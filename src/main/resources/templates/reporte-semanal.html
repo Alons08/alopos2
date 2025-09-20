@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Semanal - Sistema de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #2980b9;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color) !important;
+            color: white;
+        }
+        
+        .summary-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .summary-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .summary-card .card-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-card .card-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .date-navigation {
+            background-color: white;
+            border-radius: 8px;
+            padding: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .page-title:after {
+            content: '';
+            display: block;
+            margin-top: 2px;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Forzar scroll horizontal en móviles para tablas */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            .table {
+                min-width: 700px;
+            }
+        }
+        
+        .table thead {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .table th {
+            font-weight: 500;
+        }
+        
+        .badge-status {
+            padding: 0.5em 0.8em;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: capitalize;
+        }
+        .badge-status.bg-success {
+            background-color: var(--warning-color) !important;
+            color: #fff !important;
+        }
+        
+        .info-card {
+            padding: 1.5rem;
+        }
+        
+        .info-card p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-card p strong {
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .info-card p span {
+            font-weight: 600;
+        }
+        
+        .period-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        /* Nuevos estilos para los números más pequeños */
+        .stat-card .card-body {
+            padding: 1rem;
+        }
+        
+        .stat-card .stat-number {
+            font-size: 1.8rem; /* Reduje de display-6 (2.5rem) a 1.8rem */
+            font-weight: 600;
+            margin-bottom: 0;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .summary-card .card-text {
+                font-size: 1.25rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .stat-card .stat-number {
+                font-size: 1.5rem; /* Más pequeño en móviles */
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .summary-card .card-body {
+                padding: 1rem;
+            }
+            
+            .date-navigation .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .stat-card .stat-number {
+                font-size: 1.3rem; /* Aún más pequeño en móviles pequeños */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    
+    <div class="container mt-4 mb-5">
+        <!-- Encabezado con título -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="page-title">Reporte Semanal</h1>
+                <p class="text-muted mb-0">
+                    <span th:text="${#dates.format(reporte.inicio, 'dd/MM/yyyy')}"></span> - 
+                    <span th:text="${#dates.format(reporte.fin, 'dd/MM/yyyy')}"></span>
+                </p>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                <a th:href="@{'/reportes/exportar/semanal?inicio=' + ${#dates.format(reporte.inicio, 'yyyy-MM-dd')} + '&fin=' + ${#dates.format(reporte.fin, 'yyyy-MM-dd')}}" class="btn btn-success">
+                    <i class="bi bi-file-excel me-2"></i> Exportar a Excel
+                </a>
+            </div>
+        </div>
+        
+        <!-- Navegación por semanas -->
+        <div class="date-navigation">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <a th:href="@{'/reportes/semanal?inicio=' + ${semanaAnteriorInicio} + '&fin=' + ${semanaAnteriorFin}}" 
+                       class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-chevron-left"></i> Semana anterior
+                    </a>
+                    <a th:if="${semanaSiguienteInicio <= T(java.time.LocalDate).now().toString()}" 
+                       th:href="@{'/reportes/semanal?inicio=' + ${semanaSiguienteInicio} + '&fin=' + ${semanaSiguienteFin}}" 
+                       class="btn btn-outline-secondary">
+                        Semana siguiente <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+                <div class="d-none d-md-block">
+                    <span class="text-muted">
+                        <span th:text="${#dates.format(reporte.inicio, 'dd/MM/yyyy')}"></span> - 
+                        <span th:text="${#dates.format(reporte.fin, 'dd/MM/yyyy')}"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resumen semanal -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Resumen Semanal</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Total Semanal -->
+                    <div class="col-md-6">
+                        <div class="card text-white summary-card" style="background-color: var(--success-color);">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title">TOTAL GENERAL</h6>
+                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalSemanal, 1, 2)}"></span></p>
+                                    </div>
+                                    <i class="bi bi-cash-stack fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Periodo -->
+                    <div class="col-md-6">
+                        <div class="period-card h-100">
+                            <div class="d-flex flex-column h-100 justify-content-center">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Desde:</span>
+                                    <strong th:text="${#dates.format(reporte.inicio, 'EEEE, dd/MM/yyyy')}"></strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Hasta:</span>
+                                    <strong th:text="${#dates.format(reporte.fin, 'EEEE, dd/MM/yyyy')}"></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4 g-3">
+                    <!-- Estadísticas adicionales -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm stat-card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="bi bi-calendar-week me-2"></i>Días con actividad</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="stat-number" th:text="${reporte.cajas.size()}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Promedio diario -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm stat-card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="bi bi-calculator me-2"></i>Promedio diario</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="stat-number">
+                                    S/ <span th:text="${#numbers.formatDecimal(reporte.totalSemanal/reporte.cajas.size(), 1, 2)}"></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total pedidos -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm stat-card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="bi bi-receipt me-2"></i>Cantidad de pedidos</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="stat-number" th:text="${reporte.pedidos.size()}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resumen por día -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-calendar-day me-2"></i>Resumen por Día</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Total Ventas</th>
+                                <th>N° Pedidos</th>
+                                <th>Estado Caja</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="caja : ${reporte.cajas}">
+                                <td th:text="${#dates.format(caja.fecha, 'EEEE, dd/MM/yyyy')}"></td>
+                                <td>
+                                    <span th:if="${caja.montoCierre == null}">
+                                        <span class="badge-status bg-secondary">Caja abierta</span>
+                                    </span>
+                                    <span th:if="${caja.montoCierre != null}">
+                                        S/ <span th:text="${#numbers.formatDecimal((caja.montoCierre ?: 0) - (caja.montoApertura ?: 0), 1, 2)}"></span>
+                                    </span>
+                                </td>
+                                <td th:text="${reporte.pedidos.?[caja.id == #this.caja.id].size()}"></td>
+                                <td>
+                                    <span th:if="${caja.montoCierre == null}" class="badge-status bg-warning">
+                                        Abierta
+                                    </span>
+                                    <span th:if="${caja.montoCierre != null}" class="badge-status bg-success">
+                                        Cerrada
+                                    </span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/reportes/diario?fecha={fecha}(fecha=${#dates.format(caja.fecha, 'yyyy-MM-dd')})}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye me-1"></i> Ver detalle
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

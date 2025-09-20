@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos - Sistema de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        /* Forzar visibilidad del menú desplegable */
+        .dropdown-menu.show {
+            display: block;
+            z-index: 9999;
+        }
+
+        /* Prevenir que el overflow de la tabla o card o main corte el menú */
+        .main-content, .card, .table-responsive {
+            overflow: visible !important;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 60px;
+        }
+        
+        .order-card {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.85em;
+            border-radius: 50rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .type-badge {
+            padding: 0.35em 0.65em;
+            font-size: 0.85em;
+            border-radius: 50rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table thead th {
+            background-color: #34495e;
+            color: white;
+            font-weight: 500;
+            vertical-align: middle;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 98, 230, 0.05);
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        
+        .dropdown-item {
+            padding: 0.5rem 1rem;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #0062E6;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state .btn {
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .table-responsive {
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                overflow-x: auto;
+            }
+            
+            .table {
+                width: 100%;
+                margin-bottom: 1rem;
+                display: block;
+            }
+            
+            .table thead {
+                display: none;
+            }
+            
+            .table tbody {
+                display: block;
+                width: 100%;
+            }
+            
+            .table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 0.75rem;
+            }
+            
+            .table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem;
+                border: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .table td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 1rem;
+                color: #34495e;
+            }
+            
+            .table td:last-child {
+                border-bottom: none;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+            
+            .action-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            
+            .d-flex.gap-2 {
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Fragment -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    
+    <main class="main-content">
+        <div class="container py-4">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="h3 mb-0">Listado de Pedidos</h1>
+                        <a th:href="@{/pedidos/nuevo}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-1"></i> Nuevo Pedido
+                        </a>
+                    </div>
+                    <p class="text-muted mb-0">Gestión y seguimiento de todos los pedidos</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div th:unless="${#lists.isEmpty(pedidos)}" class="card border-0 shadow-sm">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tipo</th>
+                                            <th>Mesa</th>
+                                            <th>Total</th>
+                                            <th>Estado</th>
+                                            <th>Fecha</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="pedido : ${pedidos}">
+                                            <td data-label="ID" th:text="${pedido.id}"></td>
+                                            <td data-label="Tipo" th:text="${pedido.tipo}"></td>
+                                            <td data-label="Mesa" th:text="${pedido.mesa != null} ? '# '+${pedido.mesa.numero} : 'N/A'"></td>
+                                            <td data-label="Total" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
+                                            <td data-label="Estado" th:text="${pedido.estado}"></td>
+                                            <td data-label="Fecha" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}" class="text-muted"></td>
+                                            <td data-label="Acciones">
+                                                <div class="d-flex gap-2">
+                                                    <a th:href="@{/pedidos/{id}/detalle(id=${pedido.id})}" 
+                                                       class="action-btn btn btn-outline-primary" 
+                                                       title="Ver Detalle"
+                                                       data-bs-toggle="tooltip">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                    
+                                                    <a th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}"
+                                                       th:href="@{/pedidos/{id}/editar(id=${pedido.id})}"
+                                                       class="action-btn btn btn-outline-warning"
+                                                       title="Editar Pedido"
+                                                       data-bs-toggle="tooltip">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                    
+                                                    <div class="dropdown">
+                                                        <button class="action-btn btn btn-outline-secondary dropdown-toggle" 
+                                                                type="button" 
+                                                                id="dropdownMenuButton${pedido.id}"
+                                                                data-bs-toggle="dropdown"
+                                                                aria-expanded="false"
+                                                                title="Más opciones">
+                                                            <i class="bi bi-gear"></i>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton${pedido.id}">
+                                                            <li th:if="${pedido.estado.name() == 'PENDIENTE'}">
+                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                    <input type="hidden" name="estado" value="PREPARANDO">
+                                                                    <button type="submit" class="dropdown-item">
+                                                                        <i class="bi bi-egg-fried me-2 text-info"></i>Marcar como Preparando
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li th:if="${pedido.estado.name() == 'PREPARANDO'}">
+                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                    <input type="hidden" name="estado" value="ENTREGANDO">
+                                                                    <button type="submit" class="dropdown-item">
+                                                                        <i class="bi bi-check-circle me-2 text-warning"></i>Marcar como Entregando
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
+                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                    <input type="hidden" name="estado" value="PAGADO">
+                                                                    <button type="submit" class="dropdown-item">
+                                                                        <i class="bi bi-check-circle-fill me-2 text-success"></i>Finalizar Pedido
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
+                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                    <input type="hidden" name="estado" value="CANCELADO">
+                                                                    <button type="submit" class="dropdown-item">
+                                                                        <i class="bi bi-x-circle-fill me-2 text-danger"></i>Cancelar Pedido
+                                                                    </button>
+                                                                </form>
+                                                            </li>
+                                                            <li>
+                                                                <hr class="dropdown-divider">
+                                                            </li>
+                                                            <li>
+                                                                <a th:href="@{/pedidos/{id}/comprobante(id=${pedido.id})}" class="dropdown-item" target="_blank">
+                                                                    <i class="bi bi-receipt me-2 text-primary"></i>Generar Comprobante
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div th:if="${#lists.isEmpty(pedidos)}" class="empty-state animate__animated animate__fadeIn">
+                        <i class="bi bi-inbox text-muted"></i>
+                        <h4 class="mb-2">No hay pedidos registrados</h4>
+                        <p class="text-muted mb-3">Comienza creando tu primer pedido</p>
+                        <a th:href="@{/pedidos/nuevo}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Crear Pedido
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tooltips and popovers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Dropdowns
+            const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+        });
+    </script>
+</body>
+</html>

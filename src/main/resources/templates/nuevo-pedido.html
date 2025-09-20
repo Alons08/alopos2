@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Pedido - Sistema de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a56d4;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --cancel-color: #6c757d;
+            --cancel-hover: #5a6268;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+        
+        .form-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: none;
+            transition: transform 0.3s ease;
+            margin-bottom: 1.2rem;
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .form-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header-custom {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 1rem;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 1.2rem;
+        }
+        
+        .product-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 0.8rem;
+        }
+        
+        .product-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            padding: 0.6rem;
+            text-align: left;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .product-table td {
+            padding: 0.6rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .total-row {
+            background-color: rgba(39, 174, 96, 0.1);
+            font-weight: 700;
+        }
+        
+        .total-row td {
+            border-top: 2px solid var(--success-color);
+            border-bottom: none;
+        }
+        
+        .btn-add-product {
+            background-color: #27ae60; /* Verde moderno */
+            border: none;
+            padding: 0.4rem 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-add-product:hover {
+            background-color: #219150; /* Verde más oscuro al pasar el mouse */
+        }
+        
+        .btn-action {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            padding: 0;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #34495e;
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.5rem 0.8rem;
+            border: 1px solid #dee2e6;
+            font-size: 0.95rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+        
+        .input-group-text {
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            font-size: 0.9rem;
+            padding: 0.5rem 0.8rem;
+        }
+        
+        .alert-warning-custom {
+            background-color: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--warning-color);
+            color: #6c757d;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-danger-custom {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left: 4px solid var(--danger-color);
+            color: #6c757d;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .product-select-container {
+            display: flex;
+            align-items: stretch;
+            width: 100%;
+        }
+        
+        .product-select {
+            flex: 1;
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+        
+        .btn-search-product {
+            width: 38px;
+            padding: 0;
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .text-end {
+            text-align: right;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem 0;
+            }
+            
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .product-table {
+                font-size: 0.85rem;
+            }
+            
+            .product-table th, 
+            .product-table td {
+                .product-select {
+                    min-width: 120px;
+                    font-size: 0.95rem;
+                    max-width: 100%;
+                    white-space: normal;
+                }
+                padding: 0.5rem;
+            }
+            
+            .btn-group-mobile {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn-group-mobile .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 0.9rem;
+            }
+            
+            .product-table {
+                font-size: 0.8rem;
+            }
+            
+            .form-control, .form-select {
+                padding: 0.45rem 0.7rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    
+    <main class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <!-- Header -->
+                    <div class="mb-3">
+                        <h2 class="page-title">
+                            <i class="bi bi-cart-plus me-2"></i>
+                            <span th:if="${pedido.id == null}">Nuevo Pedido</span>
+                            <span th:if="${pedido.id != null}">Editar Pedido</span>
+                        </h2>
+                    </div>
+                    
+                    <!-- Alertas -->
+                    <div th:if="${error}" class="alert alert-danger-custom alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <span th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div th:if="${!cajaAbierta}" class="alert alert-warning-custom">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <strong>¡Atención!</strong> No hay una caja abierta. No es posible registrar pedidos.
+                    </div>
+                    
+                    <!-- Formulario -->
+                    <form th:action="@{/pedidos/guardar}" th:object="${pedido}" method="post" id="pedidoForm">
+                        <input type="hidden" th:field="*{id}" />
+
+                        <fieldset th:disabled="${!cajaAbierta}">
+                        
+                        <!-- Información del Pedido -->
+                        <div class="form-card">
+                            <div class="card-header-custom">
+                                <h5 class="card-title"><i class="bi bi-info-circle me-2"></i>Información del Pedido</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2 align-items-end">
+                                    <div class="col-md-4">
+                                        <label for="tipo" class="form-label">Tipo de Pedido *</label>
+                                        <select class="form-select" id="tipo" th:name="tipo" required>
+                                            <option value="" disabled th:selected="${pedido.tipo == null}">Seleccione...</option>
+                                            <option th:each="tipo : ${tiposPedido}" th:value="${tipo}" th:text="${tipo}" th:selected="${pedido.tipo != null} ? (${tipo} == ${pedido.tipo}) : false"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4" id="mesaContainer" style="display: none;">
+                                        <label for="mesa" class="form-label">Mesa *</label>
+                                        <select class="form-select" id="mesa" th:field="*{mesa.id}">
+                                            <option value="" disabled th:selected="${pedido.mesa == null or pedido.mesa.id == null}">Seleccione mesa...</option>
+                                            <option th:each="mesa : ${mesasDisponibles}" th:value="${mesa.id}" th:text="'Mesa ' + ${mesa.numero}" th:selected="${pedido.mesa != null and #strings.toString(mesa.id) == #strings.toString(pedido.mesa.id)}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="recargo" class="form-label">Recargo (opcional)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">S/</span>
+                                            <input type="number" step="0.01" min="0" class="form-control" id="recargo" th:field="*{recargo}" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <label for="observaciones" class="form-label">Observaciones</label>
+                                        <textarea class="form-control" id="observaciones" th:field="*{observaciones}" rows="2" maxlength="200" placeholder="Observaciones adicionales..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Productos -->
+                        <div class="form-card">
+                            <div class="card-header-custom d-flex justify-content-between align-items-center">
+                                <h5 class="card-title"><i class="bi bi-box-seam me-2"></i>Productos</h5>
+                                <button type="button" class="btn btn-add-product text-white" id="agregarProducto">
+                                    <i class="bi bi-plus-circle me-1"></i> Agregar
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="product-table" id="productosTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Producto *</th>
+                                                <th style="width: 100px;">Cantidad *</th>
+                                                <th style="width: 100px;" class="text-end">P. Unitario</th>
+                                                <th style="width: 100px;" class="text-end">Subtotal</th>
+                                                <th style="width: 50px;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Productos existentes al editar -->
+                                            <tr th:each="detalle, iterStat : *{detalles}" class="producto-row">
+                                                <td>
+                                                    <div class="product-select-container">
+                                                        <select class="form-select product-select" th:name="productos[]" th:field="*{detalles[__${iterStat.index}__].producto.id}" required>
+                                                            <option value="" disabled>Seleccione producto...</option>
+                                                            <option th:each="producto : ${productos}"
+                                                                th:value="${producto.id}"
+                                                                th:text="${producto.nombre + ' - S/' + #numbers.formatDecimal(producto.precio, 1, 2)}"
+                                                                th:data-precio="${producto.precio}"
+                                                                th:selected="${producto.id == detalle.producto.id}"></option>
+                                                        </select>
+                                                        <button type="button" class="btn btn-outline-secondary btn-search-product">
+                                                            <i class="bi bi-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="number" min="1" class="form-control cantidad" th:name="cantidades[]" th:field="*{detalles[__${iterStat.index}__].cantidad}" required>
+                                                </td>
+                                                <td class="precio-unitario text-end" th:text="'S/' + ${#numbers.formatDecimal(detalle.producto.precio, 1, 2)}"></td>
+                                                <td class="subtotal text-end" th:text="'S/' + ${#numbers.formatDecimal(detalle.subtotal, 1, 2)}"></td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger btn-action eliminar-producto">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <!-- Fila de plantilla (oculta) -->
+                                            <tr class="producto-row" id="productoRowTemplate" style="display: none;">
+                                                <td>
+                                                    <div class="product-select-container">
+                                                        <select class="form-select product-select" required disabled>
+                                                            <option value="" disabled selected>Seleccione producto...</option>
+                                                            <option th:each="producto : ${productos}"
+                                                                th:value="${producto.id}"
+                                                                th:text="${producto.nombre + ' - S/' + #numbers.formatDecimal(producto.precio, 1, 2)}"
+                                                                th:data-precio="${producto.precio}"></option>
+                                                        </select>
+                                                        <button type="button" class="btn btn-outline-secondary btn-search-product">
+                                                            <i class="bi bi-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="number" min="1" class="form-control cantidad" value="1" required disabled>
+                                                </td>
+                                                <td class="precio-unitario text-end">S/0.00</td>
+                                                <td class="subtotal text-end">S/0.00</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-sm btn-outline-danger btn-action eliminar-producto" disabled>
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="total-row">
+                                                <td colspan="3" class="text-end fw-bold">Total del Pedido:</td>
+                                                <td id="totalPedido" class="text-end fw-bold">S/0.00</td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="d-flex flex-column flex-md-row gap-2 justify-content-end btn-group-mobile">
+                            <button type="submit" class="btn btn-primary px-3" id="btnGuardar">
+                                <i class="bi bi-check-circle me-1"></i> Guardar
+                            </button>
+                            <a th:href="@{/pedidos}" class="btn btn-outline-secondary px-3">
+                                <i class="bi bi-x-circle me-1"></i> Cancelar
+                            </a>
+                        </div>
+                        
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de búsqueda de productos -->
+    <div class="modal fade" id="searchProductModal" tabindex="-1" aria-labelledby="searchProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="searchProductModalLabel">
+                        <i class="bi bi-search me-2"></i>Buscar Producto
+                    </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="productSearchInput" 
+                               placeholder="Buscar producto por nombre..." autocomplete="off">
+                    </div>
+                    <div class="search-results" id="searchResults" style="max-height: 300px; overflow-y: auto;">
+                        <div th:each="producto : ${productos}" class="search-product-item d-flex justify-content-between align-items-center p-2 border-bottom"
+                             th:data-id="${producto.id}"
+                             th:data-precio="${producto.precio}"
+                             th:data-nombre="${producto.nombre}"
+                             style="cursor: pointer;">
+                            <span class="product-name" th:text="${producto.nombre}"></span>
+                            <span class="product-price text-success" th:text="'S/' + ${#numbers.formatDecimal(producto.precio, 1, 2)}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // El código JavaScript se mantiene igual que en tu versión original
+        // Solo se actualizaron los estilos, la funcionalidad JS permanece intacta
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar/ocultar selector de mesa según tipo de pedido
+            const tipoSelect = document.getElementById('tipo');
+            const mesaContainer = document.getElementById('mesaContainer');
+            const mesaSelect = document.getElementById('mesa');
+
+            if (tipoSelect.value === 'MESA') {
+                mesaContainer.style.display = 'block';
+                mesaSelect.required = true;
+            } else {
+                mesaContainer.style.display = 'none';
+                mesaSelect.required = false;
+            }
+
+            tipoSelect.addEventListener('change', function() {
+                if (this.value === 'MESA') {
+                    mesaContainer.style.display = 'block';
+                    mesaSelect.required = true;
+                    var idInput = document.querySelector('input[name="id"]');
+                    if (idInput && !idInput.value) {
+                        mesaSelect.value = '';
+                    }
+                } else {
+                    mesaContainer.style.display = 'none';
+                    mesaSelect.required = false;
+                    mesaSelect.value = '';
+                }
+            });
+
+            // Variables para el modal de búsqueda
+            const searchModal = new bootstrap.Modal(document.getElementById('searchProductModal'));
+            let currentSelectElement = null;
+
+            // Agregar nueva fila de producto
+            const agregarBtn = document.getElementById('agregarProducto');
+            const productosTable = document.getElementById('productosTable');
+            const tbody = productosTable.querySelector('tbody');
+            const templateRow = document.getElementById('productoRowTemplate');
+
+            agregarBtn.addEventListener('click', function() {
+                const newRow = templateRow.cloneNode(true);
+                newRow.style.display = '';
+                newRow.removeAttribute('id');
+
+                const select = newRow.querySelector('.product-select');
+                select.disabled = false;
+                select.name = 'productos[]';
+
+                const cantidadInput = newRow.querySelector('.cantidad');
+                cantidadInput.disabled = false;
+                cantidadInput.name = 'cantidades[]';
+
+                const eliminarBtn = newRow.querySelector('.eliminar-producto');
+                eliminarBtn.disabled = false;
+
+                const searchBtn = newRow.querySelector('.btn-search-product');
+                searchBtn.disabled = false;
+
+                tbody.appendChild(newRow);
+                setupProductRow(newRow);
+                newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+
+            function setupProductRow(row) {
+                const productoSelect = row.querySelector('.product-select');
+                const cantidadInput = row.querySelector('.cantidad');
+                const precioUnitarioCell = row.querySelector('.precio-unitario');
+                const subtotalCell = row.querySelector('.subtotal');
+                const eliminarBtn = row.querySelector('.eliminar-producto');
+                const searchBtn = row.querySelector('.btn-search-product');
+
+                function updatePrices() {
+                    const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+                    const precio = selectedOption ? parseFloat(selectedOption.dataset.precio) || 0 : 0;
+                    const cantidad = parseInt(cantidadInput.value) || 1;
+
+                    if (cantidad < 1) cantidadInput.value = 1;
+
+                    const subtotal = precio * cantidad;
+
+                    precioUnitarioCell.textContent = 'S/' + precio.toFixed(2);
+                    subtotalCell.textContent = 'S/' + subtotal.toFixed(2);
+                    updateTotal();
+                }
+
+                productoSelect.addEventListener('change', updatePrices);
+                cantidadInput.addEventListener('input', updatePrices);
+                cantidadInput.addEventListener('blur', function() {
+                    if (this.value < 1) this.value = 1;
+                    updatePrices();
+                });
+
+                eliminarBtn.addEventListener('click', function() {
+                    row.remove();
+                    updateTotal();
+                });
+
+                searchBtn.addEventListener('click', function() {
+                    currentSelectElement = productoSelect;
+                    searchModal.show();
+                });
+
+                updatePrices();
+            }
+
+            document.querySelectorAll('.producto-row:not([id="productoRowTemplate"])').forEach(row => {
+                setupProductRow(row);
+            });
+
+            // Búsqueda de productos (con depuración)
+            const searchInput = document.getElementById('productSearchInput');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.trim().toLowerCase();
+                console.log('Buscando:', searchTerm);
+                const productItems = document.querySelectorAll('.search-results .search-product-item');
+                productItems.forEach(item => {
+                    let productName = '';
+                    const nameSpan = item.querySelector('.product-name');
+                    if (nameSpan) {
+                        productName = nameSpan.textContent.trim().toLowerCase();
+                    } else if (item.dataset.nombre) {
+                        productName = item.dataset.nombre.trim().toLowerCase();
+                    }
+                    console.log('Comparando:', productName);
+                    if (productName.includes(searchTerm)) {
+                        item.classList.remove('d-none');
+                        item.classList.add('d-flex');
+                    } else {
+                        item.classList.add('d-none');
+                        item.classList.remove('d-flex');
+                    }
+                });
+            });
+
+            // Selección de producto desde el modal
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.search-product-item')) {
+                    const item = e.target.closest('.search-product-item');
+                    if (currentSelectElement) {
+                        const productId = item.dataset.id;
+                        const options = currentSelectElement.options;
+                        for (let i = 0; i < options.length; i++) {
+                            if (options[i].value === productId) {
+                                currentSelectElement.selectedIndex = i;
+                                break;
+                            }
+                        }
+                        const event = new Event('change');
+                        currentSelectElement.dispatchEvent(event);
+                        searchModal.hide();
+                    }
+                }
+            });
+
+            // Calcular total general
+            function updateTotal() {
+                let total = 0;
+                document.querySelectorAll('.subtotal').forEach(cell => {
+                    total += parseFloat(cell.textContent.replace('S/', '')) || 0;
+                });
+
+                const recargo = parseFloat(document.getElementById('recargo').value) || 0;
+                total += recargo;
+
+                document.getElementById('totalPedido').textContent = 'S/' + total.toFixed(2);
+            }
+
+            const recargoInput = document.getElementById('recargo');
+            recargoInput.addEventListener('input', updateTotal);
+            recargoInput.addEventListener('focus', function(e) {
+                const val = this.value.replace(',', '.').trim();
+                if (val === '0' || val === '0.0' || val === '0.00' || val === '' || val === '0,0' || val === '0,00') {
+                    this.value = '';
+                }
+            });
+
+            updateTotal();
+
+            // Validación antes de enviar
+            document.getElementById('pedidoForm').addEventListener('submit', function(e) {
+                const productosRows = document.querySelectorAll('.producto-row:not([id="productoRowTemplate"])');
+
+                if (productosRows.length === 0) {
+                    e.preventDefault();
+                    alert('Debe agregar al menos un producto al pedido.');
+                    return false;
+                }
+
+                let hasErrors = false;
+                productosRows.forEach(row => {
+                    const select = row.querySelector('.product-select');
+                    const cantidadInput = row.querySelector('.cantidad');
+                    if (select) {
+                        select.disabled = false;
+                        select.setAttribute('name', 'productos[]');
+                        if (!select.value) {
+                            select.classList.add('is-invalid');
+                            hasErrors = true;
+                        } else {
+                            select.classList.remove('is-invalid');
+                        }
+                    }
+                    if (cantidadInput) {
+                        cantidadInput.disabled = false;
+                        cantidadInput.setAttribute('name', 'cantidades[]');
+                    }
+                });
+
+                if (hasErrors) {
+                    e.preventDefault();
+                    alert('Debe seleccionar un producto en todas las filas agregadas.');
+                    return false;
+                }
+
+                const filaPlantilla = document.getElementById('productoRowTemplate');
+                if (filaPlantilla) filaPlantilla.remove();
+
+                return true;
+            });
+
+            if (!document.getElementById('pedidoForm').disabled) {
+                document.getElementById('btnGuardar').disabled = false;
+            } else {
+                document.getElementById('btnGuardar').disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>

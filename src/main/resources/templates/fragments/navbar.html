@@ -1,0 +1,226 @@
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark shadow" style="background: #4361ee; color: #fff;">
+    <div class="container-fluid">
+        <!-- Brand/logo con animación -->
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" th:href="@{/home}" style="transition: all 0.3s; color: #fff;">
+            <i class="bi bi-shop-window fs-3 animate__animated animate__pulse animate__infinite" style="animation-duration: 2s;"></i>
+            <span class="d-none d-sm-inline">Sistema de Ventas</span>
+        </a>
+        
+        <!-- Toggler button con efecto -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Contenido del navbar -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
+                <!-- Inicio -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-1 py-2 px-3 rounded" th:href="@{/home}" style="color: #fff; transition: all 0.2s;">
+                        <i class="bi bi-house-door fs-5"></i>
+                        <span class="ms-1">Inicio</span>
+                    </a>
+                </li>
+                <!-- Pedidos -->
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-1 py-2 px-3 rounded" th:href="@{/pedidos}" style="color: #fff; transition: all 0.2s;">
+                        <i class="bi bi-list-check fs-5"></i>
+                        <span class="ms-1">Pedidos</span>
+                    </a>
+                </li>
+                
+                <!-- Inventario (Admin only) -->
+                <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-1 py-2 px-3 rounded" href="#" id="inventarioDropdown" role="button" data-bs-toggle="dropdown" style="transition: all 0.2s; color: #fff;">
+                        <i class="bi bi-archive fs-5"></i>
+                        <span class="ms-1">Inventario</span>
+                    </a>
+                    <ul class="dropdown-menu shadow-sm border-0 animate__animated animate__fadeIn">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" 
+                               th:href="@{/productos}">
+                                <i class="bi bi-box-seam"></i> Productos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" 
+                               th:href="@{/mesas}">
+                                <i class="bi bi-table"></i> Mesas
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Caja (Admin only) -->
+                <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-1 py-2 px-3 rounded" href="#" id="cajaDropdown" role="button" data-bs-toggle="dropdown" style="transition: all 0.2s; color: #fff;">
+                        <i class="bi bi-cash-coin fs-5"></i>
+                        <span class="ms-1">Caja</span>
+                    </a>
+                    <ul class="dropdown-menu shadow-sm border-0 animate__animated animate__fadeIn">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" 
+                               th:href="@{/caja/abrir}">
+                                <i class="bi bi-unlock"></i> Abrir Caja
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" 
+                               th:href="@{/caja/cerrar}">
+                                <i class="bi bi-lock"></i> Cerrar Caja
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Reportes -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-1 py-2 px-3 rounded" href="#" id="reportesDropdown" role="button" data-bs-toggle="dropdown" style="transition: all 0.2s; color: #fff;">
+                        <i class="bi bi-bar-chart fs-5"></i>
+                        <span class="ms-1">Reportes</span>
+                    </a>
+                    <ul class="dropdown-menu shadow-sm border-0 animate__animated animate__fadeIn">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" 
+                               th:href="@{/reportes/diario}">
+                                <i class="bi bi-calendar-day"></i> Reporte Diario
+                            </a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" 
+                               th:href="@{/reportes/semanal}">
+                                <i class="bi bi-calendar-week"></i> Reporte Semanal
+                            </a>
+                        </li>
+                        <li sec:authorize="hasAuthority('ADMIN')">
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" 
+                               th:href="@{/reportes/mensual}">
+                                <i class="bi bi-calendar-month"></i> Reporte Mensual
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+                <!-- Usuarios (Admin only) -->
+                <li class="nav-item" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                    <a class="nav-link d-flex align-items-center gap-1 py-2 px-3 rounded" th:href="@{/admin/usuarios}" style="transition: all 0.2s; color: #fff;">
+                        <i class="bi bi-people fs-5"></i>
+                        <span class="ms-1">Usuarios</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Menú usuario -->
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 py-2 px-3 rounded" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" style="transition: all 0.2s; color: #fff;">
+                        <div class="position-relative">
+                            <i class="bi bi-person-circle fs-4"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle">
+                                <span class="visually-hidden">Usuario activo</span>
+                            </span>
+                        </div>
+                        <span class="fw-semibold d-none d-lg-inline" sec:authentication="principal.usuario.nombre">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 animate__animated animate__fadeInDown">
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" th:href="@{/perfil}">
+                                <i class="bi bi-person-lines-fill"></i> Mi perfil
+                            </a>
+                        </li>
+                        <li th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                            <a class="dropdown-item d-flex align-items-center gap-2 py-2" th:href="@{/cliente}">
+                                <i class="bi bi-building"></i> Datos de la Empresa
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post">
+                                <button class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" type="submit">
+                                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Estilos adicionales -->
+<style>
+    .navbar {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 1050; /* Aumentado para asegurar que esté por encima */
+    }
+    
+    .nav-link:hover, .nav-link:focus {
+        background-color: rgba(255, 255, 255, 0.15) !important;
+        transform: translateY(-2px);
+    }
+    
+    .dropdown-item:hover, .dropdown-item:focus {
+        background-color: #f8f9fa;
+        color: #4361ee;
+        transform: translateX(5px);
+    }
+    
+    .dropdown-menu {
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+        border: none;
+    }
+    
+    /* Estilos para móvil */
+    @media (max-width: 991.98px) {
+        .navbar-collapse {
+            padding: 1rem;
+            background: #4361ee;
+            margin-top: 0.5rem;
+            border-radius: 0.5rem;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100%;
+            z-index: 1050; /* Asegurar que esté por encima del contenido */
+        }
+        
+        .navbar-nav {
+            gap: 0.5rem !important;
+        }
+        
+        .nav-link, .dropdown-toggle {
+            padding: 0.75rem 1rem !important;
+            border-radius: 0.5rem !important;
+        }
+        
+        .dropdown-menu {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-left: 1.5rem;
+        }
+        
+        .dropdown-item {
+            color: #fff !important;
+        }
+        
+        .dropdown-item:hover, .dropdown-item:focus {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: #fff !important;
+        }
+        
+        .navbar-brand span {
+            display: inline !important;
+        }
+    }
+    
+    /* Animaciones suaves */
+    .dropdown-menu, .nav-link, .dropdown-item {
+        transition: all 0.3s ease;
+    }
+</style>

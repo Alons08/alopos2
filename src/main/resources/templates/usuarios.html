@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios - Sistema de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 60px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .page-title:after {
+            content: '';
+            display: block;
+            margin-top: 2px;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .btn-add-user {
+            background-color: var(--success-color);
+            border: none;
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+        }
+        
+        .btn-add-user:hover {
+            background-color: #219653;
+        }
+        
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .table th {
+            font-weight: 500;
+            vertical-align: middle;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(44, 62, 80, 0.05);
+        }
+        
+        .badge-role {
+            padding: 0.35em 0.65em;
+            font-size: 0.75em;
+            border-radius: 50rem;
+            background-color: #e0e0e0;
+            color: #333;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+            display: inline-block;
+        }
+        
+        .badge-status {
+            padding: 0.5em 0.8em;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+        
+        .status-active {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background-color: rgba(108, 117, 125, 0.1);
+            color: #6c757d;
+        }
+        
+        .action-btn {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #adb5bd;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .table-responsive {
+                border: 1px solid #dee2e6;
+                overflow-x: auto;
+            }
+            
+            .table {
+                width: 100%;
+                margin-bottom: 1rem;
+                display: block;
+            }
+            
+            .table thead {
+                display: none;
+            }
+            
+            .table tbody {
+                display: block;
+                width: 100%;
+            }
+            
+            .table tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 0.75rem;
+            }
+            
+            .table td {
+                display: flex;
+                align-items: center;
+                padding: 0.5rem 0;
+                border: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .table td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: var(--primary-color);
+                min-width: 100px;
+                margin-right: 3rem; 
+            }
+            
+            .table td:last-child {
+                border-bottom: none;
+                padding-bottom: 0;
+            }
+            
+            .badge-status {
+                display: inline-flex;
+                align-items: center;
+            }
+            
+            .action-btn {
+                margin-right: 0.5rem;
+                margin-bottom: 0;
+            }
+            
+            .d-flex.flex-wrap.gap-2 {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+            
+            .d-flex.flex-wrap.gap-2 .btn {
+                white-space: nowrap;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .btn-add-user {
+                width: 100%;
+            }
+            
+            .empty-state {
+                padding: 2rem 1rem;
+            }
+            
+            .table td:before {
+                min-width: 80px;
+            }
+            
+            .action-btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    
+    <div class="main-content">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-header animate__animated animate__fadeIn">
+                        <h1 class="page-title">Gestión de Usuarios</h1>
+                        <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-primary text-white">
+                            <i class="bi bi-person-plus me-1"></i> Nuevo Usuario
+                        </a>
+                    </div>
+                    
+                    <!-- Empty State -->
+                    <div th:if="${usuarios.size() == 0}" class="empty-state animate__animated animate__fadeIn">
+                        <i class="bi bi-people"></i>
+                        <h4 class="mb-2">No hay usuarios registrados</h4>
+                        <p class="text-muted mb-3">Comienza agregando un nuevo usuario al sistema</p>
+                        <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-success">
+                            <i class="bi bi-person-plus me-1"></i> Crear Usuario
+                        </a>
+                    </div>
+                    
+                    <!-- Tabla de usuarios -->
+                    <div th:if="${usuarios.size() > 0}" class="animate__animated animate__fadeIn">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre completo</th>
+                                        <th>Usuario</th>
+                                        <th>Roles</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="usuario : ${usuarios}">
+                                        <td data-label="Nombre" th:text="${usuario.nombre}"></td>
+                                        <td data-label="Usuario" th:text="${usuario.username}"></td>
+                                        <td data-label="Roles">
+                                            <div class="d-flex flex-wrap">
+                                                <span th:each="rol : ${usuario.roles}" 
+                                                      class="badge-role" 
+                                                      th:text="${rol.nombre}">
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td data-label="Estado">
+                                            <span th:if="${usuario.activo}" class="badge-status status-active">
+                                                <i class="bi bi-check-circle-fill"></i> Activo
+                                            </span>
+                                            <span th:if="${!usuario.activo}" class="badge-status status-inactive">
+                                                <i class="bi bi-x-circle-fill"></i> Inactivo
+                                            </span>
+                                        </td>
+                                        <td data-label="Acciones">
+                                            <div class="d-flex flex-wrap gap-2">
+                                                <!-- Editar -->
+                                                <a th:href="@{'/admin/usuarios/editar/' + ${usuario.id}}" 
+                                                   class="btn btn-warning action-btn" 
+                                                   th:if="${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}">
+                                                    <i class="bi bi-pencil"></i> Editar
+                                                </a>
+                                                
+                                                <!-- Cambiar estado -->
+                                                <form th:action="@{'/admin/usuarios/cambiar-estado/' + ${usuario.id}}" 
+                                                      method="post" 
+                                                      style="display:inline;" 
+                                                      th:if="${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}">
+                                                    <button type="submit" 
+                                                            class="btn action-btn" 
+                                                            th:classappend="${usuario.activo} ? 'btn-danger' : 'btn-success'">
+                                                        <i th:classappend="${usuario.activo} ? 'bi-toggle-off' : 'bi-toggle-on'"></i> 
+                                                        <span th:text="${usuario.activo ? 'Desactivar' : 'Activar'}"></span>
+                                                    </button>
+                                                </form>
+                                                
+                                                <!-- Para admin -->
+                                                <span th:if="${!usuario.roles.?[nombre == 'ADMIN'].isEmpty()}" 
+                                                      class="text-muted">Acciones restringidas</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar tooltips si es necesario
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+</body>
+</html>

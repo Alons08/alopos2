@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Abrir Caja - Sistema de Ventas</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <style>
+      :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a56d4;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --cancel-color: #6c757d;
+        --cancel-hover: #5a6268;
+        --card-bg-primary: #f0f4ff;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-top: 40px;
+        padding-bottom: 20px;
+      }
+
+      .caja-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: none;
+        transition: transform 0.3s ease;
+        border-top: 4px solid var(--success-color);
+      }
+
+      .caja-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header-custom {
+        background-color: var(--success-color);
+        color: white;
+        padding: 0.8rem 1rem;
+        border-radius: 10px 10px 0 0 !important;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .alert-warning-custom {
+        background-color: rgba(243, 156, 18, 0.1);
+        border-left: 4px solid var(--warning-color);
+        color: #6c757d;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .alert-danger-custom {
+        background-color: rgba(231, 76, 60, 0.1);
+        border-left: 4px solid var(--danger-color);
+        color: #6c757d;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+        margin-bottom: 1.2rem;
+      }
+
+      .form-label {
+        font-weight: 500;
+        color: #34495e;
+        margin-bottom: 0.4rem;
+        font-size: 0.95rem;
+      }
+
+      .input-group-text {
+        background-color: #e9ecef;
+        border: 1px solid #dee2e6;
+        font-size: 0.9rem;
+        padding: 0.55rem 0.8rem;
+      }
+
+      .form-control {
+        border-radius: 0 8px 8px 0 !important;
+        padding: 0.55rem 0.8rem;
+        border: 1px solid #dee2e6;
+        font-size: 1rem;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+      }
+
+      .btn-primary-custom {
+        background-color: var(--success-color);
+        border: none;
+        padding: 0.55rem;
+        font-weight: 500;
+        transition: all 0.3s;
+        border-radius: 8px;
+      }
+
+      .btn-primary-custom:hover {
+        background-color: #219150;
+      }
+
+      .btn-cancel {
+        background-color: var(--cancel-color);
+        border-color: var(--cancel-color);
+        color: white;
+        padding: 0.55rem;
+        transition: all 0.3s;
+        border-radius: 8px;
+      }
+
+      .btn-cancel:hover {
+        background-color: var(--cancel-hover);
+        border-color: var(--cancel-hover);
+        color: white;
+      }
+
+      .text-muted-small {
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 1rem 0;
+        }
+
+        .card-body {
+          padding: 1.2rem;
+        }
+
+        .col-lg-6 {
+          padding: 0 10px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .card-body {
+          padding: 1rem;
+        }
+
+        .btn-group-mobile {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .btn-group-mobile .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-5 col-md-7">
+            <div class="caja-card card animate__animated animate__fadeIn">
+              <div class="card-header-custom card-header">
+                <div class="d-flex align-items-center">
+                  <i
+                    class="bi bi-cash-stack me-2"
+                    style="font-size: 1.2rem"
+                  ></i>
+                  <h5 class="mb-0" style="font-size: 1.1rem">
+                    Apertura de Caja
+                  </h5>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <!-- Alertas -->
+                <div
+                  th:if="${error}"
+                  class="alert alert-danger-custom alert-dismissible fade show"
+                >
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                  <span th:text="${error}"></span>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                  ></button>
+                </div>
+
+                <div th:if="${cajaAbierta}" class="alert alert-warning-custom">
+                  <div class="d-flex align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <div>
+                      <strong class="d-block">¡Caja ya abierta!</strong>
+                      <small
+                        >Ya hay una caja abierta hoy. No es posible abrir
+                        otra.</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Formulario -->
+                <form th:action="@{/caja/abrir}" method="post">
+                  <!-- Monto de Apertura -->
+                  <div class="mb-3">
+                    <label for="montoApertura" class="form-label"
+                      >Monto Inicial</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text">S/</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        class="form-control"
+                        id="montoApertura"
+                        name="montoApertura"
+                        th:value="${montoApertura}"
+                        placeholder="0.00"
+                        required
+                        th:disabled="${cajaAbierta}"
+                      />
+                    </div>
+                    <div class="text-muted-small">
+                      Ingrese el monto inicial en efectivo
+                    </div>
+                  </div>
+
+                  <!-- Botones -->
+                  <div
+                    class="d-flex flex-column flex-md-row gap-2 mt-3 btn-group-mobile"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-primary-custom text-white flex-fill"
+                      th:disabled="${cajaAbierta}"
+                    >
+                      <i class="bi bi-cash-coin me-1"></i> Abrir Caja
+                    </button>
+                    <a th:href="@{/home}" class="btn btn-cancel flex-fill">
+                      <i class="bi bi-x-circle me-1"></i> Cancelar
+                    </a>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      th:replace="~{fragments/footer :: footer}"
+      class="footer mt-auto py-3 bg-light"
+    ></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Validar que el monto no sea negativo
+      const montoInput = document.getElementById("montoApertura");
+      if (montoInput) {
+        montoInput.addEventListener("input", function (e) {
+          if (this.value && parseFloat(this.value) < 0) {
+            this.value = 0;
+          }
+        });
+        montoInput.addEventListener("focus", function (e) {
+          const val = this.value.replace(",", ".").trim();
+          if (
+            val === "0" ||
+            val === "0.0" ||
+            val === "0.00" ||
+            val === "" ||
+            val === "0,0" ||
+            val === "0,00"
+          ) {
+            this.value = "";
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

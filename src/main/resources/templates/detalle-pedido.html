@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Pedido - Sistema de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding-bottom: 60px;
+        }
+        
+        .card-detail {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-pendiente { background-color: #f8f9fa; color: #6c757d; }
+        .status-preparando { background-color: #e7f1ff; color: #0d6efd; }
+        .status-entregando { background-color: #fff3cd; color: #ffc107; }
+        .status-pagado { background-color: #d4edda; color: #28a745; }
+        .status-cancelado { background-color: #f8d7da; color: #dc3545; }
+        
+        .products-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .products-table thead th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 15px;
+            font-weight: 500;
+        }
+        
+        .products-table tbody td {
+            padding: 12px 15px;
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .products-table tfoot td {
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            font-weight: 500;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .btn-action i {
+            font-size: 1rem;
+        }
+        
+        .btn-edit {
+            background-color: var(--warning-color);
+            color: #212529;
+            border: none;
+        }
+        
+        .btn-edit:hover {
+            background-color: #e0a800;
+            color: #212529;
+        }
+        
+        .btn-more {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-more:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+        }
+        
+        .btn-back:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+        
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: none;
+        }
+        
+        .dropdown-item {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Mejoras para mobile */
+        @media (max-width: 992px) {
+            .card-detail {
+                margin-bottom: 15px;
+            }
+            
+            .card-header {
+                padding: 12px 15px;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .detail-item {
+                flex-direction: column;
+                gap: 4px;
+                padding: 8px 0;
+            }
+            
+            .detail-label {
+                font-size: 0.9rem;
+                font-weight: 600;
+            }
+            
+            .products-table thead th,
+            .products-table tbody td {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-action {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .action-buttons .dropdown {
+                width: 100%;
+            }
+            
+            .action-buttons .dropdown .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-header {
+                padding: 10px 12px;
+            }
+            
+            .products-table thead th,
+            .products-table tbody td {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .products-table thead th:last-child,
+            .products-table tbody td:last-child {
+                padding-right: 5px;
+            }
+            
+            .products-table thead th:first-child,
+            .products-table tbody td:first-child {
+                padding-left: 5px;
+            }
+            
+            .btn-action i {
+                font-size: 0.9rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    
+    <div class="main-content">
+        <div class="container py-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Detalle del Pedido #<span th:text="${pedido.id}"></span></h2>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="card card-detail h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i> Información del Pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="detail-item">
+                                <span class="detail-label">Estado</span>
+                                <span class="status-badge" th:classappend="'status-' + ${pedido.estado.toString().toLowerCase()}" 
+                                      th:text="${pedido.estado}"></span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Tipo</span>
+                                <span th:text="${pedido.tipo}"></span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Mesa</span>
+                                <span th:text="${pedido.mesa != null ? 'Mesa #' + pedido.mesa.numero : 'N/A'}"></span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Total</span>
+                                <span th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Recargo</span>
+                                <span th:text="'S/ ' + ${#numbers.formatDecimal(pedido.recargo, 1, 2)}"></span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Fecha</span>
+                                <span th:text="${#dates.format(pedido.fecha, 'EEEE, dd/MM/yyyy HH:mm')}"></span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Usuario</span>
+                                <span th:text="${pedido.usuario != null ? pedido.usuario.username : 'N/A'}"></span>
+                            </div>
+                            
+                            <div class="detail-item">
+                                <span class="detail-label">Caja</span>
+                                <span th:text="${pedido.caja != null ? 'Caja #' + pedido.caja.id : 'N/A'}"></span>
+                            </div>
+                            
+                            <div th:if="${pedido.observaciones}" class="detail-item">
+                                <span class="detail-label">Observaciones</span>
+                                <span th:text="${pedido.observaciones}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card card-detail h-100">
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="products-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-right">P. Unitario</th>
+                                            <th class="text-right">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="detalle : ${pedido.detalles}">
+                                            <td th:text="${detalle.producto.nombre}"></td>
+                                            <td class="text-center" th:text="${detalle.cantidad}"></td>
+                                            <td class="text-right" th:text="'S/ ' + ${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}"></td>
+                                            <td class="text-right" th:text="'S/ ' + ${#numbers.formatDecimal(detalle.subtotal, 1, 2)}"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-right fw-bold">Total</td>
+                                            <td class="text-right fw-bold" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex flex-wrap gap-3 mt-4 action-buttons">
+                <a th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}"
+                   th:href="@{'/pedidos/{id}/editar'(id=${pedido.id})}" 
+                   class="btn btn-edit btn-action">
+                    <i class="bi bi-pencil-square"></i> Editar Pedido
+                </a>
+                
+                <div class="dropdown">
+                    <button class="btn btn-more btn-action dropdown-toggle" 
+                            type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-gear"></i> Más acciones
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li th:if="${pedido.estado.name() == 'PENDIENTE'}">
+                            <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post">
+                                <input type="hidden" name="estado" value="PREPARANDO">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-egg-fried text-info"></i> Marcar como Preparando
+                                </button>
+                            </form>
+                        </li>
+                        <li th:if="${pedido.estado.name() == 'PREPARANDO'}">
+                            <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post">
+                                <input type="hidden" name="estado" value="ENTREGANDO">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-check-circle text-warning"></i> Marcar como Entregando
+                                </button>
+                            </form>
+                        </li>
+                        <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
+                            <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post">
+                                <input type="hidden" name="estado" value="PAGADO">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-check-circle-fill text-success"></i> Completar Pedido
+                                </button>
+                            </form>
+                        </li>
+                        <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
+                            <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post">
+                                <input type="hidden" name="estado" value="CANCELADO">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="bi bi-x-circle-fill text-danger"></i> Cancelar Pedido
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                
+                <a th:href="@{/pedidos}" class="btn btn-back btn-action ms-auto">
+                    <i class="bi bi-arrow-left"></i> Volver a Pedidos
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar dropdowns
+            const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            dropdownElementList.map(function (dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl);
+            });
+        });
+    </script>
+</body>
+</html>

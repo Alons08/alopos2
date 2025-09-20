@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Diario - Sistema de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #2980b9;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color) !important;
+            color: white;
+        }
+        
+        .summary-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .summary-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .summary-card .card-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-card .card-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .date-navigation {
+            background-color: white;
+            border-radius: 8px;
+            padding: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        .page-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .page-title:after {
+            content: '';
+            display: block;
+            margin-top: 2px;
+            width: 100%;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Forzar scroll horizontal en móviles */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            .table {
+                min-width: 700px;
+            }
+        }
+        
+        .table thead {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .table th {
+            font-weight: 500;
+        }
+        
+        
+        @media (max-width: 768px) {
+            .summary-card .card-text {
+                font-size: 1.25rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .table th, .table td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .card-body {
+                padding: 1rem;
+            }
+            
+            .summary-card .card-body {
+                padding: 1rem;
+            }
+            
+            .date-navigation .btn {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+    
+    <div class="container mt-4 mb-5">
+        <!-- Encabezado con título y botón de exportación -->
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="page-title">Reporte Diario</h1>
+                <p class="text-muted mb-0" th:text="${#dates.format(reporte.fecha, 'EEEE, d MMMM yyyy')}"></p>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                <a th:href="@{'/reportes/exportar/diario?fecha=' + ${#dates.format(reporte.fecha, 'yyyy-MM-dd')}}" class="btn btn-success">
+                    <i class="bi bi-file-excel me-2"></i> Exportar a Excel
+                </a>
+            </div>
+        </div>
+        
+        <!-- Navegación por fechas -->
+        <div class="date-navigation">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <a th:href="@{'/reportes/diario?fecha=' + ${diaAnterior}}" class="btn btn-outline-secondary me-2">
+                        <i class="bi bi-chevron-left"></i> Día anterior
+                    </a>
+                    <a th:if="${diaSiguiente <= T(java.time.LocalDate).now().toString()}" th:href="@{'/reportes/diario?fecha=' + ${diaSiguiente}}" class="btn btn-outline-secondary">
+                        Día siguiente <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+                <div class="d-none d-md-block">
+                    <span class="text-muted" th:text="${#dates.format(reporte.fecha, 'EEEE, d MMMM yyyy')}"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resumen del día -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Resumen del Día</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <!-- Ventas Totales -->
+                    <div class="col-md-4">
+                        <div class="card text-white summary-card" style="background-color: var(--info-color);">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title">TOTAL VENTAS</h6>
+                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalVentas, 1, 2)}"></span></p>
+                                    </div>
+                                    <i class="bi bi-wallet2 fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recargos -->
+                    <div class="col-md-4">
+                        <div class="card text-white summary-card" style="background-color: var(--warning-color);">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title">TOTAL RECARGOS</h6>
+                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalRecargos, 1, 2)}"></span></p>
+                                    </div>
+                                    <i class="bi bi-plus-circle fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Neto -->
+                    <div class="col-md-4">
+                        <div class="card text-white summary-card" style="background-color: var(--success-color);">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title">TOTAL GENERAL</h6>
+                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalNeto, 1, 2)}"></span></p>
+                                    </div>
+                                    <i class="bi bi-cash-stack fs-4"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4 g-3">
+                    <!-- Información de Caja -->
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="bi bi-cash-coin me-2"></i>Información de Caja</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Monto Apertura:</span>
+                                    <strong>S/ <span th:text="${#numbers.formatDecimal(reporte.montoApertura, 1, 2)}"></span></strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Monto Cierre:</span>
+                                    <strong>S/ <span th:text="${#numbers.formatDecimal(reporte.montoCierre, 1, 2)}"></span></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resumen adicional -->
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="bi bi-info-circle me-2"></i>Resumen Adicional</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Cantidad de Pedidos:</span>
+                                    <strong th:text="${reporte.pedidos.size()}"></strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Promedio por Pedido:</span>
+                                    <strong>S/ <span th:text="${#numbers.formatDecimal(reporte.totalNeto/reporte.pedidos.size(), 1, 2)}"></span></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detalle de pedidos -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-check me-2"></i>Detalle de Pedidos</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tipo</th>
+                                <th>Mesa</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Hora</th>
+                                <th>Comprobante</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="pedido : ${reporte.pedidos}" style="cursor: pointer;" onclick="window.location.href='/pedidos/' + ${pedido.id}">
+                                <td th:text="${pedido.id}"></td>
+                                <td th:text="${pedido.tipo}"></td>
+                                <td th:text="${pedido.mesa != null} ? ${pedido.mesa.numero} : 'N/A'"></td>
+                                <td>S/ <span th:text="${#numbers.formatDecimal(pedido.total, 1, 2)}"></span></td>
+                                <td th:text="${pedido.estado}"></td>
+                                <td th:text="${#dates.format(pedido.fechaPagado, 'HH:mm')}"></td>
+                                <td>
+                                    <a th:href="@{'/pedidos/' + ${pedido.id} + '/comprobante'}" class="btn btn-sm btn-primary" title="Generar Comprobante" target="_blank">
+                                        <i class="bi bi-receipt"></i> Comprobante
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
