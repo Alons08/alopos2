@@ -7,6 +7,7 @@ import com.alocode.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
 import com.alocode.repository.RolRepository;
+import com.alocode.repository.ClienteRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ClienteRepository clienteRepository;
 
     // Listar todos los usuarios
     public List<Usuario> findAll() {
@@ -50,6 +52,10 @@ public class UsuarioService {
 
     // Guardar nuevo usuario
     public void guardarUsuario(Usuario usuario, List<Long> rolesIds) {
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        if (usuario.getCliente() == null || !usuario.getCliente().getId().equals(clienteId)) {
+            throw new IllegalArgumentException("El usuario debe pertenecer al cliente actual");
+        }
         if (usuario.getId() == null && usuario.getPassword() != null) {
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
@@ -105,5 +111,10 @@ public class UsuarioService {
     public void actualizarNombre(Usuario usuario, String nombre) {
         usuario.setNombre(nombre);
         usuarioRepository.save(usuario);
+    }
+
+    public com.alocode.model.Cliente obtenerClientePorId(Long id) {
+        return clienteRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
     }
 }

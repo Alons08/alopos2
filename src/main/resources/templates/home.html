@@ -27,62 +27,64 @@
             flex-direction: column;
             min-height: 100vh;
             background-color: #f8f9fa;
+            font-size: 14px; /* Tamaño base más pequeño para móviles */
         }
         
         .main-content {
             flex: 1;
-            padding-bottom: 20px;
-            margin-top: 40px;
+            padding-bottom: 15px;
+            margin-top: 20px; /* Menos margen superior en móviles */
         }
         
         .form-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 15px;
+            padding: 0 10px; /* Padding lateral reducido */
         }
         
         .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Bordes ligeramente más pequeños */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* Sombra más suave */
             border: none;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s ease; /* Transición más rápida */
             height: 100%;
+            margin-bottom: 8px; /* Espacio entre cards reducido */
         }
         
         .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px); /* Efecto hover más sutil */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
         
         .card-primary {
             background-color: var(--card-bg-primary);
-            border-top: 4px solid var(--primary-color);
+            border-top: 3px solid var(--primary-color); /* Borde más fino */
         }
         
         .card-success {
             background-color: var(--card-bg-success);
-            border-top: 4px solid var(--success-color);
+            border-top: 3px solid var(--success-color);
         }
         
         .card-warning {
             background-color: var(--card-bg-warning);
-            border-top: 4px solid var(--warning-color);
+            border-top: 3px solid var(--warning-color);
         }
         
         .card-danger {
             background-color: var(--card-bg-danger);
-            border-top: 4px solid var(--danger-color);
+            border-top: 3px solid var(--danger-color);
         }
         
         .card-body {
-            padding: 1.2rem;
+            padding: 1rem; /* Padding reducido */
             display: flex;
             flex-direction: column;
         }
         
         .card-icon {
-            font-size: 2rem;
-            margin-bottom: 0.8rem;
+            font-size: 1.5rem; /* Iconos más pequeños */
+            margin-bottom: 0.6rem;
             display: inline-block;
         }
         
@@ -104,23 +106,25 @@
         
         .card-title {
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem; /* Título más pequeño */
             color: var(--secondary-color);
+            line-height: 1.3;
         }
         
         .card-text {
-            font-size: 0.9rem;
+            font-size: 0.8rem; /* Texto más pequeño */
             color: #6c757d;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
         }
         
         .btn-custom {
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            padding: 0.4rem 0.8rem; /* Botones más compactos */
             font-weight: 500;
-            font-size: 0.9rem;
-            transition: all 0.3s;
+            font-size: 0.8rem; /* Texto de botón más pequeño */
+            transition: all 0.2s;
             margin-top: auto;
         }
         
@@ -151,40 +155,43 @@
         
         .welcome-banner {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--primary-color);
-            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            border-left: 3px solid var(--primary-color);
+            padding: 0.6rem 0.8rem; /* Padding reducido */
+            margin-bottom: 0.8rem;
         }
         
         .page-title {
             font-weight: 600;
             color: var(--secondary-color);
             margin-bottom: 0;
-            font-size: 1.5rem;
+            font-size: 1.2rem; /* Título de página más pequeño */
         }
         
         .date-badge {
             background-color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
         }
         
-        /* Toast mejorado para laptop y móvil */
+        /* Toast mejorado para móvil */
         .toast-container-improved {
             position: fixed;
             z-index: 1100;
-            top: 100px;
-            right: 20px;
-            max-width: 350px;
+            top: 70px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
         }
         
         .toast-improved {
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border: none;
             background: linear-gradient(135deg, #28a745, #20c997);
         }
@@ -192,23 +199,79 @@
         .toast-improved .toast-body {
             display: flex;
             align-items: center;
-            padding: 1rem;
+            padding: 0.8rem;
             color: white;
             font-weight: 500;
+            font-size: 0.85rem;
         }
         
         .toast-improved .btn-close {
             filter: invert(1);
             opacity: 0.8;
+            padding: 0.5rem;
         }
         
         .toast-improved .btn-close:hover {
             opacity: 1;
         }
         
-        @media (max-width: 768px) {
+        /* Mejoras específicas para móviles muy pequeños */
+        @media (max-width: 400px) {
             .form-container {
-                padding: 0 10px;
+                padding: 0 8px;
+            }
+            
+            .card-body {
+                padding: 0.8rem;
+            }
+            
+            .card-icon {
+                font-size: 1.4rem;
+            }
+            
+            .card-title {
+                font-size: 0.9rem;
+            }
+            
+            .card-text {
+                font-size: 0.78rem;
+            }
+            
+            .btn-custom {
+                padding: 0.35rem 0.7rem;
+                font-size: 0.78rem;
+            }
+            
+            .page-title {
+                font-size: 1.1rem;
+            }
+            
+            .date-badge {
+                font-size: 0.78rem;
+                padding: 0.25rem 0.5rem;
+            }
+            
+            .welcome-banner {
+                padding: 0.5rem 0.7rem;
+                font-size: 0.85rem;
+            }
+            
+            .toast-container-improved {
+                top: 60px;
+                right: 8px;
+                left: 8px;
+            }
+            
+            .toast-improved .toast-body {
+                padding: 0.7rem;
+                font-size: 0.82rem;
+            }
+        }
+        
+        /* Mejoras para tablets y pantallas medianas */
+        @media (min-width: 577px) and (max-width: 768px) {
+            .main-content {
+                margin-top: 30px;
             }
             
             .card-body {
@@ -216,15 +279,19 @@
             }
             
             .card-icon {
-                font-size: 1.8rem;
+                font-size: 1.7rem;
             }
             
             .card-title {
                 font-size: 1rem;
             }
             
+            .card-text {
+                font-size: 0.85rem;
+            }
+            
             .btn-custom {
-                padding: 0.4rem 0.8rem;
+                padding: 0.45rem 0.9rem;
                 font-size: 0.85rem;
             }
             
@@ -232,78 +299,35 @@
                 font-size: 1.3rem;
             }
             
-            .date-badge {
-                font-size: 0.85rem;
-                padding: 0.3rem 0.7rem;
-            }
-            
             .welcome-banner {
                 padding: 0.7rem 0.9rem;
             }
-            
-            /* Toast para tablet */
-            .toast-container-improved {
-                top: 80px;
-                right: 15px;
-                left: 15px;
-                max-width: none;
-            }
         }
         
-        @media (max-width: 576px) {
+        /* Ajustes para orientación landscape en móviles */
+        @media (max-height: 500px) and (orientation: landscape) {
             .main-content {
-                margin-top: 30px;
+                margin-top: 15px;
+                padding-bottom: 10px;
             }
             
             .card-body {
-                padding: 0.9rem;
+                padding: 0.7rem;
             }
             
             .card-icon {
-                font-size: 1.6rem;
-            }
-            
-            .welcome-banner {
-                padding: 0.6rem 0.8rem;
-                font-size: 0.9rem;
-            }
-            
-            /* Toast para móvil */
-            .toast-container-improved {
-                top: 70px;
-                right: 10px;
-                left: 10px;
-            }
-            
-            .toast-improved .toast-body {
-                padding: 0.8rem;
-                font-size: 0.9rem;
-            }
-        }
-        
-        @media (max-width: 400px) {
-            .form-container {
-                padding: 0 5px;
-            }
-            
-            .card-body {
-                padding: 0.8rem;
-            }
-            
-            .card-title {
-                font-size: 0.95rem;
+                font-size: 1.3rem;
+                margin-bottom: 0.4rem;
             }
             
             .card-text {
-                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
             }
-            
-            /* Toast para móviles pequeños */
-            .toast-container-improved {
-                top: 60px;
-                right: 5px;
-                left: 5px;
-            }
+        }
+        
+        /* Mejora de espaciado entre filas en móviles */
+        .row.g-3 {
+            --bs-gutter-y: 0.75rem; /* Espaciado vertical reducido */
         }
     </style>
 </head>
@@ -312,7 +336,7 @@
     <div th:if="${success}" class="toast-container-improved">
         <div class="toast show toast-improved" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="4000">
             <div class="toast-body">
-                <i class="bi bi-check-circle-fill me-3" style="font-size: 1.3rem;"></i>
+                <i class="bi bi-check-circle-fill me-2" style="font-size: 1.1rem;"></i>
                 <span th:text="${success}"></span>
                 <button type="button" class="btn-close ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
@@ -325,74 +349,74 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="container form-container">
-            <div class="row mb-4">
+            <div class="row mb-3">
                 <div class="col-12">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
                         <h2 class="page-title">Panel Principal</h2>
                         <div class="date-badge text-muted" th:text="'Hoy es ' + ${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></div>
                     </div>
                     
                     <!-- Welcome Message -->
-                    <div sec:authorize="hasAuthority('ADMIN')" class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-3">
-                        <i class="bi bi-person-badge me-3" style="color: var(--primary-color);"></i>
-                        <div>
-                            <strong class="d-block">Bienvenido Administrador</strong>
-                            <small class="text-muted">Tienes acceso completo al sistema</small>
+                    <div sec:authorize="hasAuthority('ADMIN')" class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-2">
+                        <i class="bi bi-person-badge me-2" style="color: var(--primary-color);"></i>
+                        <div class="flex-grow-1">
+                            <strong class="d-block" style="font-size: 0.9rem;">Bienvenido Administrador</strong>
+                            <small class="text-muted" style="font-size: 0.8rem;">Tienes acceso completo al sistema</small>
                         </div>
-                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close ms-1" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.7rem;"></button>
                     </div>
                     
-                    <div sec:authorize="hasAuthority('SECRETARIA')" class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-3">
-                        <i class="bi bi-person-lines-fill me-3" style="color: var(--primary-color);"></i>
-                        <div>
-                            <strong class="d-block">Bienvenida Secretaria</strong>
-                            <small class="text-muted">Puedes gestionar pedidos y clientes</small>
+                    <div sec:authorize="hasAuthority('SECRETARIA')" class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-2">
+                        <i class="bi bi-person-lines-fill me-2" style="color: var(--primary-color);"></i>
+                        <div class="flex-grow-1">
+                            <strong class="d-block" style="font-size: 0.9rem;">Bienvenida Secretaria</strong>
+                            <small class="text-muted" style="font-size: 0.8rem;">Puedes gestionar pedidos y clientes</small>
                         </div>
-                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close ms-1" data-bs-dismiss="alert" aria-label="Close" style="font-size: 0.7rem;"></button>
                     </div>
                 </div>
             </div>
             
             <!-- Cards Section -->
-            <div class="row g-3">
+            <div class="row g-2"> <!-- Espaciado reducido entre cards -->
                 <!-- Nuevo Pedido Card -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="col-6 col-lg-3 col-md-4">
                     <div class="card card-primary animate__animated animate__fadeIn">
                         <div class="card-body text-center">
                             <i class="bi bi-cart-plus card-icon"></i>
                             <h5 class="card-title">Nuevo Pedido</h5>
-                            <p class="card-text">Registrar nuevo pedido para mesa, local o delivery</p>
+                            <p class="card-text">Registrar nuevo pedido</p>
                             <a th:href="@{/pedidos/nuevo}" class="btn btn-primary btn-custom">
-                                <i class="bi bi-plus-circle me-1"></i>Crear Pedido
+                                <i class="bi bi-plus-circle me-1"></i>Crear
                             </a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Pedidos Activos Card -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="col-6 col-lg-3 col-md-4">
                     <div class="card card-success animate__animated animate__fadeIn">
                         <div class="card-body text-center">
                             <i class="bi bi-list-check card-icon"></i>
                             <h5 class="card-title">Pedidos Activos</h5>
-                            <p class="card-text">Ver y gestionar pedidos en proceso</p>
+                            <p class="card-text">Gestionar pedidos en proceso</p>
                             <a th:href="@{/pedidos}" class="btn btn-success btn-custom">
-                                <i class="bi bi-eye me-1"></i>Ver Pedidos
+                                <i class="bi bi-eye me-1"></i>Ver
                             </a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Caja Card (Solo Admin) -->
-                <div sec:authorize="hasAuthority('ADMIN')" class="col-xl-3 col-lg-4 col-md-6">
+                <div sec:authorize="hasAuthority('ADMIN')" class="col-6 col-lg-3 col-md-4">
                     <div th:if="${cajaAbierta}" class="card card-warning animate__animated animate__fadeIn">
                         <div class="card-body text-center">
                             <i class="bi bi-cash-coin card-icon"></i>
                             <h5 class="card-title">Caja Abierta</h5>
                             <p class="card-text mb-1">Monto inicial:</p>
-                            <h6 class="text-warning mb-3">S/ <span th:text="${#numbers.formatDecimal(cajaAbierta.montoApertura, 1, 2)}"></span></h6>
+                            <h6 class="text-warning mb-2" style="font-size: 0.9rem;">S/ <span th:text="${#numbers.formatDecimal(cajaAbierta.montoApertura, 1, 2)}"></span></h6>
                             <a th:href="@{/caja/cerrar}" class="btn btn-warning btn-custom">
-                                <i class="bi bi-lock me-1"></i>Cerrar Caja
+                                <i class="bi bi-lock me-1"></i>Cerrar
                             </a>
                         </div>
                     </div>
@@ -401,23 +425,23 @@
                         <div class="card-body text-center">
                             <i class="bi bi-cash-coin card-icon"></i>
                             <h5 class="card-title">Caja Cerrada</h5>
-                            <p class="card-text">No hay caja abierta en este momento</p>
+                            <p class="card-text">No hay caja abierta</p>
                             <a th:href="@{/caja/abrir}" class="btn btn-danger btn-custom">
-                                <i class="bi bi-unlock me-1"></i>Abrir Caja
+                                <i class="bi bi-unlock me-1"></i>Abrir
                             </a>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Reportes Card -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card" style="background-color: #f8f9fa; border-top: 4px solid #6c757d;">
+                <div class="col-6 col-lg-3 col-md-4">
+                    <div class="card" style="background-color: #f8f9fa; border-top: 3px solid #6c757d;">
                         <div class="card-body text-center">
                             <i class="bi bi-bar-chart-fill card-icon" style="color: #6c757d;"></i>
                             <h5 class="card-title">Reporte Diario</h5>
-                            <p class="card-text">Visualizar ventas de hoy y días anteriores</p>
+                            <p class="card-text">Visualizar ventas del día</p>
                             <a th:href="@{/reportes/diario}" class="btn btn-custom" style="background-color: #6c757d; border-color: #6c757d; color: white;">
-                                <i class="bi bi-graph-up me-1"></i>Ver Reporte Diario
+                                <i class="bi bi-graph-up me-1"></i>Ver
                             </a>
                         </div>
                     </div>
@@ -454,13 +478,13 @@
         const cards = document.querySelectorAll('.card');
         cards.forEach((card, index) => {
             card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'all 0.5s ease';
+            card.style.transform = 'translateY(15px)';
+            card.style.transition = 'all 0.4s ease';
             
             setTimeout(() => {
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';
-            }, 100 * index);
+            }, 80 * index);
         });
     });
     </script>

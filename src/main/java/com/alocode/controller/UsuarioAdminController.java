@@ -37,6 +37,10 @@ public class UsuarioAdminController {
 
     @PostMapping("/guardar")
     public String guardarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds) {
+        // Asignar el cliente actual usando TenantContext
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
+        usuario.setCliente(cliente);
         usuarioService.guardarUsuario(usuario, rolesIds);
         return "redirect:/admin/usuarios";
     }
@@ -52,6 +56,10 @@ public class UsuarioAdminController {
 
     @PostMapping("/actualizar")
     public String actualizarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds) {
+        // Asignar el cliente actual usando TenantContext
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
+        usuario.setCliente(cliente);
         usuarioService.actualizarUsuario(usuario, rolesIds);
         return "redirect:/admin/usuarios";
     }
