@@ -1,358 +1,439 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mesas - Sistema de Ventas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --success-color: #28a745;
+        --danger-color: #dc3545;
+        --warning-color: #ffc107;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+      }
+
+      .main-content {
+        flex: 1;
+        padding-bottom: 60px;
+      }
+
+      .card-shadow {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .card-header-light {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #eee;
+        border-radius: 10px 10px 0 0 !important;
+      }
+
+      .table-mesas th {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 500;
+        padding: 12px 15px;
+      }
+
+      .table-mesas td {
+        padding: 12px 15px;
+        vertical-align: middle;
+      }
+
+      .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-disponible {
+        background-color: #d4edda;
+        color: #28a745;
+      }
+
+      .status-ocupada {
+        background-color: #f8d7da;
+        color: #dc3545;
+      }
+
+      .status-reservada {
+        background-color: #fff3cd;
+        color: #ffc107;
+      }
+
+      .action-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        width: 110px;
+        justify-content: center;
+      }
+      .action-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+
+      .btn-edit {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: var(--primary-color);
+      }
+
+      .btn-edit:hover {
+        background-color: #e9ecef;
+        color: var(--primary-color);
+      }
+
+      .btn-delete {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: var(--danger-color);
+      }
+
+      .btn-delete:hover {
+        background-color: #f8d7da;
+        color: var(--danger-color);
+      }
+
+      .search-container {
+        max-width: 400px;
+      }
+
+      .mobile-mesa-card {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        background-color: white;
+      }
+
+      .mobile-mesa-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .mobile-mesa-title {
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .mobile-mesa-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid #f1f1f1;
+      }
+
+      .mobile-mesa-detail:last-child {
+        border-bottom: none;
+      }
+
+      .mobile-detail-label {
+        color: #6c757d;
+        font-weight: 500;
+      }
+
+      @media (max-width: 992px) {
+        .desktop-view {
+          display: none;
         }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f8f9fa;
+
+        .mobile-view {
+          display: block;
         }
-        
-        .main-content {
-            flex: 1;
-            padding-bottom: 60px;
+      }
+
+      @media (min-width: 993px) {
+        .mobile-view {
+          display: none;
         }
-        
-        .card-shadow {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        
-        .card-header-light {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #eee;
-            border-radius: 10px 10px 0 0 !important;
-        }
-        
-        .table-mesas th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 500;
-            padding: 12px 15px;
-        }
-        
-        .table-mesas td {
-            padding: 12px 15px;
-            vertical-align: middle;
-        }
-        
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .status-disponible {
-            background-color: #d4edda;
-            color: #28a745;
-        }
-        
-        .status-ocupada {
-            background-color: #f8d7da;
-            color: #dc3545;
-        }
-        
-        .status-reservada {
-            background-color: #fff3cd;
-            color: #ffc107;
-        }
-        
+      }
+
+      @media (max-width: 576px) {
         .action-btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            width: 110px;
-            justify-content: center;
+          min-width: auto;
+          padding: 6px 8px;
         }
-        .action-group {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
+
+        .action-btn span {
+          display: none;
         }
-        
-        .btn-edit {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            color: var(--primary-color);
-        }
-        
-        .btn-edit:hover {
-            background-color: #e9ecef;
-            color: var(--primary-color);
-        }
-        
-        .btn-delete {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            color: var(--danger-color);
-        }
-        
-        .btn-delete:hover {
-            background-color: #f8d7da;
-            color: var(--danger-color);
-        }
-        
-        .search-container {
-            max-width: 400px;
-        }
-        
-        .mobile-mesa-card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            background-color: white;
-        }
-        
-        .mobile-mesa-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .mobile-mesa-title {
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        
-        .mobile-mesa-detail {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid #f1f1f1;
-        }
-        
-        .mobile-mesa-detail:last-child {
-            border-bottom: none;
-        }
-        
-        .mobile-detail-label {
-            color: #6c757d;
-            font-weight: 500;
-        }
-        
-        @media (max-width: 992px) {
-            .desktop-view {
-                display: none;
-            }
-            
-            .mobile-view {
-                display: block;
-            }
-        }
-        
-        @media (min-width: 993px) {
-            .mobile-view {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .action-btn {
-                min-width: auto;
-                padding: 6px 8px;
-            }
-            
-            .action-btn span {
-                display: none;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
-    
+
     <div class="main-content">
-        <div class="container py-4">
-            <div class="card card-shadow">
-                <div class="card-header card-header-light d-flex flex-column flex-md-row justify-content-between align-items-center">
-                    <h2 class="h4 mb-3 mb-md-0"><i class="bi bi-table me-2"></i> Listado de Mesas</h2>
-                    <a th:href="@{/mesas/nuevo}" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-1"></i> Nueva Mesa
-                    </a>
-                </div>
-                
-                <div class="card-body">
-                    <!-- Alertas -->
-                    <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4">
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                        <span th:text="${success}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    
-                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <span th:text="${error}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                    
-                    <!-- Buscador -->
-                    <div class="mb-4 search-container">
-                        <form th:action="@{/mesas}" method="get" class="input-group">
-                            <input type="text" class="form-control" placeholder="Buscar mesa por número" name="q" th:value="${param.q}">
-                            <button class="btn btn-outline-secondary" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </form>
-                    </div>
-                    
-                    <!-- Vista de escritorio -->
-                    <div class="desktop-view">
-                        <div class="table-responsive">
-                            <table class="table table-mesas table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>N° Mesa</th>
-                                        <th>Ubicación</th>
-                                        <th>Estado</th>
-                                        <th class="text-center">Capacidad</th>
-                                        <th class="text-center">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="mesa : ${mesas}">
-                                        <td>
-                                            <span class="mesa-numero"><span th:text="${mesa.numero}"></span></span>
-                                            <span th:if="${mesa.numero == null}" class="text-danger">(Sin número)</span>
-                                        </td>
-                                        <td>
-                                            <span th:text="${mesa.ubicacion}"></span>
-                                        </td>
-                                        <td>
-                                            <span class="mesa-estado" style="font-weight: 500;" th:text="${mesa.estado}"></span>
-                                        </td>
-                                        <td class="text-center" th:text="${mesa.capacidad} + ' personas'"></td>
-                                        <td class="text-center">
-                                            <div class="action-group">
-                                                <a th:href="@{/mesas/editar/{id}(id=${mesa.id})}"
-                                                   class="btn btn-warning action-btn"
-                                                   title="Editar">
-                                                    <i class="bi bi-pencil"></i>
-                                                    <span>Editar</span>
-                                                </a>
-                                <form th:if="${mesa.estado.name() == 'INACTIVA'}" th:action="@{/mesas/activar/{id}(id=${mesa.id})}"
-                                    method="post">
-                                                    <button type="submit"
-                                                            class="btn btn-success action-btn"
-                                                            onclick="return confirm('¿Estás seguro de activar esta mesa?')"
-                                                            title="Activar">
-                                                        <i class="bi bi-check-circle"></i>
-                                                        <span>Activar</span>
-                                                    </button>
-                                                </form>
-                                <form th:if="${mesa.estado.name() != 'INACTIVA'}" th:action="@{/mesas/desactivar/{id}(id=${mesa.id})}"
-                                    method="post">
-                                                    <button type="submit"
-                                                            class="btn btn-danger action-btn"
-                                                            onclick="return confirm('¿Estás seguro de desactivar esta mesa?')"
-                                                            title="Desactivar">
-                                                        <i class="bi bi-slash-circle"></i>
-                                                        <span>Desactivar</span>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr th:if="${#lists.isEmpty(mesas)}">
-                                        <td colspan="4" class="text-center text-muted py-4">
-                                            <i class="bi bi-table me-2"></i> No se encontraron mesas registradas
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <!-- Vista móvil -->
-                    <div class="mobile-view">
-                        <div th:each="mesa : ${mesas}" class="mobile-mesa-card">
-                            <div class="mobile-mesa-header">
-                                <h5 class="mobile-mesa-title mb-0">
-                                    <span th:text="${mesa.numero}"></span>
-                                    <span th:if="${mesa.numero == null}" class="text-danger">(Sin número)</span>
-                                </h5>
-                                <span th:text="${mesa.ubicacion}"></span>
-                                <span th:text="${mesa.estado}"></span>
-                            </div>
-                            
-                            <div class="mobile-mesa-detail">
-                                <span class="mobile-detail-label">Capacidad:</span>
-                                <span th:text="${mesa.capacidad} + ' personas'"></span>
-                            </div>
-                            
-                            <div class="action-group mt-3">
-                                <a th:href="@{/mesas/editar/{id}(id=${mesa.id})}"
-                                   class="btn btn-warning action-btn"
-                                   title="Editar">
-                                    <i class="bi bi-pencil"></i>
-                                    <span>Editar</span>
-                                </a>
-                      <form th:if="${mesa.estado.name() == 'INACTIVA'}" th:action="@{/mesas/activar/{id}(id=${mesa.id})}"
-                          method="post">
-                                    <button type="submit"
-                                            class="btn btn-success action-btn"
-                                            onclick="return confirm('¿Estás seguro de activar esta mesa?')">
-                                        <i class="bi bi-check-circle"></i>
-                                        <span>Activar</span>
-                                    </button>
-                                </form>
-                      <form th:if="${mesa.estado.name() != 'INACTIVA'}" th:action="@{/mesas/desactivar/{id}(id=${mesa.id})}"
-                          method="post">
-                                    <button type="submit"
-                                            class="btn btn-danger action-btn"
-                                            onclick="return confirm('¿Estás seguro de desactivar esta mesa?')">
-                                        <i class="bi bi-slash-circle"></i>
-                                        <span>Desactivar</span>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                        
-                        <div th:if="${#lists.isEmpty(mesas)}" class="text-center text-muted py-4">
-                            <i class="bi bi-table me-2"></i> No se encontraron mesas registradas
-                        </div>
-                    </div>
-                </div>
+      <div class="container py-4">
+        <div class="card card-shadow">
+          <div
+            class="card-header card-header-light d-flex flex-column flex-md-row justify-content-between align-items-center"
+          >
+            <h2 class="h4 mb-3 mb-md-0">
+              <i class="bi bi-table me-2"></i> Listado de Mesas
+            </h2>
+            <a th:href="@{/mesas/nuevo}" class="btn btn-primary">
+              <i class="bi bi-plus-circle me-1"></i> Nueva Mesa
+            </a>
+          </div>
+
+          <div class="card-body">
+            <!-- Alertas -->
+            <div
+              th:if="${success}"
+              class="alert alert-success alert-dismissible fade show mb-4"
+            >
+              <i class="bi bi-check-circle-fill me-2"></i>
+              <span th:text="${success}"></span>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
             </div>
+
+            <div
+              th:if="${error}"
+              class="alert alert-danger alert-dismissible fade show mb-4"
+            >
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <span th:text="${error}"></span>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
+            </div>
+
+            <!-- Buscador -->
+            <div class="mb-4 search-container">
+              <form th:action="@{/mesas}" method="get" class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Buscar mesa por número"
+                  name="q"
+                  th:value="${param.q}"
+                />
+                <button class="btn btn-outline-secondary" type="submit">
+                  <i class="bi bi-search"></i>
+                </button>
+              </form>
+            </div>
+
+            <!-- Vista de escritorio -->
+            <div class="desktop-view">
+              <div class="table-responsive">
+                <table class="table table-mesas table-hover">
+                  <thead>
+                    <tr>
+                      <th>N° Mesa</th>
+                      <th>Ubicación</th>
+                      <th>Estado</th>
+                      <th class="text-center">Capacidad</th>
+                      <th class="text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="mesa : ${mesas}">
+                      <td>
+                        <span class="mesa-numero"
+                          ><span th:text="${mesa.numero}"></span
+                        ></span>
+                        <span th:if="${mesa.numero == null}" class="text-danger"
+                          >(Sin número)</span
+                        >
+                      </td>
+                      <td>
+                        <span th:text="${mesa.ubicacion}"></span>
+                      </td>
+
+                      <td>
+                        <span
+                          class="mesa-estado"
+                          style="font-weight: 500"
+                          th:text="${mesa.estado}"
+                        ></span>
+                      </td>
+                      <td class="align-middle">
+                        <div class="d-flex align-items-center">
+                          <i class="fas fa-users text-muted me-2"></i>
+                          <span
+                            th:text="${mesa.capacidad != null ? mesa.capacidad + ' personas' : ''}"
+                          ></span>
+                        </div>
+                      </td>
+                      <td class="text-center">
+                        <div class="action-group">
+                          <a
+                            th:href="@{/mesas/editar/{id}(id=${mesa.id})}"
+                            class="btn btn-warning action-btn"
+                            title="Editar"
+                          >
+                            <i class="bi bi-pencil"></i>
+                            <span>Editar</span>
+                          </a>
+                          <form
+                            th:if="${mesa.estado.name() == 'INACTIVA'}"
+                            th:action="@{/mesas/activar/{id}(id=${mesa.id})}"
+                            method="post"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-success action-btn"
+                              onclick="return confirm('¿Estás seguro de activar esta mesa?')"
+                              title="Activar"
+                            >
+                              <i class="bi bi-check-circle"></i>
+                              <span>Activar</span>
+                            </button>
+                          </form>
+                          <form
+                            th:if="${mesa.estado.name() != 'INACTIVA'}"
+                            th:action="@{/mesas/desactivar/{id}(id=${mesa.id})}"
+                            method="post"
+                          >
+                            <button
+                              type="submit"
+                              class="btn btn-danger action-btn"
+                              onclick="return confirm('¿Estás seguro de desactivar esta mesa?')"
+                              title="Desactivar"
+                            >
+                              <i class="bi bi-slash-circle"></i>
+                              <span>Desactivar</span>
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(mesas)}">
+                      <td colspan="4" class="text-center text-muted py-4">
+                        <i class="bi bi-table me-2"></i> No se encontraron mesas
+                        registradas
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Vista móvil -->
+            <div class="mobile-view">
+              <div th:each="mesa : ${mesas}" class="mobile-mesa-card">
+                <div class="mobile-mesa-header">
+                  <h5 class="mobile-mesa-title mb-0">
+                    <span th:text="${mesa.numero}"></span>
+                    <span th:if="${mesa.numero == null}" class="text-danger"
+                      >(Sin número)</span
+                    >
+                  </h5>
+                  <span th:text="${mesa.ubicacion}"></span>
+                  <span th:text="${mesa.estado}"></span>
+                </div>
+
+                <div class="mobile-mesa-detail">
+                  <span class="mobile-detail-label">Capacidad:</span>
+                  <span
+                    th:text="${mesa.capacidad != null ? mesa.capacidad + ' personas' : ''}"
+                  ></span>
+                </div>
+
+                <div class="action-group mt-3">
+                  <a
+                    th:href="@{/mesas/editar/{id}(id=${mesa.id})}"
+                    class="btn btn-warning action-btn"
+                    title="Editar"
+                  >
+                    <i class="bi bi-pencil"></i>
+                    <span>Editar</span>
+                  </a>
+                  <form
+                    th:if="${mesa.estado.name() == 'INACTIVA'}"
+                    th:action="@{/mesas/activar/{id}(id=${mesa.id})}"
+                    method="post"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-success action-btn"
+                      onclick="return confirm('¿Estás seguro de activar esta mesa?')"
+                    >
+                      <i class="bi bi-check-circle"></i>
+                      <span>Activar</span>
+                    </button>
+                  </form>
+                  <form
+                    th:if="${mesa.estado.name() != 'INACTIVA'}"
+                    th:action="@{/mesas/desactivar/{id}(id=${mesa.id})}"
+                    method="post"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-danger action-btn"
+                      onclick="return confirm('¿Estás seguro de desactivar esta mesa?')"
+                    >
+                      <i class="bi bi-slash-circle"></i>
+                      <span>Desactivar</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <div
+                th:if="${#lists.isEmpty(mesas)}"
+                class="text-center text-muted py-4"
+              >
+                <i class="bi bi-table me-2"></i> No se encontraron mesas
+                registradas
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-    
+
     <footer th:replace="~{fragments/footer :: footer}"></footer>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar tooltips si es necesario
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
+      document.addEventListener("DOMContentLoaded", function () {
+        // Inicializar tooltips si es necesario
+        const tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
         });
+      });
     </script>
-</body>
+  </body>
 </html>

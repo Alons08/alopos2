@@ -26,7 +26,6 @@ public class Mesa {
     @Column(nullable = false)
     private Integer numero;
     
-    @NotNull(message = "La capacidad es requerida")
     @Min(value = 1, message = "La capacidad debe ser mayor a 0")
     private Integer capacidad;
     
