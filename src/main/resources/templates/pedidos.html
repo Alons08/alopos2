@@ -240,7 +240,7 @@
                                             <td data-label="Acciones">
                                                 <div class="d-flex gap-2">
                                                     <a th:href="@{/pedidos/{id}/detalle(id=${pedido.id})}" 
-                                                       class="action-btn btn btn-outline-primary" 
+                                                       class="action-btn btn btn-primary" 
                                                        title="Ver Detalle"
                                                        data-bs-toggle="tooltip">
                                                         <i class="bi bi-eye"></i>
@@ -248,14 +248,14 @@
                                                     
                                                     <a th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}"
                                                        th:href="@{/pedidos/{id}/editar(id=${pedido.id})}"
-                                                       class="action-btn btn btn-outline-warning"
+                                                       class="action-btn btn btn-warning"
                                                        title="Editar Pedido"
                                                        data-bs-toggle="tooltip">
                                                         <i class="bi bi-pencil-square"></i>
                                                     </a>
                                                     
                                                     <div class="dropdown">
-                                                        <button class="action-btn btn btn-outline-secondary dropdown-toggle" 
+                                                        <button class="action-btn btn btn-secondary dropdown-toggle" 
                                                                 type="button" 
                                                                 id="dropdownMenuButton${pedido.id}"
                                                                 data-bs-toggle="dropdown"
