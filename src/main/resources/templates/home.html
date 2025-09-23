@@ -149,6 +149,18 @@
             border-color: var(--danger-color);
         }
         
+        .btn-purple {
+            background-color: #713aed !important;
+            border-color: #713aed !important;
+            color: white !important;
+        }
+        
+        .btn-purple:hover {
+            background-color: #5c2fb7 !important;
+            border-color: #5c2fb7 !important;
+            color: white !important;
+        }
+        
         .welcome-banner {
             background-color: white;
             border-radius: 8px;
@@ -161,7 +173,7 @@
             font-weight: 600;
             color: var(--secondary-color);
             margin-bottom: 0;
-            font-size: 1.5rem;
+            font-size: 1.7rem;
         }
         
         .date-badge {
@@ -208,7 +220,7 @@
         
         @media (max-width: 768px) {
             .form-container {
-                padding: 0 10px;
+                padding: 0 15px;
             }
             
             .card-body {
@@ -229,7 +241,7 @@
             }
             
             .page-title {
-                font-size: 1.3rem;
+                font-size: 1.5rem;
             }
             
             .date-badge {
@@ -251,6 +263,10 @@
         }
         
         @media (max-width: 576px) {
+            .form-container {
+                padding: 0 12px;
+            }
+            
             .main-content {
                 margin-top: 30px;
             }
@@ -283,7 +299,7 @@
         
         @media (max-width: 400px) {
             .form-container {
-                padding: 0 5px;
+                padding: 0 12px;
             }
             
             .card-body {
@@ -411,12 +427,12 @@
                 
                 <!-- Reportes Card -->
                 <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card" style="background-color: #f3f0ff; border-top: 4px solid #8b5cf6;">
+                    <div class="card" style="background-color: #f3f0ff; border-top: 4px solid #713aed;">
                         <div class="card-body text-center">
-                            <i class="bi bi-bar-chart-fill card-icon" style="color: #8b5cf6;"></i>
+                            <i class="bi bi-bar-chart-fill card-icon" style="color: #713aed;"></i>
                             <h5 class="card-title">Reporte Diario</h5>
                             <p class="card-text">Visualizar ventas de hoy y días anteriores</p>
-                            <a th:href="@{/reportes/diario}" class="btn btn-custom" style="background-color: #8b5cf6; border-color: #8b5cf6; color: white;">
+                            <a th:href="@{/reportes/diario}" class="btn btn-custom btn-purple">
                                 <i class="bi bi-graph-up me-1"></i>Ver Reporte Diario
                             </a>
                         </div>

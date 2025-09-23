@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
-            --primary-color: #4361ee;
+            --primary-color: #dda742;
             --secondary-color: #34495e;
             --accent-color: #3498db;
             --success-color: #27ae60;
@@ -98,7 +98,7 @@
         }
         
         .btn-submit:hover {
-            background-color: #3a56d4;
+            background-color: #cb8b27;
         }
         
         .btn-cancel {
@@ -120,6 +120,18 @@
             width: 1.1em;
             height: 1.1em;
             margin-top: 0.1em;
+            border: 2px solid #dee2e6 !important;
+            border-radius: 4px !important;
+        }
+        
+        .form-check-input:focus {
+            border-color: var(--accent-color) !important;
+            box-shadow: 0 0 0 0.25rem rgba(52, 144, 220, 0.25) !important;
+        }
+        
+        .form-check-input:checked {
+            background-color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
         }
         
         .form-check-label {

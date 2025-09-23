@@ -262,14 +262,14 @@
                         <div class="form-section">
                             <label for="nombre" class="form-label">Nombre Completo</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" 
-                                   th:value="${usuarioForm.nombre}" required>
+                                   th:value="${usuarioForm.nombre}" placeholder="Ej. Jose Hurtado Rivas" required>
                         </div>
                         
                         <!-- Username -->
                         <div class="form-section">
-                            <label for="username" class="form-label">Nombre de usuario</label>
+                            <label for="username" class="form-label">Nombre de usuario (sin espacios)</label>
                             <input type="text" class="form-control" id="username" name="username" 
-                                   th:value="${usuarioForm.username}" required>
+                                   th:value="${usuarioForm.username}" placeholder="Ej. Josesito" required>
                         </div>
                         
                         <!-- Contraseña -->
@@ -277,7 +277,7 @@
                             <label for="password" class="form-label">Contraseña</label>
                             <div class="password-container">
                                 <input type="password" class="form-control" id="password" name="password" 
-                                       minlength="4" required>
+                                       minlength="4" placeholder="Ej. josefo08" required>
                                 <span class="password-toggle" id="passwordToggle">
                                     <i class="bi bi-eye"></i>
                                 </span>
