@@ -18,6 +18,14 @@
         
         body {
             background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            flex: 1;
+            padding-bottom: 60px;
         }
         
         .card-header {
@@ -118,6 +126,10 @@
         }
         
         @media (max-width: 576px) {
+            .container {
+                padding-bottom: 60px;
+            }
+            
             .card-body {
                 padding: 1rem;
             }
@@ -136,7 +148,7 @@
 <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
     
-    <div class="container mt-4 mb-5">
+    <div class="container mt-4">
         <!-- Encabezado con título y botón de exportación -->
         <div class="row mb-4">
             <div class="col-md-8">
