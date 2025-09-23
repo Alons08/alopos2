@@ -332,9 +332,9 @@
                                     <table class="product-table" id="productosTable">
                                         <thead>
                                             <tr>
-                                                <th>Producto *</th>
-                                                <th style="width: 100px;">Cantidad *</th>
-                                                <th style="width: 100px;" class="text-end">P. Unitario</th>
+                                                <th>Producto</th>
+                                                <th style="width: 100px;">Cantidad</th>
+                                                <th style="width: 100px;">P. Unitario</th>
                                                 <th style="width: 100px;" class="text-end">Subtotal</th>
                                                 <th style="width: 50px;"></th>
                                             </tr>
@@ -360,7 +360,7 @@
                                                 <td>
                                                     <input type="number" min="1" class="form-control cantidad" th:name="cantidades[]" th:field="*{detalles[__${iterStat.index}__].cantidad}" required>
                                                 </td>
-                                                <td class="precio-unitario text-end" th:text="'S/' + ${#numbers.formatDecimal(detalle.producto.precio, 1, 2)}"></td>
+                                                <td class="precio-unitario" th:text="'S/' + ${#numbers.formatDecimal(detalle.producto.precio, 1, 2)}"></td>
                                                 <td class="subtotal text-end" th:text="'S/' + ${#numbers.formatDecimal(detalle.subtotal, 1, 2)}"></td>
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-sm btn-outline-danger btn-action eliminar-producto">
@@ -387,7 +387,7 @@
                                                 <td>
                                                     <input type="number" min="1" class="form-control cantidad" value="1" required disabled>
                                                 </td>
-                                                <td class="precio-unitario text-end">S/0.00</td>
+                                                <td class="precio-unitario">S/0.00</td>
                                                 <td class="subtotal text-end">S/0.00</td>
                                                 <td class="text-center">
                                                     <button type="button" class="btn btn-sm btn-outline-danger btn-action eliminar-producto" disabled>
