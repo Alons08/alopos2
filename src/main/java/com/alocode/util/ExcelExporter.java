@@ -72,7 +72,7 @@ public class ExcelExporter {
                 
                 // Cabecera de pedidos
                 String[] pedidosHeaders = {
-                    "ID Pedido", "Mesa", "Usuario", "Total", "Recargo", "Fecha Pagado"
+                    "ID Pedido", "Mesa", "Usuario", "Recargo", "Total", "Fecha Pagado"
                 };
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 
@@ -85,8 +85,8 @@ public class ExcelExporter {
                     addCell(row, colIdx++, p.getId(), centeredStyle);
                     addCell(row, colIdx++, p.getMesa() != null ? String.valueOf(p.getMesa().getNumero()) : "", centeredStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);
-                    addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getRecargo(), centeredCurrencyStyle);
+                    addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getFechaPagado() != null ? p.getFechaPagado() : null, dateStyle);
 
                     // Detalles del pedido
@@ -179,7 +179,7 @@ public class ExcelExporter {
                 rowIdx = addSeparatorRow(sheet, rowIdx, 7, separatorStyle);
 
                 // Cabecera de pedidos
-                String[] pedidosHeaders = {"ID Pedido", "Mesa", "Usuario", "Total", "Recargo", "Fecha Pagado"};
+                String[] pedidosHeaders = {"ID Pedido", "Mesa", "Usuario", "Recargo", "Total", "Fecha Pagado"};
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 boolean firstPedido = true;
                 for (Pedido p : semanal.getPedidos()) {
@@ -190,8 +190,8 @@ public class ExcelExporter {
                     addCell(row, colIdx++, p.getId(), centeredStyle);
                     addCell(row, colIdx++, p.getMesa() != null ? String.valueOf(p.getMesa().getNumero()) : "", centeredStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);
-                    addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getRecargo(), centeredCurrencyStyle);
+                    addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getFechaPagado() != null ? p.getFechaPagado() : null, dateStyle);
                 }
 
@@ -252,15 +252,15 @@ public class ExcelExporter {
                 rowIdx = addSeparatorRow(sheet, rowIdx, 5, separatorStyle);
 
                 // Cabecera de pedidos
-                String[] pedidosHeaders = {"ID Pedido", "Fecha Pagado", "Total ventas", "Total recargos", "Usuario"};
+                String[] pedidosHeaders = {"ID Pedido", "Fecha Pagado", "Recargo", "Total", "Usuario"};
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 for (Pedido p : mensual.getPedidos()) {
                     Row row = sheet.createRow(rowIdx++);
                     int colIdx = 0;
                     addCell(row, colIdx++, p.getId(), centeredStyle);
                     addCell(row, colIdx++, p.getFechaPagado(), dateStyle);
-                    addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getRecargo(), centeredCurrencyStyle);
+                    addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);
                 }
 
