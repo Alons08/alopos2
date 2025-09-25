@@ -137,7 +137,8 @@
         }
         
         .products-table-compact {
-            width: 100%;
+            width: 100% !important;
+            min-width: 100% !important;
             border-collapse: collapse;
             background: #ffffff;
             border-radius: 8px;
@@ -146,6 +147,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             border: 1px solid #e9ecef;
             table-layout: fixed; /* Forzar que use todo el ancho disponible */
+            display: table !important;
         }
         
         .products-table-compact th {
@@ -158,25 +160,29 @@
             font-size: 0.75rem;
         }
         
-        /* Definir anchos específicos para cada columna */
+        /* Definir anchos específicos para cada columna - deben sumar 100% */
         .products-table-compact th:nth-child(1),
         .products-table-compact td:nth-child(1) {
-            width: 40%; /* Producto - el más ancho */
+            width: 40% !important; /* Producto - el más ancho */
+            min-width: 40% !important;
         }
         
         .products-table-compact th:nth-child(2),
         .products-table-compact td:nth-child(2) {
-            width: 15%; /* Cantidad - compacto */
+            width: 15% !important; /* Cantidad - compacto */
+            min-width: 15% !important;
         }
         
         .products-table-compact th:nth-child(3),
         .products-table-compact td:nth-child(3) {
-            width: 22%; /* Precio unitario */
+            width: 22.5% !important; /* Precio unitario */
+            min-width: 22.5% !important;
         }
         
         .products-table-compact th:nth-child(4),
         .products-table-compact td:nth-child(4) {
-            width: 23%; /* Subtotal */
+            width: 22.5% !important; /* Subtotal */
+            min-width: 22.5% !important;
         }
         
         .products-table-compact td {
@@ -194,8 +200,18 @@
         
         /* Asegurar que la tabla siempre use todo el ancho */
         .table-responsive {
-            width: 100%;
+            width: 100% !important;
+            min-width: 100% !important;
             min-height: 0.01%; /* Hack para IE */
+            display: block !important;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Forzar que el contenedor de la sección también use todo el ancho */
+        .info-section {
+            width: 100% !important;
+            box-sizing: border-box;
         }
         
         /* Permitir que el nombre del producto se ajuste si es muy largo */
@@ -395,28 +411,44 @@
             }
             
             .products-table-compact {
-                font-size: 0.75rem;
+                font-size: 0.75rem !important;
+                width: 100% !important;
+                min-width: 100% !important;
             }
             
-            /* Ajustar proporciones en móviles */
+            /* Asegurar que la tabla ocupe todo el ancho en móviles */
+            .table-responsive {
+                width: 100% !important;
+                overflow-x: auto !important;
+            }
+            
+            .info-section {
+                width: 100% !important;
+            }
+            
+            /* Ajustar proporciones en móviles - deben sumar 100% */
             .products-table-compact th:nth-child(1),
             .products-table-compact td:nth-child(1) {
-                width: 35%; /* Producto un poco menos ancho en móvil */
+                width: 35% !important; /* Producto un poco menos ancho en móvil */
+                min-width: 35% !important;
             }
             
             .products-table-compact th:nth-child(2),
             .products-table-compact td:nth-child(2) {
-                width: 12%; /* Cantidad más compacto */
+                width: 12% !important; /* Cantidad más compacto */
+                min-width: 12% !important;
             }
             
             .products-table-compact th:nth-child(3),
             .products-table-compact td:nth-child(3) {
-                width: 26%; /* Precio unitario más espacio */
+                width: 26.5% !important; /* Precio unitario más espacio */
+                min-width: 26.5% !important;
             }
             
             .products-table-compact th:nth-child(4),
             .products-table-compact td:nth-child(4) {
-                width: 27%; /* Subtotal más espacio para números largos */
+                width: 26.5% !important; /* Subtotal más espacio para números largos */
+                min-width: 26.5% !important;
             }
             
             .products-table-compact th,
@@ -700,12 +732,12 @@
                         <span class="info-value" th:text="${pedido.mesa != null ? 'Mesa #' + pedido.mesa.numero : 'N/A'}"></span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Total:</span>
-                        <span class="info-value" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></span>
-                    </div>
-                    <div class="info-row">
                         <span class="info-label">Recargo:</span>
                         <span class="info-value" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.recargo, 1, 2)}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Total:</span>
+                        <span class="info-value" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">Fecha:</span>
@@ -728,8 +760,8 @@
                     <i class="bi bi-cart-check"></i>
                     Productos del Pedido
                 </div>
-                <div class="table-responsive" style="width: 100%; overflow-x: auto;">
-                    <table class="products-table-compact">
+                <div class="table-responsive" style="width: 100% !important; min-width: 100% !important; overflow-x: auto; display: block;">
+                    <table class="products-table-compact" style="width: 100% !important; min-width: 100% !important;">
                         <thead>
                             <tr>
                                 <th>Producto</th>
