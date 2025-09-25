@@ -189,6 +189,11 @@
             padding: 0.6rem 0.5rem;
             border-bottom: 1px solid #f1f3f4;
             color: var(--text-dark);
+            min-height: 3rem; /* Altura mínima para acomodar texto en múltiples líneas */
+        }
+        
+        .products-table-compact tr {
+            min-height: 3rem; /* Altura mínima para las filas */
         }
         
         /* Asegurar que los precios no se rompan */
@@ -216,9 +221,19 @@
         
         /* Permitir que el nombre del producto se ajuste si es muy largo */
         .products-table-compact td:nth-child(1) {
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            max-width: 0; /* Permite que funcione el word-wrap con table-layout: fixed */
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            word-break: break-word !important;
+            hyphens: auto !important;
+            max-width: 0 !important; /* Permite que funcione el word-wrap con table-layout: fixed */
+            white-space: normal !important; /* Permitir salto de línea */
+            line-height: 1.3 !important;
+            vertical-align: top !important; /* Alinear al top para mejor presentación */
+        }
+        
+        /* Asegurar que todas las celdas tengan alineación vertical superior */
+        .products-table-compact td {
+            vertical-align: top !important;
         }
         
         .products-table-compact tfoot td {
@@ -454,6 +469,20 @@
             .products-table-compact th,
             .products-table-compact td {
                 padding: 0.5rem 0.3rem;
+                vertical-align: top !important;
+            }
+            
+            /* Estilos específicos para nombres de producto largos en móvil */
+            .products-table-compact td:nth-child(1) {
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                word-break: break-word !important;
+                hyphens: auto !important;
+                white-space: normal !important;
+                line-height: 1.3 !important; /* Mantener línea espaciada para legibilidad */
+                max-width: 0 !important;
+                padding: 0.5rem 0.2rem !important; /* Menos padding horizontal */
+                /* NO reducir font-size - mantener tamaño original */
             }
             
             .section-title {
@@ -491,6 +520,27 @@
                 padding: 0.3rem 0.8rem;
             }
             
+            /* Mejor manejo de texto largo en móviles pequeños */
+            .products-table-compact td:nth-child(1) {
+                /* NO cambiar font-size - mantener tamaño original */
+                line-height: 1.3 !important;
+                padding: 0.4rem 0.15rem !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                word-break: break-word !important;
+                hyphens: auto !important;
+                white-space: normal !important;
+                max-width: 0 !important;
+            }
+            
+            /* Ajustar padding pero mantener font-size original */
+            .products-table-compact th,
+            .products-table-compact td {
+                padding: 0.4rem 0.2rem !important;
+                vertical-align: top !important;
+                /* Mantener font-size original de la tabla */
+            }
+            
             .btn-compact {
                 padding: 0.5rem 0.7rem;
                 font-size: 0.75rem;
@@ -514,16 +564,36 @@
         
         @media (max-width: 400px) {
             .products-table-compact {
-                display: block;
+                display: table !important; /* Mantener como tabla para mejor control */
                 overflow-x: auto;
-                white-space: nowrap;
+                /* Mantener font-size original - NO reducir */
             }
             
-            /* Asegurar que el total no se rompa en móviles pequeños */
-            .products-table-compact td,
-            .products-table-compact th {
-                white-space: nowrap;
+            /* Permitir que solo las columnas de precios no se rompan */
+            .products-table-compact th:nth-child(2),
+            .products-table-compact td:nth-child(2),
+            .products-table-compact th:nth-child(3),
+            .products-table-compact td:nth-child(3),
+            .products-table-compact th:nth-child(4),
+            .products-table-compact td:nth-child(4) {
+                white-space: nowrap !important;
                 min-width: fit-content;
+            }
+            
+            /* Permitir que el nombre del producto se ajuste completamente */
+            .products-table-compact th:nth-child(1),
+            .products-table-compact td:nth-child(1) {
+                white-space: normal !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                word-break: break-word !important;
+                hyphens: auto !important;
+                line-height: 1.3 !important;
+                /* Mantener font-size original - NO reducir */
+                padding: 0.3rem 0.1rem !important;
+                max-width: 0 !important;
+                width: 30% !important; /* Reducir un poco más el ancho en pantallas muy pequeñas */
+                min-width: 30% !important;
             }
             
             /* Columnas de precio más anchas para números grandes */
@@ -532,8 +602,8 @@
             .products-table-compact th:nth-child(4),
             .products-table-compact td:nth-child(4) {
                 min-width: 70px;
-                padding-left: 0.3rem;
-                padding-right: 0.3rem;
+                padding-left: 0.2rem !important;
+                padding-right: 0.2rem !important;
             }
             
             .info-row {

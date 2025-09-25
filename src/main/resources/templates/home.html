@@ -140,8 +140,20 @@
         }
         
         .btn-warning {
-            background-color: var(--warning-color);
-            border-color: var(--warning-color);
+            background-color: #ffc107; /* Color más claro inicialmente */
+            border-color: #ffc107;
+            color: #000; /* Texto negro para mejor contraste */
+        }
+        
+        .btn-warning:hover {
+            background-color: #e0a800; /* Tonalidad más oscura en hover */
+            border-color: #d39e00;
+            color: #000;
+        }
+        
+        .monto-caja {
+            color: #e29400 !important; /* Tonalidad dorada intermedia - más legible */
+            font-weight: 600;
         }
         
         .btn-danger {
@@ -407,7 +419,7 @@
                             <i class="bi bi-cash-coin card-icon"></i>
                             <h5 class="card-title">Caja Abierta</h5>
                             <p class="card-text mb-1">Monto inicial:</p>
-                            <h6 class="text-warning mb-3">S/ <span th:text="${#numbers.formatDecimal(cajaAbierta.montoApertura, 1, 2)}"></span></h6>
+                            <h6 class="monto-caja mb-3">S/ <span th:text="${#numbers.formatDecimal(cajaAbierta.montoApertura, 1, 2)}"></span></h6>
                             <a th:href="@{/caja/cerrar}" class="btn btn-warning btn-custom">
                                 <i class="bi bi-lock me-1"></i>Cerrar Caja
                             </a>
