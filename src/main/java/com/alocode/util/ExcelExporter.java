@@ -36,13 +36,14 @@ public class ExcelExporter {
                     fechaReporte = new SimpleDateFormat("dd-MM-yyyy").format(diario.getFecha());
                 }
                 // Configurar anchos de columnas (en unidades de 1/256 de ancho de carácter)
-                sheet.setColumnWidth(0, 16*256);  // Columna A
-                sheet.setColumnWidth(1, 20*256);  // Columna B
-                sheet.setColumnWidth(2, 20*256);  // Columna C
-                sheet.setColumnWidth(3, 15*256);  // Columna D
-                sheet.setColumnWidth(4, 15*256);  // Columna E
-                sheet.setColumnWidth(5, 25*256);  // Columna F
-                sheet.setColumnWidth(6, 20*256);  // Columna G
+                sheet.setColumnWidth(0, 16*256);  // Columna A - ID Pedido
+                sheet.setColumnWidth(1, 20*256);  // Columna B - Mesa
+                sheet.setColumnWidth(2, 20*256);  // Columna C - Usuario
+                sheet.setColumnWidth(3, 15*256);  // Columna D - Venta
+                sheet.setColumnWidth(4, 15*256);  // Columna E - Recargo
+                sheet.setColumnWidth(5, 15*256);  // Columna F - Total
+                sheet.setColumnWidth(6, 25*256);  // Columna G - Fecha Pagado
+                sheet.setColumnWidth(7, 20*256);  // Columna H
                 
                 int rowIdx = 0;
                 
@@ -52,7 +53,7 @@ public class ExcelExporter {
                 Cell titleCell = titleRow.createCell(0);
                 titleCell.setCellValue("REPORTE DIARIO");
                 titleCell.setCellStyle(titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
                 
                 // Información general
                 rowIdx = addGeneralInfo(sheet, rowIdx, 
@@ -68,11 +69,11 @@ public class ExcelExporter {
                     headerStyle, centeredStyle, centeredCurrencyStyle, dateStyle);
                 
                 // Espacio antes de la tabla de pedidos
-                rowIdx = addSeparatorRow(sheet, rowIdx, 6, separatorStyle);
+                rowIdx = addSeparatorRow(sheet, rowIdx, 7, separatorStyle);
                 
                 // Cabecera de pedidos
                 String[] pedidosHeaders = {
-                    "ID Pedido", "Mesa", "Usuario", "Recargo", "Total", "Fecha Pagado"
+                    "ID Pedido", "Mesa", "Usuario", "Venta", "Recargo", "Total", "Fecha Pagado"
                 };
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 
@@ -85,6 +86,9 @@ public class ExcelExporter {
                     addCell(row, colIdx++, p.getId(), centeredStyle);
                     addCell(row, colIdx++, p.getMesa() != null ? String.valueOf(p.getMesa().getNumero()) : "", centeredStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);
+                    // Calcular venta sin recargo
+                    double ventaSinRecargo = p.getTotal() - p.getRecargo();
+                    addCell(row, colIdx++, ventaSinRecargo, centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getRecargo(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getFechaPagado() != null ? p.getFechaPagado() : null, dateStyle);
@@ -116,19 +120,19 @@ public class ExcelExporter {
                     }
 
                     // Espacio en blanco después de los detalles del pedido (o después del pedido si no hay detalles)
-                    rowIdx = addSeparatorRow(sheet, rowIdx, 6, separatorStyle);
+                    rowIdx = addSeparatorRow(sheet, rowIdx, 7, separatorStyle);
                 }
                 
             } else if (reporte instanceof ReporteService.ReporteSemanal semanal) {
                 Sheet sheet = workbook.createSheet("Reporte Semanal");
-                // Configurar anchos de columnas igual que el diario
-                sheet.setColumnWidth(0, 20*256);  // Fecha y etiquetas generales (más ancho)
-                sheet.setColumnWidth(1, 20*256);  // Monto Apertura
-                sheet.setColumnWidth(2, 20*256);  // Monto Cierre
-                sheet.setColumnWidth(3, 18*256);  // Total Ventas
-                sheet.setColumnWidth(4, 18*256);  // Total Pedidos
-                sheet.setColumnWidth(5, 18*256);  // Estado Caja
-                sheet.setColumnWidth(6, 20*256);  // Columna G (igual que en diario, para observaciones o fechas largas)
+                // Configurar anchos de columnas
+                sheet.setColumnWidth(0, 16*256);  // ID Pedido
+                sheet.setColumnWidth(1, 20*256);  // Mesa
+                sheet.setColumnWidth(2, 20*256);  // Usuario
+                sheet.setColumnWidth(3, 15*256);  // Venta
+                sheet.setColumnWidth(4, 15*256);  // Recargo
+                sheet.setColumnWidth(5, 15*256);  // Total
+                sheet.setColumnWidth(6, 25*256);  // Fecha Pagado
 
                 int rowIdx = 0;
                 // Título del reporte
@@ -137,7 +141,7 @@ public class ExcelExporter {
                 Cell titleCell = titleRow.createCell(0);
                 titleCell.setCellValue("REPORTE SEMANAL");
                 titleCell.setCellStyle(titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 
                 // Información general (igual que diario)
                 rowIdx = addGeneralInfo(sheet, rowIdx,
@@ -146,7 +150,7 @@ public class ExcelExporter {
                     headerStyle, centeredStyle, centeredCurrencyStyle, dateStyle);
 
                 // Espacio antes de la tabla de resumen por día
-                rowIdx = addSeparatorRow(sheet, rowIdx, 6, separatorStyle);
+                rowIdx = addSeparatorRow(sheet, rowIdx, 7, separatorStyle);
 
                 // Cabecera resumen por día
                 String[] headers = {"Fecha", "Monto Apertura", "Monto Cierre", "Total General", "Total Pedidos", "Estado Caja"};
@@ -159,10 +163,10 @@ public class ExcelExporter {
                     addCell(row, colIdx++, caja.getFecha(), dateStyle);
                     addCell(row, colIdx++, caja.getMontoApertura(), centeredCurrencyStyle);
                     addCell(row, colIdx++, caja.getMontoCierre(), centeredCurrencyStyle);
-                    // Calcular total ventas del día (ventas + recargos)
+                    // Calcular total ventas del día (el total ya incluye recargos)
                     double totalVentasDia = semanal.getPedidos().stream()
                         .filter(p -> p.getCaja() != null && p.getCaja().getId().equals(caja.getId()))
-                        .mapToDouble(p -> p.getTotal() + p.getRecargo())
+                        .mapToDouble(p -> p.getTotal())
                         .sum();
                     addCell(row, colIdx++, totalVentasDia, centeredCurrencyStyle);
                     // Total pedidos del día
@@ -179,9 +183,8 @@ public class ExcelExporter {
                 rowIdx = addSeparatorRow(sheet, rowIdx, 7, separatorStyle);
 
                 // Cabecera de pedidos
-                String[] pedidosHeaders = {"ID Pedido", "Mesa", "Usuario", "Recargo", "Total", "Fecha Pagado"};
+                String[] pedidosHeaders = {"ID Pedido", "Mesa", "Usuario", "Venta", "Recargo", "Total", "Fecha Pagado"};
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
-                boolean firstPedido = true;
                 for (Pedido p : semanal.getPedidos()) {
                     // No agregar separador entre pedidos en el reporte semanal
                     Row row = sheet.createRow(rowIdx++);
@@ -190,6 +193,9 @@ public class ExcelExporter {
                     addCell(row, colIdx++, p.getId(), centeredStyle);
                     addCell(row, colIdx++, p.getMesa() != null ? String.valueOf(p.getMesa().getNumero()) : "", centeredStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);
+                    // Calcular venta sin recargo
+                    double ventaSinRecargo = p.getTotal() - p.getRecargo();
+                    addCell(row, colIdx++, ventaSinRecargo, centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getRecargo(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getFechaPagado() != null ? p.getFechaPagado() : null, dateStyle);
@@ -207,11 +213,12 @@ public class ExcelExporter {
             } else if (reporte instanceof ReporteService.ReporteMensual mensual) {
                 Sheet sheet = workbook.createSheet("Reporte Mensual");
                 // Anchos de columnas
-                sheet.setColumnWidth(0, 20*256); // Semana/Fecha
-                sheet.setColumnWidth(1, 20*256); // Periodo
-                sheet.setColumnWidth(2, 18*256); // Total Ventas
-                sheet.setColumnWidth(3, 18*256); // N° Pedidos
-                sheet.setColumnWidth(4, 20*256); // Observaciones/Acciones
+                sheet.setColumnWidth(0, 16*256); // ID Pedido
+                sheet.setColumnWidth(1, 25*256); // Fecha Pagado
+                sheet.setColumnWidth(2, 15*256); // Venta
+                sheet.setColumnWidth(3, 15*256); // Recargo
+                sheet.setColumnWidth(4, 15*256); // Total
+                sheet.setColumnWidth(5, 20*256); // Usuario
 
                 int rowIdx = 0;
                 // Título
@@ -220,7 +227,7 @@ public class ExcelExporter {
                 Cell titleCell = titleRow.createCell(0);
                 titleCell.setCellValue("REPORTE MENSUAL");
                 titleCell.setCellStyle(titleStyle);
-                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 4));
+                sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
 
                 // Info general
                 rowIdx = addGeneralInfo(sheet, rowIdx,
@@ -229,7 +236,7 @@ public class ExcelExporter {
                     headerStyle, centeredStyle, centeredCurrencyStyle, dateStyle);
 
                 // Espacio antes de la tabla de resumen semanal
-                rowIdx = addSeparatorRow(sheet, rowIdx, 5, separatorStyle);
+                rowIdx = addSeparatorRow(sheet, rowIdx, 6, separatorStyle);
 
                 // Cabecera resumen semanal
                 String[] headers = {"Semana", "Periodo", "Total General", "N° Pedidos"};
@@ -249,16 +256,19 @@ public class ExcelExporter {
                 }
 
                 // Espacio antes de la tabla de pedidos
-                rowIdx = addSeparatorRow(sheet, rowIdx, 5, separatorStyle);
+                rowIdx = addSeparatorRow(sheet, rowIdx, 6, separatorStyle);
 
                 // Cabecera de pedidos
-                String[] pedidosHeaders = {"ID Pedido", "Fecha Pagado", "Recargo", "Total", "Usuario"};
+                String[] pedidosHeaders = {"ID Pedido", "Fecha Pagado", "Venta", "Recargo", "Total", "Usuario"};
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 for (Pedido p : mensual.getPedidos()) {
                     Row row = sheet.createRow(rowIdx++);
                     int colIdx = 0;
                     addCell(row, colIdx++, p.getId(), centeredStyle);
                     addCell(row, colIdx++, p.getFechaPagado(), dateStyle);
+                    // Calcular venta sin recargo
+                    double ventaSinRecargo = p.getTotal() - p.getRecargo();
+                    addCell(row, colIdx++, ventaSinRecargo, centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getRecargo(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getTotal(), centeredCurrencyStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);

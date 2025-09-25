@@ -335,12 +335,7 @@
                             <tr th:each="caja : ${reporte.cajas}">
                                 <td th:text="${#dates.format(caja.fecha, 'EEEE, dd/MM/yyyy')}"></td>
                                 <td>
-                                    <span th:if="${caja.montoCierre == null}">
-                                        <span class="badge-status bg-secondary">Caja abierta</span>
-                                    </span>
-                                    <span th:if="${caja.montoCierre != null}">
-                                        S/ <span th:text="${#numbers.formatDecimal((caja.montoCierre ?: 0) - (caja.montoApertura ?: 0), 1, 2)}"></span>
-                                    </span>
+                                    S/ <span th:text="${#numbers.formatDecimal(#aggregates.sum(reporte.pedidos.?[caja.id == #this.caja.id].![total]), 1, 2)}"></span>
                                 </td>
                                 <td th:text="${reporte.pedidos.?[caja.id == #this.caja.id].size()}"></td>
                                 <td>
