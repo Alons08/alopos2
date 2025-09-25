@@ -132,6 +132,26 @@
                 margin-bottom: 0;
             }
             
+            /* Prevenir scroll automático en dropdowns móviles */
+            .pedidos-dropdown-menu {
+                position: absolute !important;
+                z-index: 1055 !important;
+                right: 0 !important;
+                left: auto !important;
+                max-width: 250px;
+            }
+            
+            /* Asegurar que los dropdowns no causen scroll */
+            .pedidos-main-content .dropdown.show {
+                position: static;
+            }
+            
+            /* Prevenir focus automático que causa scroll */
+            .pedidos-dropdown-item:focus {
+                outline: none;
+                scroll-behavior: auto;
+            }
+            
             .pedidos-table {
                 width: 100%;
                 margin-bottom: 1rem;
@@ -224,6 +244,12 @@
             overflow-y: auto;
             position: absolute !important;
             z-index: 1050 !important;
+        }
+        
+        /* Forzar alineación hacia la derecha (end) en todos los casos */
+        .pedidos-dropdown-menu.dropdown-menu-end {
+            right: 0 !important;
+            left: auto !important;
         }
         
         /* Asegurar que los dropdowns tengan suficiente espacio */
@@ -403,8 +429,9 @@
             // Dropdowns - solo para elementos dentro del main de pedidos
             const dropdownElementList = [].slice.call(document.querySelectorAll('.pedidos-main-content .dropdown-toggle'));
             dropdownElementList.map(function (dropdownToggleEl) {
-                return new bootstrap.Dropdown(dropdownToggleEl, {
+                const dropdown = new bootstrap.Dropdown(dropdownToggleEl, {
                     boundary: 'viewport',
+                    autoClose: true,
                     popperConfig: {
                         placement: 'bottom-end',
                         modifiers: [
@@ -412,20 +439,72 @@
                                 name: 'flip',
                                 enabled: true,
                                 options: {
-                                    allowedAutoPlacements: ['bottom-end', 'top-end', 'bottom-start', 'top-start'],
-                                    fallbackPlacements: ['bottom', 'top']
+                                    allowedAutoPlacements: ['bottom-end', 'top-end'],
+                                    fallbackPlacements: ['top-end', 'bottom-end']
                                 }
                             },
                             {
                                 name: 'preventOverflow',
                                 enabled: true,
                                 options: {
-                                    boundary: 'viewport'
+                                    boundary: 'viewport',
+                                    altAxis: true,
+                                    mainAxis: false
+                                }
+                            },
+                            {
+                                name: 'offset',
+                                options: {
+                                    offset: [0, 8]
                                 }
                             }
                         ]
                     }
                 });
+
+                // Prevenir scroll automático en móviles
+                dropdownToggleEl.addEventListener('shown.bs.dropdown', function(e) {
+                    // Prevenir que el navegador haga scroll automático
+                    e.preventDefault();
+                    
+                    // En móviles, asegurar que no hay scroll automático
+                    if (window.innerWidth <= 768) {
+                        const currentScroll = window.pageYOffset;
+                        setTimeout(() => {
+                            window.scrollTo(0, currentScroll);
+                        }, 0);
+                    }
+                });
+
+                return dropdown;
+            });
+
+            // Prevenir scroll automático en todos los elementos del dropdown
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.pedidos-dropdown-item')) {
+                    const currentScroll = window.pageYOffset;
+                    
+                    // Mantener la posición de scroll actual
+                    setTimeout(() => {
+                        if (window.innerWidth <= 768) {
+                            window.scrollTo(0, currentScroll);
+                        }
+                    }, 10);
+                }
+            });
+
+            // Prevenir scroll al hacer focus en elementos del dropdown
+            document.addEventListener('focusin', function(e) {
+                if (e.target.closest('.pedidos-dropdown-menu')) {
+                    e.preventDefault();
+                    const currentScroll = window.pageYOffset;
+                    
+                    setTimeout(() => {
+                        if (window.innerWidth <= 768) {
+                            window.scrollTo(0, currentScroll);
+                        }
+                    }, 0);
+                }
             });
         });
     </script>
