@@ -145,6 +145,7 @@
             font-size: 0.8rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             border: 1px solid #e9ecef;
+            table-layout: fixed; /* Forzar que use todo el ancho disponible */
         }
         
         .products-table-compact th {
@@ -155,6 +156,27 @@
             text-align: left;
             border-bottom: 2px solid var(--border-color);
             font-size: 0.75rem;
+        }
+        
+        /* Definir anchos específicos para cada columna */
+        .products-table-compact th:nth-child(1),
+        .products-table-compact td:nth-child(1) {
+            width: 40%; /* Producto - el más ancho */
+        }
+        
+        .products-table-compact th:nth-child(2),
+        .products-table-compact td:nth-child(2) {
+            width: 15%; /* Cantidad - compacto */
+        }
+        
+        .products-table-compact th:nth-child(3),
+        .products-table-compact td:nth-child(3) {
+            width: 22%; /* Precio unitario */
+        }
+        
+        .products-table-compact th:nth-child(4),
+        .products-table-compact td:nth-child(4) {
+            width: 23%; /* Subtotal */
         }
         
         .products-table-compact td {
@@ -168,6 +190,19 @@
         .products-table-compact td:nth-child(4),
         .products-table-compact tfoot td {
             white-space: nowrap;
+        }
+        
+        /* Asegurar que la tabla siempre use todo el ancho */
+        .table-responsive {
+            width: 100%;
+            min-height: 0.01%; /* Hack para IE */
+        }
+        
+        /* Permitir que el nombre del producto se ajuste si es muy largo */
+        .products-table-compact td:nth-child(1) {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 0; /* Permite que funcione el word-wrap con table-layout: fixed */
         }
         
         .products-table-compact tfoot td {
@@ -361,6 +396,27 @@
             
             .products-table-compact {
                 font-size: 0.75rem;
+            }
+            
+            /* Ajustar proporciones en móviles */
+            .products-table-compact th:nth-child(1),
+            .products-table-compact td:nth-child(1) {
+                width: 35%; /* Producto un poco menos ancho en móvil */
+            }
+            
+            .products-table-compact th:nth-child(2),
+            .products-table-compact td:nth-child(2) {
+                width: 12%; /* Cantidad más compacto */
+            }
+            
+            .products-table-compact th:nth-child(3),
+            .products-table-compact td:nth-child(3) {
+                width: 26%; /* Precio unitario más espacio */
+            }
+            
+            .products-table-compact th:nth-child(4),
+            .products-table-compact td:nth-child(4) {
+                width: 27%; /* Subtotal más espacio para números largos */
             }
             
             .products-table-compact th,
@@ -672,7 +728,7 @@
                     <i class="bi bi-cart-check"></i>
                     Productos del Pedido
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive" style="width: 100%; overflow-x: auto;">
                     <table class="products-table-compact">
                         <thead>
                             <tr>
