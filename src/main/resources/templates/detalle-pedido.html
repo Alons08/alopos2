@@ -8,18 +8,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3a56d4;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --cancel-color: #6c757d;
-            --text-dark: #2c3e50;
-            --text-muted: #565c64;
-            --border-color: #e9ecef;
+            --detalle-primary-color: #4361ee;
+            --detalle-secondary-color: #3a56d4;
+            --detalle-success-color: #27ae60;
+            --detalle-warning-color: #f39c12;
+            --detalle-danger-color: #e74c3c;
+            --detalle-cancel-color: #6c757d;
+            --detalle-text-dark: #2c3e50;
+            --detalle-text-muted: #565c64;
+            --detalle-border-color: #e9ecef;
         }
         
-        body {
+        .detalle-body {
             background-color: #f1f3f6;
             display: flex;
             flex-direction: column;
@@ -27,23 +27,23 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
         
-        .main-content {
+        .detalle-main-content {
             flex: 1;
             margin-top: 40px;
             padding-bottom: 20px;
         }
         
-        .compact-header {
+        .detalle-compact-header {
             background: #ffffff;
             border-radius: 12px;
             padding: 0.75rem;
             margin-bottom: 1rem;
-            border-left: 4px solid var(--primary-color);
+            border-left: 4px solid var(--detalle-primary-color);
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             border: 1px solid #e3e8ef;
         }
         
-        .status-compact {
+        .detalle-status-compact {
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-weight: 600;
@@ -56,37 +56,37 @@
             margin-top: 0;
         }
         
-        .status-pendiente { 
+        .detalle-status-pendiente { 
             background-color: #fff3e0;
             color: #ef6c00;
             border: 1px solid #ffcc80;
         }
         
-        .status-preparando { 
+        .detalle-status-preparando { 
             background-color: #e3f2fd;
             color: #1565c0;
             border: 1px solid #bbdefb;
         }
         
-        .status-entregando { 
+        .detalle-status-entregando { 
             background-color: #f3e5f5;
             color: #7b1fa2;
             border: 1px solid #ce93d8;
         }
         
-        .status-pagado { 
+        .detalle-status-pagado { 
             background-color: #e8f5e8;
             color: #2e7d32;
             border: 1px solid #c8e6c9;
         }
         
-        .status-cancelado { 
+        .detalle-status-cancelado { 
             background-color: #ffebee;
             color: #c62828;
             border: 1px solid #ffcdd2;
         }
         
-        .info-section {
+        .detalle-info-section {
             background: #ffffff;
             border-radius: 12px;
             padding: 1rem;
@@ -95,7 +95,7 @@
             border: 1px solid #e3e8ef;
         }
         
-        .section-title {
+        .detalle-section-title {
             font-size: 0.9rem;
             font-weight: 600;
             color: #ffffff;
@@ -109,13 +109,13 @@
             margin: -1rem -1rem 0.8rem -1rem;
         }
         
-        .info-grid-compact {
+        .detalle-info-grid-compact {
             display: grid;
             grid-template-columns: 1fr;
             gap: 0.8rem;
         }
         
-        .info-row {
+        .detalle-info-row {
             display: grid;
             grid-template-columns: 120px 1fr;
             align-items: start;
@@ -123,20 +123,20 @@
             padding: 0.4rem 0;
         }
         
-        .info-label {
+        .detalle-info-label {
             font-size: 0.8rem;
-            color: var(--text-muted);
+            color: var(--detalle-text-muted);
             font-weight: 600;
         }
         
-        .info-value {
+        .detalle-info-value {
             font-size: 0.85rem;
             font-weight: 500;
-            color: var(--text-dark);
+            color: var(--detalle-text-dark);
             word-break: break-word;
         }
         
-        .products-table-compact {
+        .detalle-products-table-compact {
             width: 100% !important;
             min-width: 100% !important;
             border-collapse: collapse;
@@ -146,116 +146,110 @@
             font-size: 0.8rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             border: 1px solid #e9ecef;
-            table-layout: fixed; /* Forzar que use todo el ancho disponible */
+            table-layout: fixed;
             display: table !important;
         }
         
-        .products-table-compact th {
+        .detalle-products-table-compact th {
             background-color: #f8f9fa;
             padding: 0.7rem 0.5rem;
             font-weight: 600;
-            color: var(--text-dark);
+            color: var(--detalle-text-dark);
             text-align: left;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--detalle-border-color);
             font-size: 0.75rem;
         }
         
-        /* Definir anchos específicos para cada columna - deben sumar 100% */
-        .products-table-compact th:nth-child(1),
-        .products-table-compact td:nth-child(1) {
-            width: 40% !important; /* Producto - el más ancho */
+        /* Definir anchos específicos para cada columna */
+        .detalle-products-table-compact th:nth-child(1),
+        .detalle-products-table-compact td:nth-child(1) {
+            width: 40% !important;
             min-width: 40% !important;
         }
         
-        .products-table-compact th:nth-child(2),
-        .products-table-compact td:nth-child(2) {
-            width: 15% !important; /* Cantidad - compacto */
+        .detalle-products-table-compact th:nth-child(2),
+        .detalle-products-table-compact td:nth-child(2) {
+            width: 15% !important;
             min-width: 15% !important;
         }
         
-        .products-table-compact th:nth-child(3),
-        .products-table-compact td:nth-child(3) {
-            width: 22.5% !important; /* Precio unitario */
+        .detalle-products-table-compact th:nth-child(3),
+        .detalle-products-table-compact td:nth-child(3) {
+            width: 22.5% !important;
             min-width: 22.5% !important;
         }
         
-        .products-table-compact th:nth-child(4),
-        .products-table-compact td:nth-child(4) {
-            width: 22.5% !important; /* Subtotal */
+        .detalle-products-table-compact th:nth-child(4),
+        .detalle-products-table-compact td:nth-child(4) {
+            width: 22.5% !important;
             min-width: 22.5% !important;
         }
         
-        .products-table-compact td {
+        .detalle-products-table-compact td {
             padding: 0.6rem 0.5rem;
             border-bottom: 1px solid #f1f3f4;
-            color: var(--text-dark);
-            min-height: 3rem; /* Altura mínima para acomodar texto en múltiples líneas */
+            color: var(--detalle-text-dark);
+            min-height: 3rem;
         }
         
-        .products-table-compact tr {
-            min-height: 3rem; /* Altura mínima para las filas */
+        .detalle-products-table-compact tr {
+            min-height: 3rem;
         }
         
         /* Asegurar que los precios no se rompan */
-        .products-table-compact td:nth-child(3),
-        .products-table-compact td:nth-child(4),
-        .products-table-compact tfoot td {
+        .detalle-products-table-compact td:nth-child(3),
+        .detalle-products-table-compact td:nth-child(4),
+        .detalle-products-table-compact tfoot td {
             white-space: nowrap;
         }
         
         /* Asegurar que la tabla siempre use todo el ancho */
-        .table-responsive {
+        .detalle-table-responsive {
             width: 100% !important;
             min-width: 100% !important;
-            min-height: 0.01%; /* Hack para IE */
+            min-height: 0.01%;
             display: block !important;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
         
-        /* Forzar que el contenedor de la sección también use todo el ancho */
-        .info-section {
-            width: 100% !important;
-            box-sizing: border-box;
-        }
-        
         /* Permitir que el nombre del producto se ajuste si es muy largo */
-        .products-table-compact td:nth-child(1) {
+        .detalle-products-table-compact td:nth-child(1) {
             word-wrap: break-word !important;
             overflow-wrap: break-word !important;
             word-break: break-word !important;
             hyphens: auto !important;
-            max-width: 0 !important; /* Permite que funcione el word-wrap con table-layout: fixed */
-            white-space: normal !important; /* Permitir salto de línea */
+            max-width: 0 !important;
+            white-space: normal !important;
             line-height: 1.3 !important;
-            vertical-align: top !important; /* Alinear al top para mejor presentación */
-        }
-        
-        /* Asegurar que todas las celdas tengan alineación vertical superior */
-        .products-table-compact td {
             vertical-align: top !important;
         }
         
-        .products-table-compact tfoot td {
+        /* Asegurar que todas las celdas tengan alineación vertical superior */
+        .detalle-products-table-compact td {
+            vertical-align: top !important;
+        }
+        
+        .detalle-products-table-compact tfoot td {
             background-color: #f8f9fa;
             font-weight: 700;
             padding: 0.8rem 0.5rem;
-            border-top: 2px solid var(--border-color);
-            color: var(--primary-color);
+            border-top: 2px solid var(--detalle-border-color);
+            color: var(--detalle-primary-color);
             white-space: nowrap;
         }
         
-        .text-right,
-        .products-table-compact .text-right {
+        .detalle-text-right,
+        .detalle-products-table-compact .detalle-text-right {
             text-align: right !important;
         }
         
-        .text-center,
-        .products-table-compact .text-center {
+        .detalle-text-center,
+        .detalle-products-table-compact .detalle-text-center {
             text-align: center !important;
         }
         
-        .btn-compact {
+        .detalle-btn-compact {
             padding: 0.4rem 0.7rem;
             border-radius: 6px;
             font-size: 0.75rem;
@@ -274,51 +268,51 @@
             overflow: hidden;
         }
         
-        .btn-primary-compact {
-            background-color: var(--primary-color);
+        .detalle-btn-primary-compact {
+            background-color: var(--detalle-primary-color);
             color: white;
         }
         
-        .btn-primary-compact:hover {
-            background-color: var(--secondary-color);
+        .detalle-btn-primary-compact:hover {
+            background-color: var(--detalle-secondary-color);
             color: white;
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(67, 97, 238, 0.3);
         }
         
-        .btn-warning-compact {
+        .detalle-btn-warning-compact {
             background-color: #ffc107;
             color: #000;
         }
         
-        .btn-warning-compact:hover {
+        .detalle-btn-warning-compact:hover {
             background-color: #e0a800;
             color: #000;
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
         }
         
-        .btn-secondary-compact {
-            background-color: var(--cancel-color);
+        .detalle-btn-secondary-compact {
+            background-color: var(--detalle-cancel-color);
             color: white;
         }
         
-        .btn-secondary-compact:hover {
+        .detalle-btn-secondary-compact:hover {
             background-color: #5a6268;
             color: white;
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
         }
         
-        .action-buttons-compact {
+        .detalle-action-buttons-compact {
             display: grid;
             grid-template-columns: 1fr;
             gap: 1rem;
             margin-top: 1.5rem;
-            padding-bottom: 40px; /* Padding al footer */
+            padding-bottom: 40px;
         }
         
-        .dropdown-menu-compact {
+        .detalle-dropdown-menu-compact {
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border: none;
@@ -327,7 +321,7 @@
             width: 100%;
         }
         
-        .dropdown-item-compact {
+        .detalle-dropdown-item-compact {
             padding: 0.5rem 0.7rem;
             border-radius: 6px;
             display: flex;
@@ -343,186 +337,184 @@
             text-align: left;
         }
         
-        .dropdown-item-compact:hover,
-        .dropdown-item-compact:focus {
+        .detalle-dropdown-item-compact:hover,
+        .detalle-dropdown-item-compact:focus {
             background-color: #f8f9fa;
             transform: translateX(2px);
         }
         
         /* Fondos específicos para cada estado en el dropdown */
-        .dropdown-item-compact.text-primary {
+        .detalle-dropdown-item-compact.text-primary {
             background-color: #e3f2fd;
             border-radius: 6px;
             margin: 0.2rem 0;
         }
         
-        .dropdown-item-compact.text-warning {
+        .detalle-dropdown-item-compact.text-warning {
             background-color: #f3e5f5;
             border-radius: 6px;
             margin: 0.2rem 0;
         }
         
-        .dropdown-item-compact.text-success {
+        .detalle-dropdown-item-compact.text-success {
             background-color: #e8f5e8;
             border-radius: 6px;
             margin: 0.2rem 0;
         }
         
-        .dropdown-item-compact.text-danger {
+        .detalle-dropdown-item-compact.text-danger {
             background-color: #ffebee;
             border-radius: 6px;
             margin: 0.2rem 0;
         }
         
-        .dropdown-item-compact.text-primary:hover {
+        .detalle-dropdown-item-compact.text-primary:hover {
             background-color: #bbdefb;
         }
         
-        .dropdown-item-compact.text-warning:hover {
+        .detalle-dropdown-item-compact.text-warning:hover {
             background-color: #e1bee7;
         }
         
-        .dropdown-item-compact.text-success:hover {
+        .detalle-dropdown-item-compact.text-success:hover {
             background-color: #c8e6c9;
         }
         
-        .dropdown-item-compact.text-danger:hover {
+        .detalle-dropdown-item-compact.text-danger:hover {
             background-color: #ffcdd2;
         }
         
         /* Mejoras específicas para móvil */
         @media (max-width: 768px) {
-            .main-content {
+            .detalle-main-content {
                 padding: 0 15px;
                 margin-top: 30px;
             }
             
-            .compact-header {
+            .detalle-compact-header {
                 padding: 0.8rem;
                 margin-bottom: 0.8rem;
             }
             
-            .compact-header h2 {
+            .detalle-compact-header h2 {
                 font-size: 1rem;
             }
             
-            .info-section {
+            .detalle-info-section {
                 padding: 0.8rem;
                 margin-bottom: 0.8rem;
             }
             
-            .info-row {
+            .detalle-info-row {
                 grid-template-columns: 100px 1fr;
                 gap: 0.6rem;
                 padding: 0.3rem 0;
             }
             
-            .info-label {
+            .detalle-info-label {
                 font-size: 0.75rem;
             }
             
-            .info-value {
+            .detalle-info-value {
                 font-size: 0.8rem;
             }
             
-            .products-table-compact {
+            .detalle-products-table-compact {
                 font-size: 0.75rem !important;
                 width: 100% !important;
                 min-width: 100% !important;
             }
             
             /* Asegurar que la tabla ocupe todo el ancho en móviles */
-            .table-responsive {
+            .detalle-table-responsive {
                 width: 100% !important;
                 overflow-x: auto !important;
             }
             
-            .info-section {
+            .detalle-info-section {
                 width: 100% !important;
             }
             
-            /* Ajustar proporciones en móviles - deben sumar 100% */
-            .products-table-compact th:nth-child(1),
-            .products-table-compact td:nth-child(1) {
-                width: 35% !important; /* Producto un poco menos ancho en móvil */
+            /* Ajustar proporciones en móviles */
+            .detalle-products-table-compact th:nth-child(1),
+            .detalle-products-table-compact td:nth-child(1) {
+                width: 35% !important;
                 min-width: 35% !important;
             }
             
-            .products-table-compact th:nth-child(2),
-            .products-table-compact td:nth-child(2) {
-                width: 12% !important; /* Cantidad más compacto */
+            .detalle-products-table-compact th:nth-child(2),
+            .detalle-products-table-compact td:nth-child(2) {
+                width: 12% !important;
                 min-width: 12% !important;
             }
             
-            .products-table-compact th:nth-child(3),
-            .products-table-compact td:nth-child(3) {
-                width: 26.5% !important; /* Precio unitario más espacio */
+            .detalle-products-table-compact th:nth-child(3),
+            .detalle-products-table-compact td:nth-child(3) {
+                width: 26.5% !important;
                 min-width: 26.5% !important;
             }
             
-            .products-table-compact th:nth-child(4),
-            .products-table-compact td:nth-child(4) {
-                width: 26.5% !important; /* Subtotal más espacio para números largos */
+            .detalle-products-table-compact th:nth-child(4),
+            .detalle-products-table-compact td:nth-child(4) {
+                width: 26.5% !important;
                 min-width: 26.5% !important;
             }
             
-            .products-table-compact th,
-            .products-table-compact td {
+            .detalle-products-table-compact th,
+            .detalle-products-table-compact td {
                 padding: 0.5rem 0.3rem;
                 vertical-align: top !important;
             }
             
             /* Estilos específicos para nombres de producto largos en móvil */
-            .products-table-compact td:nth-child(1) {
+            .detalle-products-table-compact td:nth-child(1) {
                 word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
                 word-break: break-word !important;
                 hyphens: auto !important;
                 white-space: normal !important;
-                line-height: 1.3 !important; /* Mantener línea espaciada para legibilidad */
+                line-height: 1.3 !important;
                 max-width: 0 !important;
-                padding: 0.5rem 0.2rem !important; /* Menos padding horizontal */
-                /* NO reducir font-size - mantener tamaño original */
+                padding: 0.5rem 0.2rem !important;
             }
             
-            .section-title {
+            .detalle-section-title {
                 font-size: 0.85rem;
                 margin-bottom: 0.6rem;
                 margin: -0.8rem -0.8rem 0.6rem -0.8rem;
                 padding: 0.6rem 0.8rem;
             }
             
-            .btn-compact {
+            .detalle-btn-compact {
                 padding: 0.45rem 0.7rem;
                 font-size: 0.78rem;
                 min-height: 36px;
                 border-radius: 6px;
             }
             
-            .action-buttons-compact {
+            .detalle-action-buttons-compact {
                 gap: 0.8rem;
-                padding-bottom: 40px; /* Mantenemos padding en móvil */
+                padding-bottom: 40px;
             }
         }
         
         @media (max-width: 576px) {
-            .compact-header h2 {
+            .detalle-compact-header h2 {
                 font-size: 0.95rem;
             }
             
-            .info-row {
+            .detalle-info-row {
                 grid-template-columns: 90px 1fr;
                 gap: 0.5rem;
             }
             
-            .status-compact {
+            .detalle-status-compact {
                 font-size: 0.75rem;
                 padding: 0.3rem 0.8rem;
             }
             
             /* Mejor manejo de texto largo en móviles pequeños */
-            .products-table-compact td:nth-child(1) {
-                /* NO cambiar font-size - mantener tamaño original */
+            .detalle-products-table-compact td:nth-child(1) {
                 line-height: 1.3 !important;
                 padding: 0.4rem 0.15rem !important;
                 word-wrap: break-word !important;
@@ -534,14 +526,13 @@
             }
             
             /* Ajustar padding pero mantener font-size original */
-            .products-table-compact th,
-            .products-table-compact td {
+            .detalle-products-table-compact th,
+            .detalle-products-table-compact td {
                 padding: 0.4rem 0.2rem !important;
                 vertical-align: top !important;
-                /* Mantener font-size original de la tabla */
             }
             
-            .btn-compact {
+            .detalle-btn-compact {
                 padding: 0.5rem 0.7rem;
                 font-size: 0.75rem;
                 min-height: 38px;
@@ -549,83 +540,81 @@
                 font-weight: 500;
             }
             
-            /* Mejora específica para botones en móvil pequeño */
-            .action-buttons-compact {
+            /* Mejorar el área táctil */
+            .detalle-action-buttons-compact {
                 gap: 0.7rem;
                 padding-bottom: 40px;
             }
             
             /* Mejor espaciado para dropdown en móvil */
-            .dropdown-menu-compact {
+            .detalle-dropdown-menu-compact {
                 min-width: 100%;
                 margin-top: 0.5rem !important;
             }
         }
         
         @media (max-width: 400px) {
-            .products-table-compact {
-                display: table !important; /* Mantener como tabla para mejor control */
+            .detalle-products-table-compact {
+                display: table !important;
                 overflow-x: auto;
-                /* Mantener font-size original - NO reducir */
             }
             
             /* Permitir que solo las columnas de precios no se rompan */
-            .products-table-compact th:nth-child(2),
-            .products-table-compact td:nth-child(2),
-            .products-table-compact th:nth-child(3),
-            .products-table-compact td:nth-child(3),
-            .products-table-compact th:nth-child(4),
-            .products-table-compact td:nth-child(4) {
+            .detalle-products-table-compact th:nth-child(2),
+            .detalle-products-table-compact td:nth-child(2),
+            .detalle-products-table-compact th:nth-child(3),
+            .detalle-products-table-compact td:nth-child(3),
+            .detalle-products-table-compact th:nth-child(4),
+            .detalle-products-table-compact td:nth-child(4) {
                 white-space: nowrap !important;
                 min-width: fit-content;
             }
             
             /* Permitir que el nombre del producto se ajuste completamente */
-            .products-table-compact th:nth-child(1),
-            .products-table-compact td:nth-child(1) {
+            .detalle-products-table-compact th:nth-child(1),
+            .detalle-products-table-compact td:nth-child(1) {
                 white-space: normal !important;
                 word-wrap: break-word !important;
                 overflow-wrap: break-word !important;
                 word-break: break-word !important;
                 hyphens: auto !important;
                 line-height: 1.3 !important;
-                /* Mantener font-size original - NO reducir */
                 padding: 0.3rem 0.1rem !important;
                 max-width: 0 !important;
-                width: 30% !important; /* Reducir un poco más el ancho en pantallas muy pequeñas */
+                width: 30% !important;
                 min-width: 30% !important;
             }
             
             /* Columnas de precio más anchas para números grandes */
-            .products-table-compact th:nth-child(3),
-            .products-table-compact td:nth-child(3),
-            .products-table-compact th:nth-child(4),
-            .products-table-compact td:nth-child(4) {
+            .detalle-products-table-compact th:nth-child(3),
+            .detalle-products-table-compact td:nth-child(3),
+            .detalle-products-table-compact th:nth-child(4),
+            .detalle-products-table-compact td:nth-child(4) {
                 min-width: 70px;
                 padding-left: 0.2rem !important;
                 padding-right: 0.2rem !important;
             }
             
-            .info-row {
+            .detalle-info-row {
                 grid-template-columns: 80px 1fr;
             }
             
-            .compact-header {
+            .detalle-compact-header {
                 padding: 0.7rem;
             }
             
-            .compact-header h2 {
+            .detalle-compact-header h2 {
                 font-size: 0.9rem;
             }
             
-            .btn-compact {
+            .detalle-btn-compact {
                 padding: 0.4rem 0.6rem;
                 font-size: 0.73rem;
                 min-height: 36px;
                 border-radius: 6px;
             }
             
-            .action-buttons-compact {
+            .detalle-action-buttons-compact {
                 gap: 0.5rem;
                 padding-bottom: 40px;
             }
@@ -633,26 +622,26 @@
         
         /* Estilos para laptop/desktop */
         @media (min-width: 769px) {
-            .container {
+            .detalle-container {
                 max-width: 800px;
             }
             
-            .info-grid-compact {
+            .detalle-info-grid-compact {
                 grid-template-columns: 1fr 1fr;
                 gap: 1rem;
             }
             
-            .action-buttons-compact {
+            .detalle-action-buttons-compact {
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
                 gap: 1.2rem;
-                padding-bottom: 40px; /* Padding en desktop también */
+                padding-bottom: 40px;
             }
             
-            .products-table-compact {
+            .detalle-products-table-compact {
                 font-size: 0.85rem;
             }
             
-            .btn-compact {
+            .detalle-btn-compact {
                 padding: 0.5rem 0.9rem;
                 font-size: 0.8rem;
                 min-height: 38px;
@@ -660,43 +649,43 @@
         }
         
         /* Mejoras de accesibilidad y contraste */
-        .info-label {
+        .detalle-info-label {
             opacity: 0.8;
         }
         
-        .info-value {
+        .detalle-info-value {
             opacity: 1;
             font-weight: 600;
         }
         
         /* Animación sutil */
-        .fade-in {
-            animation: fadeIn 0.4s ease-in;
+        .detalle-fade-in {
+            animation: detalleFadeIn 0.4s ease-in;
         }
         
-        @keyframes fadeIn {
+        @keyframes detalleFadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         /* Asegurar que los botones sean tappables en móvil */
-        .btn-compact {
+        .detalle-btn-compact {
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
         
-        .btn-compact:active {
+        .detalle-btn-compact:active {
             transform: translateY(1px);
             box-shadow: 0 1px 3px rgba(0,0,0,0.15);
         }
         
         /* Mejoras específicas para el dropdown de botones de acción SOLAMENTE */
-        .action-buttons-compact .dropdown-toggle {
+        .detalle-action-buttons-compact .detalle-dropdown-toggle {
             position: relative;
         }
         
-        .action-buttons-compact .dropdown-toggle::after {
+        .detalle-action-buttons-compact .detalle-dropdown-toggle::after {
             position: absolute;
             right: 1rem;
             top: 50%;
@@ -704,48 +693,38 @@
             margin-left: auto;
         }
         
-        /* Proteger estilos del navbar - mantener comportamiento por defecto */
-        .navbar .dropdown-toggle::after {
-            position: static !important;
-            margin-left: 0.255em !important;
-            vertical-align: 0.255em !important;
-            right: auto !important;
-            top: auto !important;
-            transform: none !important;
-        }
-        
         /* Estilos adicionales para móvil */
         @media (max-width: 768px) {
-            .compact-header {
+            .detalle-compact-header {
                 padding: 0.6rem;
                 margin-bottom: 0.8rem;
             }
             
-            .compact-header h2 {
+            .detalle-compact-header h2 {
                 font-size: 1.2rem !important;
                 line-height: 1.2 !important;
             }
             
-            .compact-header p {
+            .detalle-compact-header p {
                 font-size: 0.75rem !important;
                 margin-top: 0.1rem !important;
             }
             
-            .status-compact {
+            .detalle-status-compact {
                 padding: 0.25rem 0.6rem !important;
                 font-size: 0.7rem !important;
             }
             
-            .btn-compact {
+            .detalle-btn-compact {
                 box-shadow: 0 3px 8px rgba(0,0,0,0.12);
             }
             
-            .btn-compact:hover {
+            .detalle-btn-compact:hover {
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             }
             
             /* Mejorar el área táctil */
-            .dropdown-item-compact {
+            .detalle-dropdown-item-compact {
                 min-height: 38px;
                 padding: 0.6rem 0.7rem;
             }
@@ -753,105 +732,105 @@
         
         /* Estilos para laptop */
         @media (min-width: 769px) and (max-width: 1200px) {
-            .compact-header {
+            .detalle-compact-header {
                 padding: 0.65rem;
             }
             
-            .compact-header h2 {
+            .detalle-compact-header h2 {
                 font-size: 1.25rem !important;
             }
             
-            .status-compact {
+            .detalle-status-compact {
                 padding: 0.28rem 0.7rem !important;
                 font-size: 0.73rem !important;
             }
         }
     </style>
 </head>
-<body>
+<body class="detalle-body">
     <div th:replace="~{fragments/navbar :: navbar}"></div>
     
-    <div class="main-content">
-        <div class="container">
+    <div class="detalle-main-content">
+        <div class="container detalle-container">
             <!-- Header compacto -->
-            <div class="compact-header fade-in">
+            <div class="detalle-compact-header detalle-fade-in">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h2 class="mb-0" style="font-size: 1.3rem; color: var(--text-dark); line-height: 1.3;">Pedido #<span th:text="${pedido.id}"></span></h2>
-                        <p class="mb-0" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Detalles del pedido</p>
+                        <h2 class="mb-0" style="font-size: 1.3rem; color: var(--detalle-text-dark); line-height: 1.3;">Pedido #<span th:text="${pedido.id}"></span></h2>
+                        <p class="mb-0" style="font-size: 0.8rem; color: var(--detalle-text-muted); margin-top: 0.2rem;">Detalles del pedido</p>
                     </div>
-                    <span class="status-compact" 
-                          th:classappend="'status-' + ${pedido.estado.toString().toLowerCase()}" 
+                    <span class="detalle-status-compact" 
+                          th:classappend="'detalle-status-' + ${pedido.estado.toString().toLowerCase()}" 
                           th:text="${pedido.estado}"></span>
                 </div>
             </div>
             
             <!-- Información del Pedido - Diseño compacto -->
-            <div class="info-section fade-in">
-                <div class="section-title">
+            <div class="detalle-info-section detalle-fade-in">
+                <div class="detalle-section-title">
                     <i class="bi bi-info-circle"></i>
                     Información del Pedido
                 </div>
-                <div class="info-grid-compact">
-                    <div class="info-row">
-                        <span class="info-label">Tipo:</span>
-                        <span class="info-value" th:text="${pedido.tipo}"></span>
+                <div class="detalle-info-grid-compact">
+                    <div class="detalle-info-row">
+                        <span class="detalle-info-label">Tipo:</span>
+                        <span class="detalle-info-value" th:text="${pedido.tipo}"></span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Mesa:</span>
-                        <span class="info-value" th:text="${pedido.mesa != null ? 'Mesa #' + pedido.mesa.numero : 'N/A'}"></span>
+                    <div class="detalle-info-row">
+                        <span class="detalle-info-label">Mesa:</span>
+                        <span class="detalle-info-value" th:text="${pedido.mesa != null ? 'Mesa #' + pedido.mesa.numero : 'N/A'}"></span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Recargo:</span>
-                        <span class="info-value" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.recargo, 1, 2)}"></span>
+                    <div class="detalle-info-row">
+                        <span class="detalle-info-label">Recargo:</span>
+                        <span class="detalle-info-value" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.recargo, 1, 2)}"></span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Total:</span>
-                        <span class="info-value" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></span>
+                    <div class="detalle-info-row">
+                        <span class="detalle-info-label">Total:</span>
+                        <span class="detalle-info-value" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Fecha:</span>
-                        <span class="info-value" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></span>
+                    <div class="detalle-info-row">
+                        <span class="detalle-info-label">Fecha:</span>
+                        <span class="detalle-info-value" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></span>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Usuario:</span>
-                        <span class="info-value" th:text="${pedido.usuario != null ? pedido.usuario.username : 'N/A'}"></span>
+                    <div class="detalle-info-row">
+                        <span class="detalle-info-label">Usuario:</span>
+                        <span class="detalle-info-value" th:text="${pedido.usuario != null ? pedido.usuario.username : 'N/A'}"></span>
                     </div>
-                    <div th:if="${pedido.observaciones}" class="info-row" style="grid-column: 1 / -1;">
-                        <span class="info-label">Observaciones:</span>
-                        <span class="info-value" style="font-style: italic;" th:text="${pedido.observaciones}"></span>
+                    <div th:if="${pedido.observaciones}" class="detalle-info-row" style="grid-column: 1 / -1;">
+                        <span class="detalle-info-label">Observaciones:</span>
+                        <span class="detalle-info-value" style="font-style: italic;" th:text="${pedido.observaciones}"></span>
                     </div>
                 </div>
             </div>
             
             <!-- Productos del Pedido - Diseño compacto -->
-            <div class="info-section fade-in">
-                <div class="section-title">
+            <div class="detalle-info-section detalle-fade-in">
+                <div class="detalle-section-title">
                     <i class="bi bi-cart-check"></i>
                     Productos del Pedido
                 </div>
-                <div class="table-responsive" style="width: 100% !important; min-width: 100% !important; overflow-x: auto; display: block;">
-                    <table class="products-table-compact" style="width: 100% !important; min-width: 100% !important;">
+                <div class="detalle-table-responsive" style="width: 100% !important; min-width: 100% !important; overflow-x: auto; display: block;">
+                    <table class="detalle-products-table-compact" style="width: 100% !important; min-width: 100% !important;">
                         <thead>
                             <tr>
                                 <th>Producto</th>
-                                <th class="text-center">Cant</th>
-                                <th class="text-right">P. Unitario</th>
-                                <th class="text-right">Subtotal</th>
+                                <th class="detalle-text-center">Cant</th>
+                                <th class="detalle-text-right">P. Unitario</th>
+                                <th class="detalle-text-right">Subtotal</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="detalle : ${pedido.detalles}">
                                 <td th:text="${detalle.producto.nombre}"></td>
-                                <td class="text-center" th:text="${detalle.cantidad}"></td>
-                                <td class="text-right" th:text="'S/ ' + ${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}"></td>
-                                <td class="text-right" th:text="'S/ ' + ${#numbers.formatDecimal(detalle.subtotal, 1, 2)}"></td>
+                                <td class="detalle-text-center" th:text="${detalle.cantidad}"></td>
+                                <td class="detalle-text-right" th:text="'S/ ' + ${#numbers.formatDecimal(detalle.precioUnitario, 1, 2)}"></td>
+                                <td class="detalle-text-right" th:text="'S/ ' + ${#numbers.formatDecimal(detalle.subtotal, 1, 2)}"></td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3" class="text-right fw-bold">Total</td>
-                                <td class="text-right fw-bold" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
+                                <td colspan="3" class="detalle-text-right fw-bold">Total</td>
+                                <td class="detalle-text-right fw-bold" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -859,23 +838,23 @@
             </div>
             
             <!-- Botones de Acción Compactos - MEJORADO -->
-            <div class="action-buttons-compact fade-in">
+            <div class="detalle-action-buttons-compact detalle-fade-in">
                 <a th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}"
                    th:href="@{'/pedidos/{id}/editar'(id=${pedido.id})}" 
-                   class="btn btn-warning-compact btn-compact">
+                   class="detalle-btn-warning-compact detalle-btn-compact">
                     <i class="bi bi-pencil-square"></i> Editar Pedido
                 </a>
                 
                 <div class="dropdown dropup">
-                    <button class="btn btn-primary-compact btn-compact dropdown-toggle w-100" 
+                    <button class="detalle-btn-primary-compact detalle-btn-compact detalle-dropdown-toggle dropdown-toggle w-100" 
                             type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-lightning-charge"></i> Cambiar Estado
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-compact">
+                    <ul class="dropdown-menu detalle-dropdown-menu-compact">
                         <li th:if="${pedido.estado.name() == 'PENDIENTE'}">
                             <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post" class="d-inline w-100">
                                 <input type="hidden" name="estado" value="PREPARANDO">
-                                <button type="submit" class="dropdown-item dropdown-item-compact text-primary w-100 text-start">
+                                <button type="submit" class="dropdown-item detalle-dropdown-item-compact text-primary w-100 text-start">
                                     <i class="bi bi-egg-fried"></i> Marcar como Preparando
                                 </button>
                             </form>
@@ -883,7 +862,7 @@
                         <li th:if="${pedido.estado.name() == 'PREPARANDO'}">
                             <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post" class="d-inline w-100">
                                 <input type="hidden" name="estado" value="ENTREGANDO">
-                                <button type="submit" class="dropdown-item dropdown-item-compact text-warning w-100 text-start">
+                                <button type="submit" class="dropdown-item detalle-dropdown-item-compact text-warning w-100 text-start">
                                     <i class="bi bi-truck"></i> Marcar como Entregando
                                 </button>
                             </form>
@@ -891,7 +870,7 @@
                         <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
                             <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post" class="d-inline w-100">
                                 <input type="hidden" name="estado" value="PAGADO">
-                                <button type="submit" class="dropdown-item dropdown-item-compact text-success w-100 text-start">
+                                <button type="submit" class="dropdown-item detalle-dropdown-item-compact text-success w-100 text-start">
                                     <i class="bi bi-check-circle"></i> Completar Pedido
                                 </button>
                             </form>
@@ -900,7 +879,7 @@
                         <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
                             <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post" class="d-inline w-100">
                                 <input type="hidden" name="estado" value="CANCELADO">
-                                <button type="submit" class="dropdown-item dropdown-item-compact text-danger w-100 text-start">
+                                <button type="submit" class="dropdown-item detalle-dropdown-item-compact text-danger w-100 text-start">
                                     <i class="bi bi-x-circle"></i> Cancelar Pedido
                                 </button>
                             </form>
@@ -908,7 +887,7 @@
                     </ul>
                 </div>
                 
-                <a th:href="@{/pedidos}" class="btn btn-secondary-compact btn-compact">
+                <a th:href="@{/pedidos}" class="detalle-btn-secondary-compact detalle-btn-compact">
                     <i class="bi bi-arrow-left"></i> Volver a Pedidos
                 </a>
             </div>
@@ -916,18 +895,18 @@
     </div>
     
     <div th:replace="~{fragments/footer :: footer}"></div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar dropdowns
-            const dropdowns = document.querySelectorAll('.dropdown-toggle');
+            // Inicializar dropdowns - solo para elementos de detalle
+            const dropdowns = document.querySelectorAll('.detalle-main-content .dropdown-toggle');
             dropdowns.forEach(dropdown => {
                 new bootstrap.Dropdown(dropdown);
             });
             
             // Mejorar experiencia táctil en móvil
-            const buttons = document.querySelectorAll('.btn-compact');
+            const buttons = document.querySelectorAll('.detalle-btn-compact');
             buttons.forEach(btn => {
                 btn.addEventListener('touchstart', function() {
                     this.style.transform = 'scale(0.98)';
