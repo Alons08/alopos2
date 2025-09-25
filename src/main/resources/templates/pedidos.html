@@ -184,17 +184,31 @@
             
             .btn-group {
                 flex-direction: column;
-                gap: 0.3rem;
+                gap: 0.5rem;
             }
             
             .action-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 0.8rem;
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
             }
             
             .d-flex.gap-2 {
                 justify-content: flex-end;
+                gap: 0.5rem !important;
+                flex-wrap: wrap;
+            }
+            
+            /* Mejorar área táctil para móviles */
+            .dropdown-toggle {
+                min-width: 36px;
+                min-height: 36px;
+            }
+            
+            /* Espaciado adicional en filas móviles */
+            .table td[data-label="Acciones"] {
+                padding: 1rem 0.5rem;
             }
         }
     </style>
