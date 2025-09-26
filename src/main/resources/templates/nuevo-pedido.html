@@ -84,12 +84,12 @@
         }
         
         .total-row {
-            background-color: rgba(39, 174, 96, 0.1);
+            background-color: rgba(221, 167, 66, 0.1);
             font-weight: 700;
         }
         
         .total-row td {
-            border-top: 2px solid var(--success-color);
+            border-top: 2px solid #dda742;
             border-bottom: none;
         }
         
@@ -171,6 +171,30 @@
             flex: 1;
             border-top-right-radius: 0 !important;
             border-bottom-right-radius: 0 !important;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .product-select option {
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            padding: 0.5rem !important;
+            line-height: 1.4 !important;
+        }
+        
+        /* Efecto de resaltado para nuevas filas */
+        .producto-row.nueva-fila {
+            background-color: rgba(144, 238, 144, 0.8) !important;
+            transition: background-color 1s ease-out;
+            animation: fadeOutHighlight 4s ease-out forwards;
+        }
+        
+        @keyframes fadeOutHighlight {
+            0% { background-color: rgba(144, 238, 144, 0.8); }
+            25% { background-color: rgba(144, 238, 144, 0.6); }
+            50% { background-color: rgba(144, 238, 144, 0.4); }
+            75% { background-color: rgba(144, 238, 144, 0.2); }
+            100% { background-color: transparent; }
         }
         
         .btn-search-product {
@@ -210,12 +234,18 @@
             
             .product-table th, 
             .product-table td {
-                .product-select {
-                    min-width: 120px;
-                    font-size: 0.95rem;
-                    max-width: 100%;
-                    white-space: normal;
-                }
+            .product-select {
+                min-width: 120px;
+                font-size: 0.95rem;
+                max-width: 100%;
+                white-space: normal;
+            }
+            
+            .product-select option {
+                white-space: normal;
+                word-wrap: break-word;
+                padding: 0.5rem;
+            }
                 padding: 0.5rem;
             }
             
@@ -524,7 +554,26 @@
 
                 tbody.appendChild(newRow);
                 setupProductRow(newRow);
+                
+                // Aplicar efecto de resaltado a la nueva fila
+                newRow.classList.add('nueva-fila');
+                
+                // Hacer scroll hacia la nueva fila
                 newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                // Remover el resaltado después de 4 segundos
+                setTimeout(() => {
+                    newRow.classList.remove('nueva-fila');
+                }, 4000);
+                
+                // En dispositivos móviles, enfocar automáticamente el select de producto
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => {
+                        select.focus();
+                        // Intentar abrir el select en dispositivos móviles
+                        select.click();
+                    }, 100);
+                }
             });
 
             function setupProductRow(row) {
@@ -549,7 +598,13 @@
                     updateTotal();
                 }
 
-                productoSelect.addEventListener('change', updatePrices);
+                productoSelect.addEventListener('change', function() {
+                    updatePrices();
+                    // Remover el efecto de resaltado cuando se selecciona un producto
+                    if (row.classList.contains('nueva-fila')) {
+                        row.classList.remove('nueva-fila');
+                    }
+                });
                 cantidadInput.addEventListener('input', updatePrices);
                 cantidadInput.addEventListener('blur', function() {
                     if (this.value < 1) this.value = 1;
@@ -613,6 +668,13 @@
                         }
                         const event = new Event('change');
                         currentSelectElement.dispatchEvent(event);
+                        
+                        // Remover el efecto de resaltado de la fila cuando se selecciona desde modal
+                        const row = currentSelectElement.closest('.producto-row');
+                        if (row && row.classList.contains('nueva-fila')) {
+                            row.classList.remove('nueva-fila');
+                        }
+                        
                         searchModal.hide();
                     }
                 }
