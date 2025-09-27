@@ -11,6 +11,7 @@ import com.alocode.model.enums.EstadoCaja;
 import com.alocode.model.enums.EstadoMesa;
 import com.alocode.model.enums.EstadoPedido;
 import com.alocode.repository.CajaRepository;
+import com.alocode.repository.ClienteRepository;
 import com.alocode.repository.PedidoRepository;
 import com.alocode.repository.MesaRepository;
 
@@ -24,7 +25,8 @@ public class CajaService {
     private final CajaRepository cajaRepository;
     private final PedidoRepository pedidoRepository;
     private final MesaRepository mesaRepository;
-    private final com.alocode.repository.ClienteRepository clienteRepository;
+    private final ClienteRepository clienteRepository;
+    private final ProductoService productoService;
 
     @Transactional
     public Caja abrirCaja(Double montoApertura, Usuario usuario) {
@@ -46,10 +48,16 @@ public class CajaService {
             caja.setMontoCierre(caja.getMontoApertura() + totalNeto);
             caja.setEstado(EstadoCaja.CERRADA);
             caja.setHoraCierre(new Date());
-            // Cambiar a CANCELADO los pedidos en estado PENDIENTE, PREPARANDO o ENTREGANDO
+            // Cambiar a CANCELADO los pedidos en estado PENDIENTE, PREPARANDO o ENTREGANDO y liberar stock reservado
             List<Pedido> pedidosNoFinalizados = pedidoRepository.findPedidosNoFinalizadosPorCaja(caja.getId(), clienteId);
             pedidosNoFinalizados.forEach(p -> {
                 p.setEstado(EstadoPedido.CANCELADO);
+                // Liberar stock reservado de cada producto del pedido
+                p.getDetalles().forEach(d -> {
+                    if (d.getProducto() != null) {
+                        productoService.liberarStockReservado(d.getProducto(), d.getCantidad());
+                    }
+                });
                 if (p.getTipo() != null && p.getTipo().name().equals("MESA") && p.getMesa() != null) {
                     p.getMesa().setEstado(EstadoMesa.DISPONIBLE);
                     mesaRepository.save(p.getMesa());
