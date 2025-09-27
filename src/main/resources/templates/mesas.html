@@ -79,13 +79,19 @@
       }
 
       .status-ocupada {
-        background-color: #f8d7da;
-        color: #dc3545;
+        background-color: #ffe5b4;
+        color: #e67e22;
       }
 
       .status-reservada {
         background-color: #fff3cd;
         color: #ffc107;
+      }
+      .text-ocupada {
+        color: #e67e22 !important;
+      }
+      .mobile-mesa-estado {
+        font-weight: 500;
       }
 
       .action-btn {
@@ -288,6 +294,7 @@
                         <span
                           class="mesa-estado"
                           style="font-weight: 500"
+                          th:classappend="${mesa.estado.name() == 'DISPONIBLE'} ? ' text-success' : (${mesa.estado.name() == 'OCUPADA'} ? ' text-ocupada' : (${mesa.estado.name() == 'INACTIVA'} ? ' text-danger' : ''))"
                           th:text="${mesa.estado}"
                         ></span>
                       </td>
@@ -360,11 +367,12 @@
                   <h5 class="mobile-mesa-title mb-0">
                     <span th:text="${mesa.numero}"></span>
                     <span th:if="${mesa.numero == null}" class="text-danger"
-                      >(Sin número)</span
-                    >
+                      >(Sin número)</span>
                   </h5>
                   <span th:text="${mesa.ubicacion}"></span>
-                  <span th:text="${mesa.estado}"></span>
+      <span class="mobile-mesa-estado" th:classappend="${mesa.estado.name() == 'DISPONIBLE'} ? ' text-success' : (${mesa.estado.name() == 'OCUPADA'} ? ' text-ocupada' : (${mesa.estado.name() == 'INACTIVA'} ? ' text-danger' : ''))"
+        th:text="${mesa.estado}"></span>
+
                 </div>
 
                 <div class="mobile-mesa-detail">

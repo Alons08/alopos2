@@ -344,45 +344,17 @@
         }
         
         /* Fondos específicos para cada estado en el dropdown */
-        .detalle-dropdown-item-compact.text-primary {
-            background-color: #e3f2fd;
-            border-radius: 6px;
-            margin: 0.2rem 0;
-        }
-        
-        .detalle-dropdown-item-compact.text-warning {
-            background-color: #f3e5f5;
-            border-radius: 6px;
-            margin: 0.2rem 0;
-        }
-        
-        .detalle-dropdown-item-compact.text-success {
-            background-color: #e8f5e8;
-            border-radius: 6px;
-            margin: 0.2rem 0;
-        }
-        
-        .detalle-dropdown-item-compact.text-danger {
-            background-color: #ffebee;
-            border-radius: 6px;
-            margin: 0.2rem 0;
-        }
-        
-        .detalle-dropdown-item-compact.text-primary:hover {
-            background-color: #bbdefb;
-        }
-        
-        .detalle-dropdown-item-compact.text-warning:hover {
-            background-color: #e1bee7;
-        }
-        
-        .detalle-dropdown-item-compact.text-success:hover {
-            background-color: #c8e6c9;
-        }
-        
-        .detalle-dropdown-item-compact.text-danger:hover {
-            background-color: #ffcdd2;
-        }
+            /* Fondo unificado para todos los ítems del dropdown */
+            .detalle-dropdown-item-compact {
+                background-color: #e0e0e0 !important;
+                border-radius: 6px;
+                margin: 0.2rem 0;
+                font-weight: 600 !important;
+            }
+            .detalle-dropdown-item-compact:hover,
+            .detalle-dropdown-item-compact.text-warning {
+                color: #e67e22 !important;
+            }
         
         /* Mejoras específicas para móvil */
         @media (max-width: 768px) {

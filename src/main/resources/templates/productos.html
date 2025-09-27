@@ -117,14 +117,30 @@
         
         .mobile-product-header {
             display: flex;
+            flex-direction: row;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 8px;
+            gap: 10px;
         }
         
         .mobile-product-title {
             font-weight: 600;
             color: var(--primary-color);
+            flex: 1 1 0%;
+            min-width: 0;
+            word-break: break-word;
+            white-space: normal;
+            margin-bottom: 0;
+        }
+
+        .mobile-product-status {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            white-space: nowrap;
         }
         
         .mobile-product-detail {
@@ -314,8 +330,8 @@
                              th:classappend="${producto.esProductoBase} ? 'producto-base' : (${producto.productoBase} != null ? 'producto-derivado' : '')"
                              class="mobile-product-card">
                             <div class="mobile-product-header">
-                                <h5 class="mobile-product-title mb-0" th:text="${producto.nombre}"></h5>
-                                <div>
+                                <h5 class="mobile-product-title" th:text="${producto.nombre}"></h5>
+                                <div class="mobile-product-status">
                                     <span th:if="${producto.esProductoBase}" class="badge badge-base">Base</span>
                                     <span th:if="${producto.productoBase != null}" class="badge badge-derivado">
                                         De: <span th:text="${producto.productoBase.nombre}"></span>

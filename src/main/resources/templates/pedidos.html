@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
+        .text-naranja {
+            color: #e67e22 !important;
+        }
         /* ESTILOS ESPECÍFICOS SOLO PARA PEDIDOS - AISLADOS */
         .pedidos-body {
             display: flex;
@@ -92,9 +95,11 @@
             color: #0062E6;
         }
         
-        .pedidos-btn-warning:hover {
-            background-color: #e0a800 !important;
-            border-color: #d39e00 !important;
+        .pedidos-btn-warning:hover,
+        .btn-warning:hover {
+            background-color: #ddb13a !important;
+            border-color: #c49e2a !important;
+            color: #212529 !important;
         }
         
         .pedidos-empty-state {
@@ -359,7 +364,7 @@
                                                                 <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
                                                                     <input type="hidden" name="estado" value="ENTREGANDO">
                                                                     <button type="submit" class="dropdown-item pedidos-dropdown-item">
-                                                                        <i class="bi bi-check-circle me-2 text-warning"></i>Marcar como Entregando
+                                                                        <i class="bi bi-check-circle me-2 text-naranja"></i>Marcar como Entregando
                                                                     </button>
                                                                 </form>
                                                             </li>

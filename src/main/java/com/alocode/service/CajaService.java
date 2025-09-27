@@ -12,7 +12,6 @@ import com.alocode.model.enums.EstadoMesa;
 import com.alocode.model.enums.EstadoPedido;
 import com.alocode.repository.CajaRepository;
 import com.alocode.repository.PedidoRepository;
-import com.alocode.repository.UsuarioRepository;
 import com.alocode.repository.MesaRepository;
 
 import java.util.Date;
@@ -25,7 +24,6 @@ public class CajaService {
     private final CajaRepository cajaRepository;
     private final PedidoRepository pedidoRepository;
     private final MesaRepository mesaRepository;
-    private final UsuarioRepository usuarioRepository;
     private final com.alocode.repository.ClienteRepository clienteRepository;
 
     @Transactional
