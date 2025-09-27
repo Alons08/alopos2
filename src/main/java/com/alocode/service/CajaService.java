@@ -46,15 +46,16 @@ public class CajaService {
             caja.setMontoCierre(caja.getMontoApertura() + totalNeto);
             caja.setEstado(EstadoCaja.CERRADA);
             caja.setHoraCierre(new Date());
-            List<Pedido> pedidosPendientes = pedidoRepository.findPedidosPendientesPorCaja(caja.getId(), clienteId);
-            pedidosPendientes.forEach(p -> {
+            // Cambiar a CANCELADO los pedidos en estado PENDIENTE, PREPARANDO o ENTREGANDO
+            List<Pedido> pedidosNoFinalizados = pedidoRepository.findPedidosNoFinalizadosPorCaja(caja.getId(), clienteId);
+            pedidosNoFinalizados.forEach(p -> {
                 p.setEstado(EstadoPedido.CANCELADO);
                 if (p.getTipo() != null && p.getTipo().name().equals("MESA") && p.getMesa() != null) {
                     p.getMesa().setEstado(EstadoMesa.DISPONIBLE);
                     mesaRepository.save(p.getMesa());
                 }
             });
-            pedidoRepository.saveAll(pedidosPendientes);
+            pedidoRepository.saveAll(pedidosNoFinalizados);
             cajaRepository.save(caja);
         });
         // Asignar el cliente actual a la caja
@@ -101,8 +102,8 @@ public class CajaService {
         caja.setHoraCierre(new Date());
 
         // Cancelar pedidos pendientes y liberar mesas si corresponde
-        List<Pedido> pedidosPendientes = pedidoRepository.findPedidosPendientesPorCaja(idCaja, caja.getCliente().getId());
-        pedidosPendientes.forEach(p -> {
+        List<Pedido> pedidosNoFinalizados = pedidoRepository.findPedidosNoFinalizadosPorCaja(idCaja, caja.getCliente().getId());
+        pedidosNoFinalizados.forEach(p -> {
             p.setEstado(EstadoPedido.CANCELADO);
             // Liberar mesa si es pedido de mesa y tiene mesa asignada
             if (p.getTipo() != null && p.getTipo().name().equals("MESA") && p.getMesa() != null) {
@@ -110,7 +111,7 @@ public class CajaService {
                 mesaRepository.save(p.getMesa());
             }
         });
-        pedidoRepository.saveAll(pedidosPendientes);
+        pedidoRepository.saveAll(pedidosNoFinalizados);
         return cajaRepository.save(caja);
     }
 
