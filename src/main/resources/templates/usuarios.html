@@ -255,6 +255,17 @@
     
     <div class="main-content">
         <div class="container py-4">
+            <!-- Alertas -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             <div class="row">
                 <div class="col-12">
                     <div class="page-header animate__animated animate__fadeIn">
@@ -354,6 +365,14 @@
             tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+            // Cerrar alertas automáticamente después de 5 segundos
+            setTimeout(function() {
+                var alertList = document.querySelectorAll('.alert');
+                alertList.forEach(function(alert) {
+                    var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
         });
     </script>
 </body>

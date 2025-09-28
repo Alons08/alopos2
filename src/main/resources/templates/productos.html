@@ -421,6 +421,14 @@
             tooltipTriggerList.map(function (tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+            // Cerrar alertas automáticamente después de 5 segundos
+            setTimeout(function() {
+                var alertList = document.querySelectorAll('.alert');
+                alertList.forEach(function(alert) {
+                    var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
         });
     </script>
 </body>

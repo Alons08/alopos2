@@ -36,12 +36,16 @@ public class UsuarioAdminController {
     }
 
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds) {
-        // Asignar el cliente actual usando TenantContext
-        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
-        usuario.setCliente(cliente);
-        usuarioService.guardarUsuario(usuario, rolesIds);
+    public String guardarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+            com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
+            usuario.setCliente(cliente);
+            usuarioService.guardarUsuario(usuario, rolesIds);
+            redirectAttributes.addFlashAttribute("success", "Usuario guardado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/admin/usuarios";
     }
 
@@ -55,18 +59,27 @@ public class UsuarioAdminController {
     }
 
     @PostMapping("/actualizar")
-    public String actualizarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds) {
-        // Asignar el cliente actual usando TenantContext
-        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
-        usuario.setCliente(cliente);
-        usuarioService.actualizarUsuario(usuario, rolesIds);
+    public String actualizarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+            com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
+            usuario.setCliente(cliente);
+            usuarioService.actualizarUsuario(usuario, rolesIds);
+            redirectAttributes.addFlashAttribute("success", "Usuario actualizado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/admin/usuarios";
     }
 
     @PostMapping("/cambiar-estado/{id}")
-    public String cambiarEstado(@PathVariable Long id) {
-        usuarioService.cambiarEstadoeIntentosFallidos(id);
+    public String cambiarEstado(@PathVariable Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            usuarioService.cambiarEstadoeIntentosFallidos(id);
+            redirectAttributes.addFlashAttribute("success", "Usuario desactivado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
         return "redirect:/admin/usuarios";
     }
 }
