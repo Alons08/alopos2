@@ -74,6 +74,13 @@
             margin-bottom: 0.3rem;
             font-size: 1rem;
         }
+        .form-label .opcional {
+            color: #ff5252;
+            font-size: 0.90em;
+            font-weight: 700;
+            margin-left: 4px;
+            letter-spacing: 0.5px;
+        }
         
         .form-control, .form-select {
             border-radius: 8px;
@@ -227,7 +234,7 @@
                         
                         <!-- Capacidad -->
                         <div class="form-section">
-                            <label for="capacidad" class="form-label">Capacidad</label>
+                            <label for="capacidad" class="form-label">Capacidad <span class="opcional">(opcional)</span></label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
                                 <input type="number" id="capacidad" th:field="*{capacidad}" class="form-control" 
@@ -237,7 +244,7 @@
                         
                         <!-- Ubicación -->
                         <div class="form-section">
-                            <label for="ubicacion" class="form-label">Ubicación</label>
+                            <label for="ubicacion" class="form-label">Ubicación <span class="opcional">(opcional)</span></label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
                                 <input type="text" id="ubicacion" th:field="*{ubicacion}" class="form-control" 
