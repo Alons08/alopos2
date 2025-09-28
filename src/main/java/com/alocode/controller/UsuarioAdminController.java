@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 
 @Controller
@@ -71,12 +73,22 @@ public class UsuarioAdminController {
         }
         return "redirect:/admin/usuarios";
     }
-
-    @PostMapping("/cambiar-estado/{id}")
-    public String cambiarEstado(@PathVariable Long id, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+    @PostMapping("/desactivar/{id}")
+    public String desactivarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            usuarioService.cambiarEstadoeIntentosFallidos(id);
+            usuarioService.desactivarUsuario(id);
             redirectAttributes.addFlashAttribute("success", "Usuario desactivado exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/admin/usuarios";
+    }
+
+    @PostMapping("/activar/{id}")
+    public String activarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            usuarioService.activarUsuario(id);
+            redirectAttributes.addFlashAttribute("success", "Usuario activado exitosamente");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

@@ -87,12 +87,22 @@ public class UsuarioService {
         usuarioRepository.save(existente);
     }
 
-    // Cambiar estado activo/inactivo
-    public void cambiarEstadoeIntentosFallidos(Long id) {
+    // Desactivar usuario y reiniciar intentos fallidos
+    public void desactivarUsuario(Long id) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
-        if (usuario != null && !tieneRolAdmin(usuario)) {
-            usuario.setActivo(!usuario.getActivo());
-            usuario.setIntentosFallidos(0); // Reinicia los intentos fallidos
+        if (usuario != null && !tieneRolAdmin(usuario) && usuario.getActivo()) {
+            usuario.setActivo(false);
+            usuario.setIntentosFallidos(0);
+            usuarioRepository.save(usuario);
+        }
+    }
+
+    // Activar usuario y reiniciar intentos fallidos
+    public void activarUsuario(Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario != null && !tieneRolAdmin(usuario) && !usuario.getActivo()) {
+            usuario.setActivo(true);
+            usuario.setIntentosFallidos(0);
             usuarioRepository.save(usuario);
         }
     }

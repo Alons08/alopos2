@@ -123,17 +123,21 @@
         }
         
         .status-inactive {
-            background-color: rgba(108, 117, 125, 0.1);
-            color: #6c757d;
+            background-color: #f8d7da;
+            color: #dc3545;
         }
         
         .action-btn {
-            padding: 0.35rem 0.75rem;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 0.85rem;
             font-weight: bold;
             display: inline-flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 6px;
+            transition: all 0.2s;
+            width: 110px;
+            justify-content: center;
         }
         
         .empty-state {
@@ -326,20 +330,25 @@
                                                    th:if="${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}">
                                                     <i class="bi bi-pencil"></i> Editar
                                                 </a>
-                                                
-                                                <!-- Cambiar estado -->
-                                                <form th:action="@{'/admin/usuarios/cambiar-estado/' + ${usuario.id}}" 
-                                                      method="post" 
-                                                      style="display:inline;" 
-                                                      th:if="${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}">
-                                                    <button type="submit" 
-                                                            class="btn action-btn" 
-                                                            th:classappend="${usuario.activo} ? 'btn-danger' : 'btn-success'">
-                                                        <i th:classappend="${usuario.activo} ? 'bi-toggle-off' : 'bi-toggle-on'"></i> 
-                                                        <span th:text="${usuario.activo ? 'Desactivar' : 'Activar'}"></span>
+
+                                                <!-- Desactivar -->
+                                                <form th:if="${usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
+                                                      th:action="@{'/admin/usuarios/desactivar/' + ${usuario.id}}"
+                                                      method="post" style="display:inline;">
+                                                    <button type="submit" class="btn btn-danger action-btn" onclick="return confirm('¿Estás seguro de desactivar este usuario?')">
+                                                        <i class="bi bi-slash-circle"></i> <span>Desactivar</span>
                                                     </button>
                                                 </form>
-                                                
+
+                                                <!-- Activar -->
+                                                <form th:if="${!usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
+                                                      th:action="@{'/admin/usuarios/activar/' + ${usuario.id}}"
+                                                      method="post" style="display:inline;">
+                                                    <button type="submit" class="btn btn-success action-btn" onclick="return confirm('¿Estás seguro de activar este usuario?')">
+                                                        <i class="bi bi-check-circle"></i> <span>Activar</span>
+                                                    </button>
+                                                </form>
+
                                                 <!-- Para admin -->
                                                 <span th:if="${!usuario.roles.?[nombre == 'ADMIN'].isEmpty()}" 
                                                       class="text-muted">Acciones restringidas</span>

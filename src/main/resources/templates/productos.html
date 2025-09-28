@@ -52,10 +52,21 @@
         }
         
         .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            padding: 0.5em 0.8em;
+            border-radius: 50px;
             font-weight: 500;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .status-active {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+        .status-inactive {
+            background-color: #f8d7da;
+            color: #dc3545;
         }
         
         .price-cell {
@@ -276,11 +287,11 @@
                                         <td class="text-center" th:text="${producto.stockOcupado}"></td>
                                         <td class="text-center" th:text="${producto.stock - producto.stockOcupado}"></td>
                                         <td class="text-center">
-                                            <span th:if="${producto.activo}" class="status-badge bg-success bg-opacity-10 text-success">
-                                                <i class="bi bi-check-circle"></i> Activo
+                                            <span th:if="${producto.activo}" class="status-badge status-active">
+                                                <i class="bi bi-check-circle-fill"></i> Activo
                                             </span>
-                                            <span th:unless="${producto.activo}" class="status-badge bg-danger bg-opacity-10 text-danger">
-                                                <i class="bi bi-x-circle"></i> Inactivo
+                                            <span th:unless="${producto.activo}" class="status-badge status-inactive">
+                                                <i class="bi bi-x-circle-fill"></i> Inactivo
                                             </span>
                                         </td>
                                         <td class="text-center">
