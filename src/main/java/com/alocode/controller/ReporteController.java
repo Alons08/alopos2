@@ -57,8 +57,9 @@ public class ReporteController {
             inicioDate = inicioSemana.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             finDate = finSemana.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         }
-        LocalDateTime inicioLdt = inicioDate.atStartOfDay();
-        LocalDateTime finLdt = finDate.atStartOfDay();
+    LocalDateTime inicioLdt = inicioDate.atStartOfDay();
+    // Sumar un día para incluir todo el domingo (último día de la semana)
+    LocalDateTime finLdt = finDate.plusDays(1).atStartOfDay();
         ReporteService.ReporteSemanal reporte = reporteService.generarReporteSemanal(inicioLdt, finLdt);
         model.addAttribute("reporte", reporte);
         // Fechas para navegación

@@ -36,7 +36,7 @@ public class ExcelExporter {
                     fechaReporte = new SimpleDateFormat("dd-MM-yyyy").format(diario.getFecha());
                 }
                 // Configurar anchos de columnas (en unidades de 1/256 de ancho de carácter)
-                sheet.setColumnWidth(0, 16*256);  // Columna A - ID Pedido
+                sheet.setColumnWidth(0, 16*256);  // Columna A - N° Pedido
                 sheet.setColumnWidth(1, 20*256);  // Columna B - Mesa
                 sheet.setColumnWidth(2, 20*256);  // Columna C - Usuario
                 sheet.setColumnWidth(3, 15*256);  // Columna D - Venta
@@ -73,7 +73,7 @@ public class ExcelExporter {
                 
                 // Cabecera de pedidos
                 String[] pedidosHeaders = {
-                    "ID Pedido", "Mesa", "Usuario", "Venta", "Recargo", "Total", "Fecha Pagado"
+                    "N° Pedido", "Mesa", "Usuario", "Venta", "Recargo", "Total", "Fecha Pagado"
                 };
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 
@@ -83,7 +83,7 @@ public class ExcelExporter {
                     Row row = sheet.createRow(rowIdx++);
                     row.setHeightInPoints(20);
                     int colIdx = 0;
-                    addCell(row, colIdx++, p.getId(), centeredStyle);
+                    addCell(row, colIdx++, p.getNumeroPedido(), centeredStyle);
                     addCell(row, colIdx++, p.getMesa() != null ? String.valueOf(p.getMesa().getNumero()) : "", centeredStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);
                     // Calcular venta sin recargo
@@ -183,14 +183,14 @@ public class ExcelExporter {
                 rowIdx = addSeparatorRow(sheet, rowIdx, 7, separatorStyle);
 
                 // Cabecera de pedidos
-                String[] pedidosHeaders = {"ID Pedido", "Mesa", "Usuario", "Venta", "Recargo", "Total", "Fecha Pagado"};
+                String[] pedidosHeaders = {"N° Pedido", "Mesa", "Usuario", "Venta", "Recargo", "Total", "Fecha Pagado"};
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 for (Pedido p : semanal.getPedidos()) {
                     // No agregar separador entre pedidos en el reporte semanal
                     Row row = sheet.createRow(rowIdx++);
                     row.setHeightInPoints(20);
                     int colIdx = 0;
-                    addCell(row, colIdx++, p.getId(), centeredStyle);
+                    addCell(row, colIdx++, p.getNumeroPedido(), centeredStyle);
                     addCell(row, colIdx++, p.getMesa() != null ? String.valueOf(p.getMesa().getNumero()) : "", centeredStyle);
                     addCell(row, colIdx++, p.getUsuario() != null ? p.getUsuario().getNombre() : "", centeredStyle);
                     // Calcular venta sin recargo
@@ -259,12 +259,12 @@ public class ExcelExporter {
                 rowIdx = addSeparatorRow(sheet, rowIdx, 6, separatorStyle);
 
                 // Cabecera de pedidos
-                String[] pedidosHeaders = {"ID Pedido", "Fecha Pagado", "Venta", "Recargo", "Total", "Usuario"};
+                String[] pedidosHeaders = {"N° Pedido", "Fecha Pagado", "Venta", "Recargo", "Total", "Usuario"};
                 rowIdx = createTableHeader(sheet, rowIdx, pedidosHeaders, headerStyle);
                 for (Pedido p : mensual.getPedidos()) {
                     Row row = sheet.createRow(rowIdx++);
                     int colIdx = 0;
-                    addCell(row, colIdx++, p.getId(), centeredStyle);
+                    addCell(row, colIdx++, p.getNumeroPedido(), centeredStyle);
                     addCell(row, colIdx++, p.getFechaPagado(), dateStyle);
                     // Calcular venta sin recargo
                     double ventaSinRecargo = p.getTotal() - p.getRecargo();

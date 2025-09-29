@@ -308,7 +308,7 @@
                                 <table class="table table-hover mb-0 pedidos-table pedidos-table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>N° Pedido</th>
                                             <th>Tipo</th>
                                             <th>Mesa</th>
                                             <th>Total</th>
@@ -319,7 +319,7 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="pedido : ${pedidos}">
-                                            <td data-label="ID" th:text="${pedido.id}"></td>
+                                            <td data-label="N° Pedido" th:text="${pedido.numeroPedido}"></td>
                                             <td data-label="Tipo" th:text="${pedido.tipo}"></td>
                                             <td data-label="Mesa" th:text="${pedido.mesa != null} ? '# '+${pedido.mesa.numero} : 'N/A'"></td>
                                             <td data-label="Total" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>

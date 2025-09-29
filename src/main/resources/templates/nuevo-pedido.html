@@ -298,7 +298,7 @@
                         <h2 class="page-title">
                             <i class="bi bi-cart-plus me-2"></i>
                             <span th:if="${pedido.id == null}">Nuevo Pedido</span>
-                            <span th:if="${pedido.id != null}">Editar Pedido <span class="badge bg-secondary ms-2">ID: <span th:text="${pedido.id}"></span></span></span>
+                            <span th:if="${pedido.id != null}">Editar Pedido <span class="badge bg-secondary ms-2">N° Pedido: <span th:text="${pedido.numeroPedido}"></span></span></span>
                         </h2>
                     </div>
                     

@@ -220,7 +220,7 @@ public class PedidoController {
             Paragraph tipoDoc = new Paragraph("COMPROBANTE DE VENTA ELECTRÓNICA", fontBold);
             tipoDoc.setAlignment(Element.ALIGN_CENTER);
             document.add(tipoDoc);
-            document.add(new Paragraph("N°: B001-" + String.format("%06d", pedido.getId()), fontBold));
+            document.add(new Paragraph("N°: B001-" + String.format("%06d", pedido.getNumeroPedido()), fontBold));
             document.add(new Paragraph(
                     "----------------------------------------------------------------------------------------",
                     fontNormal));

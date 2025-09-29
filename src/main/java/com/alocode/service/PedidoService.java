@@ -38,10 +38,14 @@ public class PedidoService {
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
         Caja caja = cajaRepository.findCajaAbiertaHoy(clienteId)
             .orElseThrow(() -> new IllegalStateException("No hay caja abierta hoy"));
-        // Asignar cliente al pedido
-        com.alocode.model.Cliente cliente = new com.alocode.model.Cliente();
-        cliente.setId(clienteId);
-        pedido.setCliente(cliente);
+    // Asignar cliente al pedido
+    com.alocode.model.Cliente cliente = new com.alocode.model.Cliente();
+    cliente.setId(clienteId);
+    pedido.setCliente(cliente);
+
+    // Asignar número de pedido secuencial por cliente
+    Integer maxNumero = pedidoRepository.findMaxNumeroPedidoByClienteId(clienteId);
+    pedido.setNumeroPedido(maxNumero + 1);
 
         // Validar y procesar detalles
         for (DetallePedido detalle : detalles) {

@@ -33,4 +33,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     
     List<Pedido> findByClienteIdAndEstadoAndFechaPagadoBetweenOrderByIdAsc(Long clienteId, EstadoPedido estado, LocalDateTime inicio, LocalDateTime fin);
 
+    @Query("SELECT COALESCE(MAX(p.numeroPedido), 0) FROM Pedido p WHERE p.cliente.id = :clienteId")
+    Integer findMaxNumeroPedidoByClienteId(@Param("clienteId") Long clienteId);
 }

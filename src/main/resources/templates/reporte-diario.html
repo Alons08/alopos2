@@ -272,7 +272,7 @@
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>N° Pedido</th>
                                 <th>Tipo</th>
                                 <th>Mesa</th>
                                 <th>Total (Venta + Recargo)</th>
@@ -283,7 +283,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="pedido : ${reporte.pedidos}" style="cursor: pointer;" onclick="window.location.href='/pedidos/' + ${pedido.id}">
-                                <td th:text="${pedido.id}"></td>
+                                <td th:text="${pedido.numeroPedido}"></td>
                                 <td th:text="${pedido.tipo}"></td>
                                 <td th:text="${pedido.mesa != null} ? ${pedido.mesa.numero} : 'N/A'"></td>
                                 <td>S/ <span th:text="${#numbers.formatDecimal(pedido.total, 1, 2)}"></span></td>

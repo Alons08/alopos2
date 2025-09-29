@@ -8,13 +8,18 @@ import com.alocode.model.enums.EstadoPedido;
 import com.alocode.model.enums.TipoPedido;
 
 @Entity
-@Table(name = "pedidos", indexes = {
-    @Index(name = "idx_pedido_fecha", columnList = "fecha"),
-    @Index(name = "idx_pedido_estado", columnList = "estado"),
-    @Index(name = "idx_pedido_usuario", columnList = "usuario_id"),
-    @Index(name = "idx_pedido_caja", columnList = "caja_id"),
-    @Index(name = "idx_pedido_cliente", columnList = "cliente_id") // Nuevo índice para multi-tenancy
-})
+@Table(name = "pedidos",
+    indexes = {
+        @Index(name = "idx_pedido_fecha", columnList = "fecha"),
+        @Index(name = "idx_pedido_estado", columnList = "estado"),
+        @Index(name = "idx_pedido_usuario", columnList = "usuario_id"),
+        @Index(name = "idx_pedido_caja", columnList = "caja_id"),
+        @Index(name = "idx_pedido_cliente", columnList = "cliente_id") // Nuevo índice para multi-tenancy
+    },
+    uniqueConstraints = {
+        @UniqueConstraint(name = "uk_cliente_numero_pedido", columnNames = {"cliente_id", "numero_pedido"})
+    }
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +28,9 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "numero_pedido", nullable = false)
+    private Integer numeroPedido;
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
