@@ -320,32 +320,36 @@
                             th:if="${mesa.estado.name() == 'INACTIVA'}"
                             th:action="@{/mesas/activar/{id}(id=${mesa.id})}"
                             method="post"
+                            class="form-activar-mesa"
+                            th:attr="data-mesa-id=${mesa.id}"
                           >
                             <button
-                              type="submit"
-                              class="btn btn-success action-btn"
-                              onclick="return confirm('¿Estás seguro de activar esta mesa?')"
+                              type="button"
+                              class="btn btn-success action-btn btn-modal-activar"
+                              th:attr="data-mesa-id=${mesa.id}"
                               title="Activar"
                             >
                               <i class="bi bi-check-circle"></i>
                               <span>Activar</span>
                             </button>
                           </form>
-                          <form
-                            th:if="${mesa.estado.name() != 'INACTIVA'}"
-                            th:action="@{/mesas/desactivar/{id}(id=${mesa.id})}"
-                            method="post"
-                          >
-                            <button
-                              type="submit"
-                              class="btn btn-danger action-btn"
-                              onclick="return confirm('¿Estás seguro de desactivar esta mesa?')"
-                              title="Desactivar"
+                            <form
+                              th:if="${mesa.estado.name() != 'INACTIVA'}"
+                              th:action="@{/mesas/desactivar/{id}(id=${mesa.id})}"
+                              method="post"
+                              class="form-desactivar-mesa"
+                              th:attr="data-mesa-id=${mesa.id}"
                             >
-                              <i class="bi bi-slash-circle"></i>
-                              <span>Desactivar</span>
-                            </button>
-                          </form>
+                              <button
+                                type="button"
+                                class="btn btn-danger action-btn btn-modal-desactivar"
+                                th:attr="data-mesa-id=${mesa.id}"
+                                title="Desactivar"
+                              >
+                                <i class="bi bi-slash-circle"></i>
+                                <span>Desactivar</span>
+                              </button>
+                            </form>
                         </div>
                       </td>
                     </tr>
@@ -395,11 +399,13 @@
                     th:if="${mesa.estado.name() == 'INACTIVA'}"
                     th:action="@{/mesas/activar/{id}(id=${mesa.id})}"
                     method="post"
+                    class="form-activar-mesa"
+                    th:attr="data-mesa-id=${mesa.id}"
                   >
                     <button
-                      type="submit"
-                      class="btn btn-success action-btn"
-                      onclick="return confirm('¿Estás seguro de activar esta mesa?')"
+                      type="button"
+                      class="btn btn-success action-btn btn-modal-activar"
+                      th:attr="data-mesa-id=${mesa.id}"
                     >
                       <i class="bi bi-check-circle"></i>
                       <span>Activar</span>
@@ -409,11 +415,13 @@
                     th:if="${mesa.estado.name() != 'INACTIVA'}"
                     th:action="@{/mesas/desactivar/{id}(id=${mesa.id})}"
                     method="post"
+                    class="form-desactivar-mesa"
+                    th:attr="data-mesa-id=${mesa.id}"
                   >
                     <button
-                      type="submit"
-                      class="btn btn-danger action-btn"
-                      onclick="return confirm('¿Estás seguro de desactivar esta mesa?')"
+                      type="button"
+                      class="btn btn-danger action-btn btn-modal-desactivar"
+                      th:attr="data-mesa-id=${mesa.id}"
                     >
                       <i class="bi bi-slash-circle"></i>
                       <span>Desactivar</span>
@@ -437,6 +445,47 @@
 
     <footer th:replace="~{fragments/footer :: footer}"></footer>
 
+    <!-- Modal de confirmación para desactivar mesa -->
+    <div class="modal fade" id="modalDesactivarMesa" tabindex="-1" aria-labelledby="modalDesactivarMesaLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalDesactivarMesaLabel">
+              <i class="bi bi-slash-circle text-danger me-2"></i> Confirmar desactivación
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0">¿Estás seguro de que deseas desactivar esta mesa?</p>
+          </div>
+          <div class="modal-footer d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="btnConfirmarDesactivar">Desactivar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal de confirmación para activar mesa -->
+    <div class="modal fade" id="modalActivarMesa" tabindex="-1" aria-labelledby="modalActivarMesaLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalActivarMesaLabel">
+              <i class="bi bi-check-circle text-success me-2"></i> Confirmar activación
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0">¿Estás seguro de que deseas activar esta mesa?</p>
+          </div>
+          <div class="modal-footer d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-success" id="btnConfirmarActivar">Activar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -455,6 +504,52 @@
             bsAlert.close();
           });
         }, 5000);
+
+        // Modal de confirmación para desactivar y activar mesa
+        let idMesaSeleccionada = null;
+        let accionSeleccionada = null;
+        const modalDesactivar = new bootstrap.Modal(document.getElementById('modalDesactivarMesa'));
+        const modalActivar = new bootstrap.Modal(document.getElementById('modalActivarMesa'));
+        const btnConfirmarDesactivar = document.getElementById('btnConfirmarDesactivar');
+        const btnConfirmarActivar = document.getElementById('btnConfirmarActivar');
+
+        document.querySelectorAll('.btn-modal-desactivar').forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            idMesaSeleccionada = btn.getAttribute('data-mesa-id');
+            accionSeleccionada = 'desactivar';
+            modalDesactivar.show();
+          });
+        });
+        document.querySelectorAll('.btn-modal-activar').forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            idMesaSeleccionada = btn.getAttribute('data-mesa-id');
+            accionSeleccionada = 'activar';
+            modalActivar.show();
+          });
+        });
+
+        btnConfirmarDesactivar.addEventListener('click', function() {
+          if (idMesaSeleccionada && accionSeleccionada === 'desactivar') {
+            const form = document.querySelector('.form-desactivar-mesa[data-mesa-id="' + idMesaSeleccionada + '"]');
+            if (form) {
+              form.submit();
+            }
+            modalDesactivar.hide();
+            idMesaSeleccionada = null;
+            accionSeleccionada = null;
+          }
+        });
+        btnConfirmarActivar.addEventListener('click', function() {
+          if (idMesaSeleccionada && accionSeleccionada === 'activar') {
+            const form = document.querySelector('.form-activar-mesa[data-mesa-id="' + idMesaSeleccionada + '"]');
+            if (form) {
+              form.submit();
+            }
+            modalActivar.hide();
+            idMesaSeleccionada = null;
+            accionSeleccionada = null;
+          }
+        });
       });
     </script>
   </body>

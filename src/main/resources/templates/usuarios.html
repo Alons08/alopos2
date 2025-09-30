@@ -334,8 +334,11 @@
                                                 <!-- Desactivar -->
                                                 <form th:if="${usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
                                                       th:action="@{'/admin/usuarios/desactivar/' + ${usuario.id}}"
-                                                      method="post" style="display:inline;">
-                                                    <button type="submit" class="btn btn-danger action-btn" onclick="return confirm('¿Estás seguro de desactivar este usuario?')">
+                                                      method="post" style="display:inline;"
+                                                      class="form-desactivar-usuario"
+                                                      th:attr="data-usuario-id=${usuario.id}">
+                                                    <button type="button" class="btn btn-danger action-btn btn-modal-desactivar"
+                                                            th:attr="data-usuario-id=${usuario.id}">
                                                         <i class="bi bi-slash-circle"></i> <span>Desactivar</span>
                                                     </button>
                                                 </form>
@@ -343,8 +346,11 @@
                                                 <!-- Activar -->
                                                 <form th:if="${!usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
                                                       th:action="@{'/admin/usuarios/activar/' + ${usuario.id}}"
-                                                      method="post" style="display:inline;">
-                                                    <button type="submit" class="btn btn-success action-btn" onclick="return confirm('¿Estás seguro de activar este usuario?')">
+                                                      method="post" style="display:inline;"
+                                                      class="form-activar-usuario"
+                                                      th:attr="data-usuario-id=${usuario.id}">
+                                                    <button type="button" class="btn btn-success action-btn btn-modal-activar"
+                                                            th:attr="data-usuario-id=${usuario.id}">
                                                         <i class="bi bi-check-circle"></i> <span>Activar</span>
                                                     </button>
                                                 </form>
@@ -366,23 +372,110 @@
     
     <div th:replace="~{fragments/footer :: footer}"></div>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar tooltips si es necesario
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-            // Cerrar alertas automáticamente después de 5 segundos
-            setTimeout(function() {
-                var alertList = document.querySelectorAll('.alert');
-                alertList.forEach(function(alert) {
-                    var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-                    bsAlert.close();
+        <!-- Modal de confirmación para desactivar usuario -->
+        <div class="modal fade" id="modalDesactivarUsuario" tabindex="-1" aria-labelledby="modalDesactivarUsuarioLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDesactivarUsuarioLabel">
+                            <i class="bi bi-slash-circle text-danger me-2"></i> Confirmar desactivación
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">¿Estás seguro de que deseas desactivar este usuario?</p>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="btnConfirmarDesactivarUsuario">Desactivar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de confirmación para activar usuario -->
+        <div class="modal fade" id="modalActivarUsuario" tabindex="-1" aria-labelledby="modalActivarUsuarioLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalActivarUsuarioLabel">
+                            <i class="bi bi-check-circle text-success me-2"></i> Confirmar activación
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">¿Estás seguro de que deseas activar este usuario?</p>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" id="btnConfirmarActivarUsuario">Activar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                        // Inicializar tooltips si es necesario
+                        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                        tooltipTriggerList.map(function (tooltipTriggerEl) {
+                                return new bootstrap.Tooltip(tooltipTriggerEl);
+                        });
+                        // Cerrar alertas automáticamente después de 5 segundos
+                        setTimeout(function() {
+                                var alertList = document.querySelectorAll('.alert');
+                                alertList.forEach(function(alert) {
+                                        var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+                                        bsAlert.close();
+                                });
+                        }, 5000);
+
+                        // Modal de confirmación para activar/desactivar usuario
+                        let idUsuarioSeleccionado = null;
+                        let accionSeleccionada = null;
+                        const modalDesactivar = new bootstrap.Modal(document.getElementById('modalDesactivarUsuario'));
+                        const modalActivar = new bootstrap.Modal(document.getElementById('modalActivarUsuario'));
+                        const btnConfirmarDesactivar = document.getElementById('btnConfirmarDesactivarUsuario');
+                        const btnConfirmarActivar = document.getElementById('btnConfirmarActivarUsuario');
+
+                        document.querySelectorAll('.btn-modal-desactivar').forEach(function(btn) {
+                                btn.addEventListener('click', function(e) {
+                                        idUsuarioSeleccionado = btn.getAttribute('data-usuario-id');
+                                        accionSeleccionada = 'desactivar';
+                                        modalDesactivar.show();
+                                });
+                        });
+                        document.querySelectorAll('.btn-modal-activar').forEach(function(btn) {
+                                btn.addEventListener('click', function(e) {
+                                        idUsuarioSeleccionado = btn.getAttribute('data-usuario-id');
+                                        accionSeleccionada = 'activar';
+                                        modalActivar.show();
+                                });
+                        });
+
+                        btnConfirmarDesactivar.addEventListener('click', function() {
+                                if (idUsuarioSeleccionado && accionSeleccionada === 'desactivar') {
+                                        const form = document.querySelector('.form-desactivar-usuario[data-usuario-id="' + idUsuarioSeleccionado + '"]');
+                                        if (form) {
+                                                form.submit();
+                                        }
+                                        modalDesactivar.hide();
+                                        idUsuarioSeleccionado = null;
+                                        accionSeleccionada = null;
+                                }
+                        });
+                        btnConfirmarActivar.addEventListener('click', function() {
+                                if (idUsuarioSeleccionado && accionSeleccionada === 'activar') {
+                                        const form = document.querySelector('.form-activar-usuario[data-usuario-id="' + idUsuarioSeleccionado + '"]');
+                                        if (form) {
+                                                form.submit();
+                                        }
+                                        modalActivar.hide();
+                                        idUsuarioSeleccionado = null;
+                                        accionSeleccionada = null;
+                                }
+                        });
                 });
-            }, 5000);
-        });
-    </script>
+        </script>
 </body>
 </html>
