@@ -332,10 +332,112 @@
         </div>
     </div>
     
-    <div th:replace="~{fragments/footer :: footer}"></div>
+
+        <!-- Modal de carga personalizado -->
+        <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
+            <div class="custom-loader-backdrop"></div>
+            <div class="custom-loader-content">
+                <div class="custom-spinner"></div>
+                <div class="custom-loader-text">Cargando...</div>
+            </div>
+        </div>
+
+        <style>
+            .custom-loader-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .custom-loader-backdrop {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(44,62,80,0.25);
+                backdrop-filter: blur(2px);
+            }
+            .custom-loader-content {
+                position: relative;
+                z-index: 2;
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(44,62,80,0.12);
+                padding: 32px 40px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-width: 220px;
+            }
+            .custom-spinner {
+                width: 48px;
+                height: 48px;
+                border: 6px solid #e0e0e0;
+                border-top: 6px solid #3498db;
+                border-radius: 50%;
+                animation: custom-spin 1s linear infinite;
+                margin-bottom: 18px;
+            }
+            @keyframes custom-spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .custom-loader-text {
+                font-size: 1.15rem;
+                color: #2c3e50;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+            }
+            @media (max-width: 576px) {
+                .custom-loader-content {
+                    padding: 24px 16px;
+                    min-width: 140px;
+                }
+                .custom-loader-text {
+                    font-size: 1rem;
+                }
+            }
+        </style>
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+                // Modal de carga personalizado
+                function showCustomLoader() {
+                    document.getElementById('customLoaderModal').style.display = 'flex';
+                }
+                function hideCustomLoader() {
+                    document.getElementById('customLoaderModal').style.display = 'none';
+                }
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Loader en Guardar
+                    var form = document.getElementById('userForm');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            if (form.checkValidity()) {
+                                showCustomLoader();
+                            }
+                        });
+                    }
+                                // Loader en Cancelar (excepto si es el enlace de Productos en el navbar)
+                                var btnCancel = document.querySelector('.btn-cancel');
+                                if (btnCancel) {
+                                    btnCancel.addEventListener('click', function(e) {
+                                        // Si el botón tiene href a /productos, no mostrar el loader
+                                        if (btnCancel.getAttribute('href') === '/productos' || btnCancel.getAttribute('th:href') === '@{/productos}') {
+                                            return;
+                                        }
+                                        showCustomLoader();
+                                    });
+                                }
+                });
+        // ...existing code...
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle para mostrar/ocultar contraseña
             function setupPasswordToggle(toggleId, inputId) {

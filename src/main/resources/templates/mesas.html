@@ -443,7 +443,78 @@
       </div>
     </div>
 
-    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <!-- Modal de carga personalizado -->
+    <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
+      <div class="custom-loader-backdrop"></div>
+      <div class="custom-loader-content">
+        <div class="custom-spinner"></div>
+        <div class="custom-loader-text">Cargando...</div>
+      </div>
+    </div>
+
+    <style>
+      .custom-loader-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-loader-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44,62,80,0.25);
+        backdrop-filter: blur(2px);
+      }
+      .custom-loader-content {
+        position: relative;
+        z-index: 2;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(44,62,80,0.12);
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 220px;
+      }
+      .custom-spinner {
+        width: 48px;
+        height: 48px;
+        border: 6px solid #e0e0e0;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        animation: custom-spin 1s linear infinite;
+        margin-bottom: 18px;
+      }
+      @keyframes custom-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .custom-loader-text {
+        font-size: 1.15rem;
+        color: #2c3e50;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      @media (max-width: 576px) {
+        .custom-loader-content {
+          padding: 24px 16px;
+          min-width: 140px;
+        }
+        .custom-loader-text {
+          font-size: 1rem;
+        }
+      }
+    </style>
 
     <!-- Modal de confirmación para desactivar mesa -->
     <div class="modal fade" id="modalDesactivarMesa" tabindex="-1" aria-labelledby="modalDesactivarMesaLabel" aria-hidden="true">
@@ -505,6 +576,14 @@
           });
         }, 5000);
 
+        // Modal de carga personalizado
+        function showCustomLoader() {
+          document.getElementById('customLoaderModal').style.display = 'flex';
+        }
+        function hideCustomLoader() {
+          document.getElementById('customLoaderModal').style.display = 'none';
+        }
+
         // Modal de confirmación para desactivar y activar mesa
         let idMesaSeleccionada = null;
         let accionSeleccionada = null;
@@ -532,6 +611,7 @@
           if (idMesaSeleccionada && accionSeleccionada === 'desactivar') {
             const form = document.querySelector('.form-desactivar-mesa[data-mesa-id="' + idMesaSeleccionada + '"]');
             if (form) {
+              showCustomLoader();
               form.submit();
             }
             modalDesactivar.hide();
@@ -543,12 +623,20 @@
           if (idMesaSeleccionada && accionSeleccionada === 'activar') {
             const form = document.querySelector('.form-activar-mesa[data-mesa-id="' + idMesaSeleccionada + '"]');
             if (form) {
+              showCustomLoader();
               form.submit();
             }
             modalActivar.hide();
             idMesaSeleccionada = null;
             accionSeleccionada = null;
           }
+        });
+
+        // Loader en Nueva Mesa y Editar
+        document.querySelectorAll('a[href*="/mesas/nuevo"], a[href*="/mesas/editar/"]').forEach(function(link) {
+          link.addEventListener('click', function(e) {
+            showCustomLoader();
+          });
         });
       });
     </script>

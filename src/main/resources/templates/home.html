@@ -1,497 +1,684 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Inicio - Sistema de Ventas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3a56d4;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --cancel-color: #6c757d;
-            --cancel-hover: #5a6268;
-            --card-bg-primary: #f0f4ff;
-            --card-bg-success: #f0fff4;
-            --card-bg-warning: #fff8f0;
-            --card-bg-danger: #fff0f0;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f8f9fa;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding-bottom: 60px;
-            margin-top: 40px;
-        }
-        
+      :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a56d4;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --cancel-color: #6c757d;
+        --cancel-hover: #5a6268;
+        --card-bg-primary: #f0f4ff;
+        --card-bg-success: #f0fff4;
+        --card-bg-warning: #fff8f0;
+        --card-bg-danger: #fff0f0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+      }
+
+      .main-content {
+        flex: 1;
+        padding-bottom: 60px;
+        margin-top: 40px;
+      }
+
+      .form-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: none;
+        transition: transform 0.3s ease;
+        height: 100%;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-primary {
+        background-color: var(--card-bg-primary);
+        border-top: 4px solid var(--primary-color);
+      }
+
+      .card-success {
+        background-color: var(--card-bg-success);
+        border-top: 4px solid var(--success-color);
+      }
+
+      .card-warning {
+        background-color: var(--card-bg-warning);
+        border-top: 4px solid var(--warning-color);
+      }
+
+      .card-danger {
+        background-color: var(--card-bg-danger);
+        border-top: 4px solid var(--danger-color);
+      }
+
+      .card-body {
+        padding: 1.2rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-icon {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+        display: inline-block;
+      }
+
+      .card-primary .card-icon {
+        color: var(--primary-color);
+      }
+
+      .card-success .card-icon {
+        color: var(--success-color);
+      }
+
+      .card-warning .card-icon {
+        color: var(--warning-color);
+      }
+
+      .card-danger .card-icon {
+        color: var(--danger-color);
+      }
+
+      .card-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        color: var(--secondary-color);
+      }
+
+      .card-text {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+      }
+
+      .btn-custom {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        margin-top: auto;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+
+      .btn-success {
+        background-color: var(--success-color);
+        border-color: var(--success-color);
+      }
+
+      .btn-warning {
+        background-color: #ffc107; /* Color más claro inicialmente */
+        border-color: #ffc107;
+        color: #000; /* Texto negro para mejor contraste */
+      }
+
+      .btn-warning:hover {
+        background-color: #e0a800; /* Tonalidad más oscura en hover */
+        border-color: #d39e00;
+        color: #000;
+      }
+
+      .monto-caja {
+        color: #e29400 !important; /* Tonalidad dorada intermedia - más legible */
+        font-weight: 600;
+      }
+
+      .btn-danger {
+        background-color: var(--danger-color);
+        border-color: var(--danger-color);
+      }
+
+      .btn-purple {
+        background-color: #713aed !important;
+        border-color: #713aed !important;
+        color: white !important;
+      }
+
+      .btn-purple:hover {
+        background-color: #5c2fb7 !important;
+        border-color: #5c2fb7 !important;
+        color: white !important;
+      }
+
+      .welcome-banner {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid var(--primary-color);
+        padding: 0.8rem 1rem;
+      }
+
+      .page-title {
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 0;
+        font-size: 1.7rem;
+      }
+
+      .date-badge {
+        background-color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      /* Toast mejorado para laptop y móvil */
+      .toast-container-improved {
+        position: fixed;
+        z-index: 1100;
+        top: 100px;
+        right: 20px;
+        max-width: 350px;
+      }
+
+      .toast-improved {
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        border: none;
+        background: linear-gradient(135deg, #28a745, #20c997);
+      }
+
+      .toast-improved .toast-body {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        color: white;
+        font-weight: 500;
+      }
+
+      .toast-improved .btn-close {
+        filter: invert(1);
+        opacity: 0.8;
+      }
+
+      .toast-improved .btn-close:hover {
+        opacity: 1;
+      }
+
+      @media (max-width: 768px) {
         .form-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
+          padding: 0 15px;
         }
-        
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: none;
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-        
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .card-primary {
-            background-color: var(--card-bg-primary);
-            border-top: 4px solid var(--primary-color);
-        }
-        
-        .card-success {
-            background-color: var(--card-bg-success);
-            border-top: 4px solid var(--success-color);
-        }
-        
-        .card-warning {
-            background-color: var(--card-bg-warning);
-            border-top: 4px solid var(--warning-color);
-        }
-        
-        .card-danger {
-            background-color: var(--card-bg-danger);
-            border-top: 4px solid var(--danger-color);
-        }
-        
+
         .card-body {
-            padding: 1.2rem;
-            display: flex;
-            flex-direction: column;
+          padding: 1rem;
         }
-        
+
         .card-icon {
-            font-size: 2rem;
-            margin-bottom: 0.8rem;
-            display: inline-block;
+          font-size: 1.8rem;
         }
-        
-        .card-primary .card-icon {
-            color: var(--primary-color);
-        }
-        
-        .card-success .card-icon {
-            color: var(--success-color);
-        }
-        
-        .card-warning .card-icon {
-            color: var(--warning-color);
-        }
-        
-        .card-danger .card-icon {
-            color: var(--danger-color);
-        }
-        
+
         .card-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-            color: var(--secondary-color);
+          font-size: 1rem;
         }
-        
-        .card-text {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 1rem;
-        }
-        
+
         .btn-custom {
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-            margin-top: auto;
+          padding: 0.4rem 0.8rem;
+          font-size: 0.85rem;
         }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-        
-        .btn-success {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-        }
-        
-        .btn-warning {
-            background-color: #ffc107; /* Color más claro inicialmente */
-            border-color: #ffc107;
-            color: #000; /* Texto negro para mejor contraste */
-        }
-        
-        .btn-warning:hover {
-            background-color: #e0a800; /* Tonalidad más oscura en hover */
-            border-color: #d39e00;
-            color: #000;
-        }
-        
-        .monto-caja {
-            color: #e29400 !important; /* Tonalidad dorada intermedia - más legible */
-            font-weight: 600;
-        }
-        
-        .btn-danger {
-            background-color: var(--danger-color);
-            border-color: var(--danger-color);
-        }
-        
-        .btn-purple {
-            background-color: #713aed !important;
-            border-color: #713aed !important;
-            color: white !important;
-        }
-        
-        .btn-purple:hover {
-            background-color: #5c2fb7 !important;
-            border-color: #5c2fb7 !important;
-            color: white !important;
-        }
-        
-        .welcome-banner {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--primary-color);
-            padding: 0.8rem 1rem;
-        }
-        
+
         .page-title {
-            font-weight: 600;
-            color: var(--secondary-color);
-            margin-bottom: 0;
-            font-size: 1.7rem;
+          font-size: 1.5rem;
         }
-        
+
         .date-badge {
-            background-color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            font-weight: 500;
-            font-size: 0.9rem;
+          font-size: 0.85rem;
+          padding: 0.3rem 0.7rem;
         }
-        
-        /* Toast mejorado para laptop y móvil */
+
+        .welcome-banner {
+          padding: 0.7rem 0.9rem;
+        }
+
+        /* Toast para tablet */
         .toast-container-improved {
-            position: fixed;
-            z-index: 1100;
-            top: 100px;
-            right: 20px;
-            max-width: 350px;
+          top: 80px;
+          right: 15px;
+          left: 15px;
+          max-width: none;
         }
-        
-        .toast-improved {
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-            border: none;
-            background: linear-gradient(135deg, #28a745, #20c997);
+      }
+
+      @media (max-width: 576px) {
+        .form-container {
+          padding: 0 12px;
         }
-        
+
+        .main-content {
+          margin-top: 30px;
+          padding-bottom: 60px;
+        }
+
+        .card-body {
+          padding: 0.9rem;
+        }
+
+        .card-icon {
+          font-size: 1.6rem;
+        }
+
+        .welcome-banner {
+          padding: 0.6rem 0.8rem;
+          font-size: 0.9rem;
+        }
+
+        /* Toast para móvil */
+        .toast-container-improved {
+          top: 70px;
+          right: 10px;
+          left: 10px;
+        }
+
         .toast-improved .toast-body {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            color: white;
-            font-weight: 500;
+          padding: 0.8rem;
+          font-size: 0.9rem;
         }
-        
-        .toast-improved .btn-close {
-            filter: invert(1);
-            opacity: 0.8;
+      }
+
+      @media (max-width: 400px) {
+        .form-container {
+          padding: 0 12px;
         }
-        
-        .toast-improved .btn-close:hover {
-            opacity: 1;
+
+        .card-body {
+          padding: 0.8rem;
         }
-        
-        @media (max-width: 768px) {
-            .form-container {
-                padding: 0 15px;
-            }
-            
-            .card-body {
-                padding: 1rem;
-            }
-            
-            .card-icon {
-                font-size: 1.8rem;
-            }
-            
-            .card-title {
-                font-size: 1rem;
-            }
-            
-            .btn-custom {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.85rem;
-            }
-            
-            .page-title {
-                font-size: 1.5rem;
-            }
-            
-            .date-badge {
-                font-size: 0.85rem;
-                padding: 0.3rem 0.7rem;
-            }
-            
-            .welcome-banner {
-                padding: 0.7rem 0.9rem;
-            }
-            
-            /* Toast para tablet */
-            .toast-container-improved {
-                top: 80px;
-                right: 15px;
-                left: 15px;
-                max-width: none;
-            }
+
+        .card-title {
+          font-size: 0.95rem;
         }
-        
-        @media (max-width: 576px) {
-            .form-container {
-                padding: 0 12px;
-            }
-            
-            .main-content {
-                margin-top: 30px;
-                padding-bottom: 60px;
-            }
-            
-            .card-body {
-                padding: 0.9rem;
-            }
-            
-            .card-icon {
-                font-size: 1.6rem;
-            }
-            
-            .welcome-banner {
-                padding: 0.6rem 0.8rem;
-                font-size: 0.9rem;
-            }
-            
-            /* Toast para móvil */
-            .toast-container-improved {
-                top: 70px;
-                right: 10px;
-                left: 10px;
-            }
-            
-            .toast-improved .toast-body {
-                padding: 0.8rem;
-                font-size: 0.9rem;
-            }
+
+        .card-text {
+          font-size: 0.85rem;
         }
-        
-        @media (max-width: 400px) {
-            .form-container {
-                padding: 0 12px;
-            }
-            
-            .card-body {
-                padding: 0.8rem;
-            }
-            
-            .card-title {
-                font-size: 0.95rem;
-            }
-            
-            .card-text {
-                font-size: 0.85rem;
-            }
-            
-            /* Toast para móviles pequeños */
-            .toast-container-improved {
-                top: 60px;
-                right: 5px;
-                left: 5px;
-            }
+
+        /* Toast para móviles pequeños */
+        .toast-container-improved {
+          top: 60px;
+          right: 5px;
+          left: 5px;
         }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Toast de éxito mejorado -->
     <div th:if="${success}" class="toast-container-improved">
-        <div class="toast show toast-improved" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="4000">
-            <div class="toast-body">
-                <i class="bi bi-check-circle-fill me-3" style="font-size: 1.3rem;"></i>
-                <span th:text="${success}"></span>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
+      <div
+        class="toast show toast-improved"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-bs-autohide="true"
+        data-bs-delay="4000"
+      >
+        <div class="toast-body">
+          <i class="bi bi-check-circle-fill me-3" style="font-size: 1.3rem"></i>
+          <span th:text="${success}"></span>
+          <button
+            type="button"
+            class="btn-close ms-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
         </div>
+      </div>
     </div>
-    
+
     <!-- Navbar Fragment -->
     <div th:replace="~{fragments/navbar :: navbar}"></div>
-    
+
     <!-- Main Content -->
     <div class="main-content">
-        <div class="container form-container">
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-                        <h2 class="page-title">Panel Principal</h2>
-                        <div class="date-badge text-muted" th:text="'Hoy es ' + ${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"></div>
-                    </div>
-                    
-                    <!-- Welcome Message -->
-                    <div sec:authorize="hasAuthority('ADMIN')" class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-3">
-                        <i class="bi bi-person-badge me-3" style="color: var(--primary-color);"></i>
-                        <div>
-                            <strong class="d-block">Bienvenido Administrador</strong>
-                            <small class="text-muted">Tienes acceso completo al sistema</small>
-                        </div>
-                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    
-                    <div sec:authorize="hasAuthority('SECRETARIA')" class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-3">
-                        <i class="bi bi-person-lines-fill me-3" style="color: var(--primary-color);"></i>
-                        <div>
-                            <strong class="d-block">Bienvenida Secretaria</strong>
-                            <small class="text-muted">Puedes gestionar pedidos y clientes</small>
-                        </div>
-                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
+      <div class="container form-container">
+        <div class="row mb-4">
+          <div class="col-12">
+            <div
+              class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3"
+            >
+              <h2 class="page-title">Panel Principal</h2>
+              <div
+                class="date-badge text-muted"
+                th:text="'Hoy es ' + ${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}"
+              ></div>
             </div>
-            
-            <!-- Cards Section -->
-            <div class="row g-3">
-                <!-- Nuevo Pedido Card -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card card-primary animate__animated animate__fadeIn">
-                        <div class="card-body text-center">
-                            <i class="bi bi-cart-plus card-icon"></i>
-                            <h5 class="card-title">Nuevo Pedido</h5>
-                            <p class="card-text">Registrar nuevo pedido para mesa, local o delivery</p>
-                            <a th:href="@{/pedidos/nuevo}" class="btn btn-primary btn-custom">
-                                <i class="bi bi-plus-circle me-1"></i>Crear Pedido
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Pedidos Activos Card -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card card-success animate__animated animate__fadeIn">
-                        <div class="card-body text-center">
-                            <i class="bi bi-list-check card-icon"></i>
-                            <h5 class="card-title">Pedidos Activos</h5>
-                            <p class="card-text">Ver y gestionar pedidos en proceso</p>
-                            <a th:href="@{/pedidos}" class="btn btn-success btn-custom">
-                                <i class="bi bi-eye me-1"></i>Ver Pedidos
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Caja Card (Solo Admin) -->
-                <div sec:authorize="hasAuthority('ADMIN')" class="col-xl-3 col-lg-4 col-md-6">
-                    <div th:if="${cajaAbierta}" class="card card-warning animate__animated animate__fadeIn">
-                        <div class="card-body text-center">
-                            <i class="bi bi-cash-coin card-icon"></i>
-                            <h5 class="card-title">Caja Abierta</h5>
-                            <p class="card-text mb-1">Monto inicial:</p>
-                            <h6 class="monto-caja mb-3">S/ <span th:text="${#numbers.formatDecimal(cajaAbierta.montoApertura, 1, 2)}"></span></h6>
-                            <a th:href="@{/caja/cerrar}" class="btn btn-warning btn-custom">
-                                <i class="bi bi-lock me-1"></i>Cerrar Caja
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div th:unless="${cajaAbierta}" class="card card-danger animate__animated animate__fadeIn">
-                        <div class="card-body text-center">
-                            <i class="bi bi-cash-coin card-icon"></i>
-                            <h5 class="card-title">Caja Cerrada</h5>
-                            <p class="card-text">No hay caja abierta en este momento</p>
-                            <a th:href="@{/caja/abrir}" class="btn btn-danger btn-custom">
-                                <i class="bi bi-unlock me-1"></i>Abrir Caja
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Reportes Card -->
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card" style="background-color: #f3f0ff; border-top: 4px solid #713aed;">
-                        <div class="card-body text-center">
-                            <i class="bi bi-bar-chart-fill card-icon" style="color: #713aed;"></i>
-                            <h5 class="card-title">Reporte Diario</h5>
-                            <p class="card-text">Visualizar ventas de hoy y días anteriores</p>
-                            <a th:href="@{/reportes/diario}" class="btn btn-custom btn-purple">
-                                <i class="bi bi-graph-up me-1"></i>Ver Reporte Diario
-                            </a>
-                        </div>
-                    </div>
-                </div>
+
+            <!-- Welcome Message -->
+            <div
+              sec:authorize="hasAuthority('ADMIN')"
+              class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-3"
+            >
+              <i
+                class="bi bi-person-badge me-3"
+                style="color: var(--primary-color)"
+              ></i>
+              <div>
+                <strong class="d-block">Bienvenido Administrador</strong>
+                <small class="text-muted"
+                  >Tienes acceso completo al sistema</small
+                >
+              </div>
+              <button
+                type="button"
+                class="btn-close ms-auto"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
             </div>
+
+            <div
+              sec:authorize="hasAuthority('SECRETARIA')"
+              class="alert welcome-banner alert-dismissible fade show d-flex align-items-center mb-3"
+            >
+              <i
+                class="bi bi-person-lines-fill me-3"
+                style="color: var(--primary-color)"
+              ></i>
+              <div>
+                <strong class="d-block">Bienvenida Secretaria</strong>
+                <small class="text-muted"
+                  >Puedes gestionar pedidos y clientes</small
+                >
+              </div>
+              <button
+                type="button"
+                class="btn-close ms-auto"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
         </div>
+
+        <!-- Cards Section -->
+        <div class="row g-3">
+          <!-- Nuevo Pedido Card -->
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card card-primary animate__animated animate__fadeIn">
+              <div class="card-body text-center">
+                <i class="bi bi-cart-plus card-icon"></i>
+                <h5 class="card-title">Nuevo Pedido</h5>
+                <p class="card-text">
+                  Registrar nuevo pedido para mesa, local o delivery
+                </p>
+                <a
+                  th:href="@{/pedidos/nuevo}"
+                  class="btn btn-primary btn-custom"
+                >
+                  <i class="bi bi-plus-circle me-1"></i>Crear Pedido
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pedidos Activos Card -->
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card card-success animate__animated animate__fadeIn">
+              <div class="card-body text-center">
+                <i class="bi bi-list-check card-icon"></i>
+                <h5 class="card-title">Pedidos Activos</h5>
+                <p class="card-text">Ver y gestionar pedidos en proceso</p>
+                <a th:href="@{/pedidos}" class="btn btn-success btn-custom">
+                  <i class="bi bi-eye me-1"></i>Ver Pedidos
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Caja Card (Solo Admin) -->
+          <div
+            sec:authorize="hasAuthority('ADMIN')"
+            class="col-xl-3 col-lg-4 col-md-6"
+          >
+            <div
+              th:if="${cajaAbierta}"
+              class="card card-warning animate__animated animate__fadeIn"
+            >
+              <div class="card-body text-center">
+                <i class="bi bi-cash-coin card-icon"></i>
+                <h5 class="card-title">Caja Abierta</h5>
+                <p class="card-text mb-1">Monto inicial:</p>
+                <h6 class="monto-caja mb-3">
+                  S/
+                  <span
+                    th:text="${#numbers.formatDecimal(cajaAbierta.montoApertura, 1, 2)}"
+                  ></span>
+                </h6>
+                <a th:href="@{/caja/cerrar}" class="btn btn-warning btn-custom">
+                  <i class="bi bi-lock me-1"></i>Cerrar Caja
+                </a>
+              </div>
+            </div>
+
+            <div
+              th:unless="${cajaAbierta}"
+              class="card card-danger animate__animated animate__fadeIn"
+            >
+              <div class="card-body text-center">
+                <i class="bi bi-cash-coin card-icon"></i>
+                <h5 class="card-title">Caja Cerrada</h5>
+                <p class="card-text">No hay caja abierta en este momento</p>
+                <a th:href="@{/caja/abrir}" class="btn btn-danger btn-custom">
+                  <i class="bi bi-unlock me-1"></i>Abrir Caja
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reportes Card -->
+          <div class="col-xl-3 col-lg-4 col-md-6">
+            <div
+              class="card"
+              style="background-color: #f3f0ff; border-top: 4px solid #713aed"
+            >
+              <div class="card-body text-center">
+                <i
+                  class="bi bi-bar-chart-fill card-icon"
+                  style="color: #713aed"
+                ></i>
+                <h5 class="card-title">Reporte Diario</h5>
+                <p class="card-text">
+                  Visualizar ventas de hoy y días anteriores
+                </p>
+                <a
+                  th:href="@{/reportes/diario}"
+                  class="btn btn-custom btn-purple"
+                >
+                  <i class="bi bi-graph-up me-1"></i>Ver Reporte Diario
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <!-- Footer Fragment -->
+
+    <!-- Modal de carga personalizado -->
+    <div
+      id="customLoaderModal"
+      class="custom-loader-modal"
+      style="display: none"
+    >
+      <div class="custom-loader-backdrop"></div>
+      <div class="custom-loader-content">
+        <div class="custom-spinner"></div>
+        <div class="custom-loader-text">Cargando...</div>
+      </div>
+    </div>
+
+    <style>
+      .custom-loader-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-loader-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44, 62, 80, 0.25);
+        backdrop-filter: blur(2px);
+      }
+      .custom-loader-content {
+        position: relative;
+        z-index: 2;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(44, 62, 80, 0.12);
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 220px;
+      }
+      .custom-spinner {
+        width: 48px;
+        height: 48px;
+        border: 6px solid #e0e0e0;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        animation: custom-spin 1s linear infinite;
+        margin-bottom: 18px;
+      }
+      @keyframes custom-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .custom-loader-text {
+        font-size: 1.15rem;
+        color: #2c3e50;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      @media (max-width: 576px) {
+        .custom-loader-content {
+          padding: 24px 16px;
+          min-width: 140px;
+        }
+        .custom-loader-text {
+          font-size: 1rem;
+        }
+      }
+    </style>
+
     <div th:replace="~{fragments/footer :: footer}"></div>
-    
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // Configuración automática del toast con Bootstrap
-        var toastEl = document.querySelector('.toast-improved');
+        var toastEl = document.querySelector(".toast-improved");
         if (toastEl) {
-            var toast = new bootstrap.Toast(toastEl, { 
-                delay: 4000,
-                autohide: true
-            });
-            
-            // Ocultar automáticamente después de 4 segundos
-            toast.show();
-            
-            // Eliminar el toast del DOM después de ocultarse
-            toastEl.addEventListener('hidden.bs.toast', function () {
-                toastEl.remove();
-            });
+          var toast = new bootstrap.Toast(toastEl, {
+            delay: 4000,
+            autohide: true,
+          });
+
+          // Ocultar automáticamente después de 4 segundos
+          toast.show();
+
+          // Eliminar el toast del DOM después de ocultarse
+          toastEl.addEventListener("hidden.bs.toast", function () {
+            toastEl.remove();
+          });
         }
-        
-        // Añadir animación escalonada a las cards
-        const cards = document.querySelectorAll('.card');
-        cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'all 0.5s ease';
-            
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 100 * index);
+
+        // Loader solo en botones/a de las cards principales (no navbar)
+        var cardButtons = document.querySelectorAll(
+          ".card .btn, .card button, .card a"
+        );
+        cardButtons.forEach(function (btn) {
+          btn.addEventListener("click", function (e) {
+            // Verifica que el botón/a no esté en el navbar
+            var inNavbar = false;
+            var el = btn;
+            while (el) {
+              if (el.classList && el.classList.contains("navbar")) {
+                inNavbar = true;
+                break;
+              }
+              el = el.parentElement;
+            }
+            if (!inNavbar) {
+              document.getElementById("customLoaderModal").style.display =
+                "flex";
+            }
+          });
         });
-    });
+
+        // Añadir animación escalonada a las cards
+        const cards = document.querySelectorAll(".card");
+        cards.forEach((card, index) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+          card.style.transition = "all 0.5s ease";
+
+          setTimeout(() => {
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, 100 * index);
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
