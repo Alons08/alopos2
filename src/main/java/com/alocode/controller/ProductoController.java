@@ -1,5 +1,9 @@
 package com.alocode.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +21,27 @@ public class ProductoController {
     private final ProductoService productoService;
 
     @GetMapping
-    public String listarProductos(@RequestParam(value = "q", required = false) String q, Model model) {
-        // Siempre mostrar todos los productos (base, derivados e independientes) en la tabla
+    public String listarProductos(
+            @RequestParam(value = "q", required = false) String q,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "2") int size, //50
+            @RequestParam(value = "sort", defaultValue = "id") String sort,
+            @RequestParam(value = "dir", defaultValue = "asc") String dir,
+            Model model) {
+        Sort.Direction direction = dir.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
+        Page<Producto> productosPage;
         if (q != null && !q.trim().isEmpty()) {
-            model.addAttribute("productos", productoService.buscarProductosPorNombre(q));
+            productosPage = productoService.buscarProductosPorNombrePaginado(q, pageable);
         } else {
-            model.addAttribute("productos", productoService.obtenerTodosLosProductos());
+            productosPage = productoService.obtenerProductosPaginados(pageable);
         }
-        // Mantener la alerta informativa de productos base
+        model.addAttribute("productosPage", productosPage);
+        model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("productosBase", productoService.obtenerProductosBase());
+        model.addAttribute("q", q);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "productos";
     }
     

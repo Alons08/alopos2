@@ -3,7 +3,6 @@ package com.alocode.controller;
 import com.alocode.model.Cliente;
 import com.alocode.model.Usuario;
 import com.alocode.service.ClienteService;
-import com.alocode.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.alocode.service.MyUserDetails;

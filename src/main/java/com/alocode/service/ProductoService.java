@@ -8,6 +8,9 @@ import com.alocode.model.Producto;
 import com.alocode.repository.ProductoRepository;
 import com.alocode.repository.ClienteRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +24,15 @@ public class ProductoService {
             .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado"));
     }
     
-    public List<Producto> obtenerTodosLosProductos() {
+        // Métodos para paginación y ordenamiento
+    public Page<Producto> obtenerProductosPaginados(Pageable pageable) {
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        return productoRepository.findAllByClienteIdOrderByIdAsc(clienteId);
+        return productoRepository.findAllByClienteId(clienteId, pageable);
     }
 
-    public List<Producto> buscarProductosPorNombre(String nombre) {
+    public Page<Producto> buscarProductosPorNombrePaginado(String nombre, Pageable pageable) {
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        return productoRepository.buscarPorNombre(nombre, clienteId);
+        return productoRepository.buscarPorNombre(nombre, clienteId, pageable);
     }
 
     public Optional<Producto> obtenerProductoPorId(Long id) {

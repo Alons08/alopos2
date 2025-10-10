@@ -9,18 +9,21 @@ import com.alocode.model.Producto;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
-    List<Producto> findAllByClienteIdOrderByIdAsc(Long clienteId);
+    // Para paginación y ordenamiento
+    Page<Producto> findAllByClienteId(Long clienteId, Pageable pageable);
     
     List<Producto> findByClienteIdAndActivoTrue(Long clienteId);
     
     Optional<Producto> findByNombreIgnoreCaseAndClienteId(String nombre, Long clienteId);
     
     @Query("SELECT p FROM Producto p WHERE p.activo = TRUE AND p.cliente.id = :clienteId AND LOWER(p.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")
-    List<Producto> buscarPorNombre(@Param("nombre") String nombre, @Param("clienteId") Long clienteId);
+    Page<Producto> buscarPorNombre(@Param("nombre") String nombre, @Param("clienteId") Long clienteId, Pageable pageable);
     
     List<Producto> findByClienteIdAndEsProductoBaseTrueAndActivoTrue(Long clienteId);
     

@@ -1,569 +1,718 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Usuarios - Sistema de Ventas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f8f9fa;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding-bottom: 60px;
-        }
-        
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .page-title {
-            color: var(--primary-color);
-            font-weight: 600;
-            position: relative;
-            padding-bottom: 0.5rem;
-            display: inline-block;
-        }
-        
-        .page-title:after {
-            content: '';
-            display: block;
-            margin-top: 2px;
-            width: 100%;
-            height: 3px;
-            background-color: var(--accent-color);
-        }
-        
-        .btn-add-user {
-            background-color: var(--success-color);
-            border: none;
-            padding: 0.5rem 1.25rem;
-            font-weight: 500;
-        }
-        
-        .btn-add-user:hover {
-            background-color: #219653;
-        }
-        
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+      }
+
+      .main-content {
+        flex: 1;
+        padding-bottom: 60px;
+      }
+
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .page-title {
+        color: var(--primary-color);
+        font-weight: 600;
+        position: relative;
+        padding-bottom: 0.5rem;
+        display: inline-block;
+      }
+
+      .page-title:after {
+        content: "";
+        display: block;
+        margin-top: 2px;
+        width: 100%;
+        height: 3px;
+        background-color: var(--accent-color);
+      }
+
+      .btn-add-user {
+        background-color: var(--success-color);
+        border: none;
+        padding: 0.5rem 1.25rem;
+        font-weight: 500;
+      }
+
+      .btn-add-user:hover {
+        background-color: #219653;
+      }
+
+      .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .table {
+        margin-bottom: 0;
+      }
+
+      .table thead {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+      }
+
+      .table thead th {
+        background-color: var(--primary-color) !important;
+        color: white !important;
+        border-color: var(--primary-color) !important;
+      }
+
+      .table th {
+        font-weight: 500;
+        vertical-align: middle;
+      }
+
+      .table-hover tbody tr:hover {
+        background-color: rgba(44, 62, 80, 0.05);
+      }
+
+      .badge-role {
+        padding: 0.35em 0.65em;
+        font-size: 0.75em;
+        border-radius: 50rem;
+        background-color: #e0e0e0;
+        color: #333;
+        margin-right: 0.3rem;
+        margin-bottom: 0.3rem;
+        display: inline-block;
+      }
+
+      .badge-status {
+        padding: 0.5em 0.8em;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .status-active {
+        background-color: rgba(39, 174, 96, 0.1);
+        color: var(--success-color);
+      }
+
+      .status-inactive {
+        background-color: #f8d7da;
+        color: #dc3545;
+      }
+
+      .action-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        width: 110px;
+        justify-content: center;
+      }
+
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 3rem;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        color: #adb5bd;
+        margin-bottom: 1rem;
+      }
+
+      @media (max-width: 768px) {
         .table-responsive {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+          border: 1px solid #dee2e6;
+          overflow-x: auto;
         }
-        
+
         .table {
-            margin-bottom: 0;
+          width: 100%;
+          margin-bottom: 1rem;
+          display: block;
         }
-        
+
         .table thead {
-            background-color: var(--primary-color) !important;
-            color: white !important;
+          display: none;
         }
-        
-        .table thead th {
-            background-color: var(--primary-color) !important;
-            color: white !important;
-            border-color: var(--primary-color) !important;
+
+        .table tbody {
+          display: block;
+          width: 100%;
         }
-        
-        .table th {
-            font-weight: 500;
-            vertical-align: middle;
+
+        .table tr {
+          display: block;
+          margin-bottom: 1rem;
+          border: 1px solid #dee2e6;
+          border-radius: 8px;
+          padding: 0.75rem;
         }
-        
-        .table-hover tbody tr:hover {
-            background-color: rgba(44, 62, 80, 0.05);
+
+        .table td {
+          display: flex;
+          align-items: center;
+          padding: 0.5rem 0;
+          border: none;
+          border-bottom: 1px solid #eee;
         }
-        
-        .badge-role {
-            padding: 0.35em 0.65em;
-            font-size: 0.75em;
-            border-radius: 50rem;
-            background-color: #e0e0e0;
-            color: #333;
-            margin-right: 0.3rem;
-            margin-bottom: 0.3rem;
-            display: inline-block;
+
+        .table td:before {
+          content: attr(data-label);
+          font-weight: bold;
+          color: var(--primary-color);
+          min-width: 100px;
+          margin-right: 3rem;
         }
-        
+
+        .table td:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+
         .badge-status {
-            padding: 0.5em 0.8em;
-            border-radius: 50px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
+          display: inline-flex;
+          align-items: center;
         }
-        
-        .status-active {
-            background-color: rgba(39, 174, 96, 0.1);
-            color: var(--success-color);
-        }
-        
-        .status-inactive {
-            background-color: #f8d7da;
-            color: #dc3545;
-        }
-        
+
         .action-btn {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            width: 110px;
-            justify-content: center;
+          margin-right: 0.5rem;
+          margin-bottom: 0;
         }
-        
+
+        .d-flex.flex-wrap.gap-2 {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          padding-bottom: 0.5rem;
+        }
+
+        .d-flex.flex-wrap.gap-2 .btn {
+          white-space: nowrap;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .btn-add-user {
+          width: 100%;
+        }
+
         .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 3rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+          padding: 2rem 1rem;
         }
-        
-        .empty-state i {
-            font-size: 3rem;
-            color: #adb5bd;
-            margin-bottom: 1rem;
+
+        .table td:before {
+          min-width: 80px;
         }
-        
-        @media (max-width: 768px) {
-            .table-responsive {
-                border: 1px solid #dee2e6;
-                overflow-x: auto;
-            }
-            
-            .table {
-                width: 100%;
-                margin-bottom: 1rem;
-                display: block;
-            }
-            
-            .table thead {
-                display: none;
-            }
-            
-            .table tbody {
-                display: block;
-                width: 100%;
-            }
-            
-            .table tr {
-                display: block;
-                margin-bottom: 1rem;
-                border: 1px solid #dee2e6;
-                border-radius: 8px;
-                padding: 0.75rem;
-            }
-            
-            .table td {
-                display: flex;
-                align-items: center;
-                padding: 0.5rem 0;
-                border: none;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .table td:before {
-                content: attr(data-label);
-                font-weight: bold;
-                color: var(--primary-color);
-                min-width: 100px;
-                margin-right: 3rem; 
-            }
-            
-            .table td:last-child {
-                border-bottom: none;
-                padding-bottom: 0;
-            }
-            
-            .badge-status {
-                display: inline-flex;
-                align-items: center;
-            }
-            
-            .action-btn {
-                margin-right: 0.5rem;
-                margin-bottom: 0;
-            }
-            
-            .d-flex.flex-wrap.gap-2 {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: 0.5rem;
-            }
-            
-            .d-flex.flex-wrap.gap-2 .btn {
-                white-space: nowrap;
-            }
+
+        .action-btn {
+          padding: 0.3rem 0.6rem;
+          font-size: 0.8rem;
         }
-        
-        @media (max-width: 576px) {
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .btn-add-user {
-                width: 100%;
-            }
-            
-            .empty-state {
-                padding: 2rem 1rem;
-            }
-            
-            .table td:before {
-                min-width: 80px;
-            }
-            
-            .action-btn {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.8rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
-    
+
     <div class="main-content">
-        <div class="container py-4">
-            <!-- Alertas -->
-            <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                <span th:text="${success}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <div class="container py-4">
+        <!-- Alertas -->
+        <div
+          th:if="${success}"
+          class="alert alert-success alert-dismissible fade show mb-4"
+        >
+          <i class="bi bi-check-circle-fill me-2"></i>
+          <span th:text="${success}"></span>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+        </div>
+        <div
+          th:if="${error}"
+          class="alert alert-danger alert-dismissible fade show mb-4"
+        >
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <span th:text="${error}"></span>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="page-header animate__animated animate__fadeIn">
+              <h1 class="page-title">Gestión de Usuarios</h1>
+              <a
+                th:href="@{/admin/usuarios/nuevo}"
+                class="btn btn-primary text-white"
+              >
+                <i class="bi bi-person-plus me-1"></i> Nuevo Usuario
+              </a>
             </div>
-            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <span th:text="${error}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+            <!-- Empty State -->
+            <div
+              th:if="${usuarios.size() == 0}"
+              class="empty-state animate__animated animate__fadeIn"
+            >
+              <i class="bi bi-people"></i>
+              <h4 class="mb-2">No hay usuarios registrados</h4>
+              <p class="text-muted mb-3">
+                Comienza agregando un nuevo usuario al sistema
+              </p>
+              <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-success">
+                <i class="bi bi-person-plus me-1"></i> Crear Usuario
+              </a>
             </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-header animate__animated animate__fadeIn">
-                        <h1 class="page-title">Gestión de Usuarios</h1>
-                        <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-primary text-white">
-                            <i class="bi bi-person-plus me-1"></i> Nuevo Usuario
-                        </a>
-                    </div>
-                    
-                    <!-- Empty State -->
-                    <div th:if="${usuarios.size() == 0}" class="empty-state animate__animated animate__fadeIn">
-                        <i class="bi bi-people"></i>
-                        <h4 class="mb-2">No hay usuarios registrados</h4>
-                        <p class="text-muted mb-3">Comienza agregando un nuevo usuario al sistema</p>
-                        <a th:href="@{/admin/usuarios/nuevo}" class="btn btn-success">
-                            <i class="bi bi-person-plus me-1"></i> Crear Usuario
-                        </a>
-                    </div>
-                    
-                    <!-- Tabla de usuarios -->
-                    <div th:if="${usuarios.size() > 0}" class="animate__animated animate__fadeIn">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre completo</th>
-                                        <th>Usuario</th>
-                                        <th>Roles</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="usuario : ${usuarios}">
-                                        <td data-label="Nombre" th:text="${usuario.nombre}"></td>
-                                        <td data-label="Usuario" th:text="${usuario.username}"></td>
-                                        <td data-label="Roles">
-                                            <div class="d-flex flex-wrap">
-                                                <span th:each="rol : ${usuario.roles}" 
-                                                      class="badge-role" 
-                                                      th:text="${rol.nombre}">
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td data-label="Estado">
-                                            <span th:if="${usuario.activo}" class="badge-status status-active">
-                                                <i class="bi bi-check-circle-fill"></i> Activo
-                                            </span>
-                                            <span th:if="${!usuario.activo}" class="badge-status status-inactive">
-                                                <i class="bi bi-x-circle-fill"></i> Inactivo
-                                            </span>
-                                        </td>
-                                        <td data-label="Acciones">
-                                            <div class="d-flex flex-wrap gap-2">
-                                                <!-- Editar -->
-                                                <a th:href="@{'/admin/usuarios/editar/' + ${usuario.id}}" 
-                                                   class="btn btn-warning action-btn" 
-                                                   th:if="${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}">
-                                                    <i class="bi bi-pencil"></i> Editar
-                                                </a>
 
-                                                <!-- Desactivar -->
-                                                <form th:if="${usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
-                                                      th:action="@{'/admin/usuarios/desactivar/' + ${usuario.id}}"
-                                                      method="post" style="display:inline;"
-                                                      class="form-desactivar-usuario"
-                                                      th:attr="data-usuario-id=${usuario.id}">
-                                                    <button type="button" class="btn btn-danger action-btn btn-modal-desactivar"
-                                                            th:attr="data-usuario-id=${usuario.id}">
-                                                        <i class="bi bi-slash-circle"></i> <span>Desactivar</span>
-                                                    </button>
-                                                </form>
-
-                                                <!-- Activar -->
-                                                <form th:if="${!usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
-                                                      th:action="@{'/admin/usuarios/activar/' + ${usuario.id}}"
-                                                      method="post" style="display:inline;"
-                                                      class="form-activar-usuario"
-                                                      th:attr="data-usuario-id=${usuario.id}">
-                                                    <button type="button" class="btn btn-success action-btn btn-modal-activar"
-                                                            th:attr="data-usuario-id=${usuario.id}">
-                                                        <i class="bi bi-check-circle"></i> <span>Activar</span>
-                                                    </button>
-                                                </form>
-
-                                                <!-- Para admin -->
-                                                <span th:if="${!usuario.roles.?[nombre == 'ADMIN'].isEmpty()}" 
-                                                      class="text-muted">Acciones restringidas</span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+            <!-- Tabla de usuarios -->
+            <div
+              th:if="${usuarios.size() > 0}"
+              class="animate__animated animate__fadeIn"
+            >
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Nombre completo</th>
+                      <th>Usuario</th>
+                      <th>Roles</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                      <td data-label="Nombre" th:text="${usuario.nombre}"></td>
+                      <td
+                        data-label="Usuario"
+                        th:text="${usuario.username}"
+                      ></td>
+                      <td data-label="Roles">
+                        <div class="d-flex flex-wrap">
+                          <span
+                            th:each="rol : ${usuario.roles}"
+                            class="badge-role"
+                            th:text="${rol.nombre}"
+                          >
+                          </span>
                         </div>
-                    </div>
-                </div>
+                      </td>
+                      <td data-label="Estado">
+                        <span
+                          th:if="${usuario.activo}"
+                          class="badge-status status-active"
+                        >
+                          <i class="bi bi-check-circle-fill"></i> Activo
+                        </span>
+                        <span
+                          th:if="${!usuario.activo}"
+                          class="badge-status status-inactive"
+                        >
+                          <i class="bi bi-x-circle-fill"></i> Inactivo
+                        </span>
+                      </td>
+                      <td data-label="Acciones">
+                        <div class="d-flex flex-wrap gap-2">
+                          <!-- Editar -->
+                          <a
+                            th:href="@{'/admin/usuarios/editar/' + ${usuario.id}}"
+                            class="btn btn-warning action-btn"
+                            th:if="${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
+                          >
+                            <i class="bi bi-pencil"></i> Editar
+                          </a>
+
+                          <!-- Desactivar -->
+                          <form
+                            th:if="${usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
+                            th:action="@{'/admin/usuarios/desactivar/' + ${usuario.id}}"
+                            method="post"
+                            style="display: inline"
+                            class="form-desactivar-usuario"
+                            th:attr="data-usuario-id=${usuario.id}"
+                          >
+                            <button
+                              type="button"
+                              class="btn btn-danger action-btn btn-modal-desactivar"
+                              th:attr="data-usuario-id=${usuario.id}"
+                            >
+                              <i class="bi bi-slash-circle"></i>
+                              <span>Desactivar</span>
+                            </button>
+                          </form>
+
+                          <!-- Activar -->
+                          <form
+                            th:if="${!usuario.activo} and ${usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
+                            th:action="@{'/admin/usuarios/activar/' + ${usuario.id}}"
+                            method="post"
+                            style="display: inline"
+                            class="form-activar-usuario"
+                            th:attr="data-usuario-id=${usuario.id}"
+                          >
+                            <button
+                              type="button"
+                              class="btn btn-success action-btn btn-modal-activar"
+                              th:attr="data-usuario-id=${usuario.id}"
+                            >
+                              <i class="bi bi-check-circle"></i>
+                              <span>Activar</span>
+                            </button>
+                          </form>
+
+                          <!-- Para admin -->
+                          <span
+                            th:if="${!usuario.roles.?[nombre == 'ADMIN'].isEmpty()}"
+                            class="text-muted"
+                            >Acciones restringidas</span
+                          >
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    
 
-        <!-- Modal de carga personalizado -->
-        <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
-            <div class="custom-loader-backdrop"></div>
-            <div class="custom-loader-content">
-                <div class="custom-spinner"></div>
-                <div class="custom-loader-text">Cargando...</div>
-            </div>
+    <!-- Modal de carga personalizado -->
+    <div
+      id="customLoaderModal"
+      class="custom-loader-modal"
+      style="display: none"
+    >
+      <div class="custom-loader-backdrop"></div>
+      <div class="custom-loader-content">
+        <div class="custom-spinner"></div>
+        <div class="custom-loader-text">Cargando...</div>
+      </div>
+    </div>
+
+    <style>
+      .custom-loader-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-loader-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44, 62, 80, 0.25);
+        backdrop-filter: blur(2px);
+      }
+      .custom-loader-content {
+        position: relative;
+        z-index: 2;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(44, 62, 80, 0.12);
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 220px;
+      }
+      .custom-spinner {
+        width: 48px;
+        height: 48px;
+        border: 6px solid #e0e0e0;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        animation: custom-spin 1s linear infinite;
+        margin-bottom: 18px;
+      }
+      @keyframes custom-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .custom-loader-text {
+        font-size: 1.15rem;
+        color: #2c3e50;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      @media (max-width: 576px) {
+        .custom-loader-content {
+          padding: 24px 16px;
+          min-width: 140px;
+        }
+        .custom-loader-text {
+          font-size: 1rem;
+        }
+      }
+    </style>
+
+    <!-- Modal de confirmación para desactivar usuario -->
+    <div
+      class="modal fade"
+      id="modalDesactivarUsuario"
+      tabindex="-1"
+      aria-labelledby="modalDesactivarUsuarioLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalDesactivarUsuarioLabel">
+              <i class="bi bi-slash-circle text-danger me-2"></i> Confirmar
+              desactivación
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0">
+              ¿Estás seguro de que deseas desactivar este usuario?
+            </p>
+          </div>
+          <div class="modal-footer d-flex justify-content-end gap-2">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="btnConfirmarDesactivarUsuario"
+            >
+              Desactivar
+            </button>
+          </div>
         </div>
-
-        <style>
-            .custom-loader-modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .custom-loader-backdrop {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(44,62,80,0.25);
-                backdrop-filter: blur(2px);
-            }
-            .custom-loader-content {
-                position: relative;
-                z-index: 2;
-                background: white;
-                border-radius: 16px;
-                box-shadow: 0 4px 24px rgba(44,62,80,0.12);
-                padding: 32px 40px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-width: 220px;
-            }
-            .custom-spinner {
-                width: 48px;
-                height: 48px;
-                border: 6px solid #e0e0e0;
-                border-top: 6px solid #3498db;
-                border-radius: 50%;
-                animation: custom-spin 1s linear infinite;
-                margin-bottom: 18px;
-            }
-            @keyframes custom-spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            .custom-loader-text {
-                font-size: 1.15rem;
-                color: #2c3e50;
-                font-weight: 500;
-                letter-spacing: 0.5px;
-            }
-            @media (max-width: 576px) {
-                .custom-loader-content {
-                    padding: 24px 16px;
-                    min-width: 140px;
-                }
-                .custom-loader-text {
-                    font-size: 1rem;
-                }
-            }
-        </style>
-    
-        <!-- Modal de confirmación para desactivar usuario -->
-        <div class="modal fade" id="modalDesactivarUsuario" tabindex="-1" aria-labelledby="modalDesactivarUsuarioLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalDesactivarUsuarioLabel">
-                            <i class="bi bi-slash-circle text-danger me-2"></i> Confirmar desactivación
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="mb-0">¿Estás seguro de que deseas desactivar este usuario?</p>
-                    </div>
-                    <div class="modal-footer d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="btnConfirmarDesactivarUsuario">Desactivar</button>
-                    </div>
-                </div>
-            </div>
+      </div>
+    </div>
+    <!-- Modal de confirmación para activar usuario -->
+    <div
+      class="modal fade"
+      id="modalActivarUsuario"
+      tabindex="-1"
+      aria-labelledby="modalActivarUsuarioLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalActivarUsuarioLabel">
+              <i class="bi bi-check-circle text-success me-2"></i> Confirmar
+              activación
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="mb-0">
+              ¿Estás seguro de que deseas activar este usuario?
+            </p>
+          </div>
+          <div class="modal-footer d-flex justify-content-end gap-2">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="btnConfirmarActivarUsuario"
+            >
+              Activar
+            </button>
+          </div>
         </div>
-        <!-- Modal de confirmación para activar usuario -->
-        <div class="modal fade" id="modalActivarUsuario" tabindex="-1" aria-labelledby="modalActivarUsuarioLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalActivarUsuarioLabel">
-                            <i class="bi bi-check-circle text-success me-2"></i> Confirmar activación
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p class="mb-0">¿Estás seguro de que deseas activar este usuario?</p>
-                    </div>
-                    <div class="modal-footer d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-success" id="btnConfirmarActivarUsuario">Activar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
+    </div>
 
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Inicializar tooltips si es necesario
-                    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                    tooltipTriggerList.map(function (tooltipTriggerEl) {
-                        return new bootstrap.Tooltip(tooltipTriggerEl);
-                    });
-                    // Cerrar alertas automáticamente después de 5 segundos
-                    setTimeout(function() {
-                        var alertList = document.querySelectorAll('.alert');
-                        alertList.forEach(function(alert) {
-                            var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
-                            bsAlert.close();
-                        });
-                    }, 5000);
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
-                    // Modal de carga personalizado
-                    function showCustomLoader() {
-                        document.getElementById('customLoaderModal').style.display = 'flex';
-                    }
-                    function hideCustomLoader() {
-                        document.getElementById('customLoaderModal').style.display = 'none';
-                    }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Inicializar tooltips si es necesario
+        const tooltipTriggerList = [].slice.call(
+          document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        );
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        // Cerrar alertas automáticamente después de 5 segundos
+        setTimeout(function () {
+          var alertList = document.querySelectorAll(".alert");
+          alertList.forEach(function (alert) {
+            var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+            bsAlert.close();
+          });
+        }, 5000);
 
-                    // Modal de confirmación para activar/desactivar usuario
-                    let idUsuarioSeleccionado = null;
-                    let accionSeleccionada = null;
-                    const modalDesactivar = new bootstrap.Modal(document.getElementById('modalDesactivarUsuario'));
-                    const modalActivar = new bootstrap.Modal(document.getElementById('modalActivarUsuario'));
-                    const btnConfirmarDesactivar = document.getElementById('btnConfirmarDesactivarUsuario');
-                    const btnConfirmarActivar = document.getElementById('btnConfirmarActivarUsuario');
+        // Modal de carga personalizado
+        function showCustomLoader() {
+          document.getElementById("customLoaderModal").style.display = "flex";
+        }
+        function hideCustomLoader() {
+          document.getElementById("customLoaderModal").style.display = "none";
+        }
 
-                    document.querySelectorAll('.btn-modal-desactivar').forEach(function(btn) {
-                        btn.addEventListener('click', function(e) {
-                            idUsuarioSeleccionado = btn.getAttribute('data-usuario-id');
-                            accionSeleccionada = 'desactivar';
-                            modalDesactivar.show();
-                        });
-                    });
-                    document.querySelectorAll('.btn-modal-activar').forEach(function(btn) {
-                        btn.addEventListener('click', function(e) {
-                            idUsuarioSeleccionado = btn.getAttribute('data-usuario-id');
-                            accionSeleccionada = 'activar';
-                            modalActivar.show();
-                        });
-                    });
+        // Modal de confirmación para activar/desactivar usuario
+        let idUsuarioSeleccionado = null;
+        let accionSeleccionada = null;
+        const modalDesactivar = new bootstrap.Modal(
+          document.getElementById("modalDesactivarUsuario")
+        );
+        const modalActivar = new bootstrap.Modal(
+          document.getElementById("modalActivarUsuario")
+        );
+        const btnConfirmarDesactivar = document.getElementById(
+          "btnConfirmarDesactivarUsuario"
+        );
+        const btnConfirmarActivar = document.getElementById(
+          "btnConfirmarActivarUsuario"
+        );
 
-                    btnConfirmarDesactivar.addEventListener('click', function() {
-                        if (idUsuarioSeleccionado && accionSeleccionada === 'desactivar') {
-                            const form = document.querySelector('.form-desactivar-usuario[data-usuario-id="' + idUsuarioSeleccionado + '"]');
-                            if (form) {
-                                showCustomLoader();
-                                form.submit();
-                            }
-                            modalDesactivar.hide();
-                            idUsuarioSeleccionado = null;
-                            accionSeleccionada = null;
-                        }
-                    });
-                    btnConfirmarActivar.addEventListener('click', function() {
-                        if (idUsuarioSeleccionado && accionSeleccionada === 'activar') {
-                            const form = document.querySelector('.form-activar-usuario[data-usuario-id="' + idUsuarioSeleccionado + '"]');
-                            if (form) {
-                                showCustomLoader();
-                                form.submit();
-                            }
-                            modalActivar.hide();
-                            idUsuarioSeleccionado = null;
-                            accionSeleccionada = null;
-                        }
-                    });
+        document
+          .querySelectorAll(".btn-modal-desactivar")
+          .forEach(function (btn) {
+            btn.addEventListener("click", function (e) {
+              idUsuarioSeleccionado = btn.getAttribute("data-usuario-id");
+              accionSeleccionada = "desactivar";
+              modalDesactivar.show();
+            });
+          });
+        document.querySelectorAll(".btn-modal-activar").forEach(function (btn) {
+          btn.addEventListener("click", function (e) {
+            idUsuarioSeleccionado = btn.getAttribute("data-usuario-id");
+            accionSeleccionada = "activar";
+            modalActivar.show();
+          });
+        });
 
-                    // Loader en Nuevo Usuario y Editar
-                    document.querySelectorAll('a[href*="/usuarios/nuevo"], a[href*="/usuarios/editar/"]').forEach(function(link) {
-                        link.addEventListener('click', function(e) {
-                            showCustomLoader();
-                        });
-                    });
-                });
-            </script>
-</body>
+        btnConfirmarDesactivar.addEventListener("click", function () {
+          if (idUsuarioSeleccionado && accionSeleccionada === "desactivar") {
+            const form = document.querySelector(
+              '.form-desactivar-usuario[data-usuario-id="' +
+                idUsuarioSeleccionado +
+                '"]'
+            );
+            if (form) {
+              showCustomLoader();
+              form.submit();
+            }
+            modalDesactivar.hide();
+            idUsuarioSeleccionado = null;
+            accionSeleccionada = null;
+          }
+        });
+        btnConfirmarActivar.addEventListener("click", function () {
+          if (idUsuarioSeleccionado && accionSeleccionada === "activar") {
+            const form = document.querySelector(
+              '.form-activar-usuario[data-usuario-id="' +
+                idUsuarioSeleccionado +
+                '"]'
+            );
+            if (form) {
+              showCustomLoader();
+              form.submit();
+            }
+            modalActivar.hide();
+            idUsuarioSeleccionado = null;
+            accionSeleccionada = null;
+          }
+        });
+
+        // Loader en Nuevo Usuario y Editar
+        document
+          .querySelectorAll(
+            'a[href*="/usuarios/nuevo"], a[href*="/usuarios/editar/"]'
+          )
+          .forEach(function (link) {
+            link.addEventListener("click", function (e) {
+              showCustomLoader();
+            });
+          });
+      });
+    </script>
+  </body>
 </html>

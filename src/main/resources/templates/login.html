@@ -1,264 +1,325 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Iniciar Sesión - Sistema de Ventas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --success-color: #4cc9f0;
-            --danger-color: #f72585;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-        
+      :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --success-color: #4cc9f0;
+        --danger-color: #f72585;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+      }
+
+      .login-container {
+        max-width: 500px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .login-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .login-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+
+      .login-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .login-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: white;
+      }
+
+      .login-body {
+        padding: 2rem;
+        background-color: white;
+      }
+
+      .form-control {
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s;
+      }
+
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+      }
+
+      .btn-login {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        border: none;
+        padding: 0.75rem;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s;
+      }
+
+      .btn-login:hover {
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--primary-color)
+        );
+        transform: translateY(-2px);
+      }
+
+      .alert {
+        border-radius: 8px;
+      }
+
+      @media (max-width: 576px) {
         .login-container {
-            max-width: 500px;
-            width: 100%;
-            margin: 0 auto;
+          padding: 0 1rem;
         }
-        
-        .login-card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .login-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-        
+
         .login-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 2rem;
-            text-align: center;
+          padding: 1.5rem;
         }
-        
-        .login-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: white;
-        }
-        
+
         .login-body {
-            padding: 2rem;
-            background-color: white;
+          padding: 1.5rem;
         }
-        
-        .form-control {
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            border: 1px solid #dee2e6;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
-        }
-        
-        .btn-login {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            padding: 0.75rem;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .btn-login:hover {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            transform: translateY(-2px);
-        }
-        
-        .alert {
-            border-radius: 8px;
-        }
-        
-        @media (max-width: 576px) {
-            .login-container {
-                padding: 0 1rem;
-            }
-            
-            .login-header {
-                padding: 1.5rem;
-            }
-            
-            .login-body {
-                padding: 1.5rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="login-container animate__animated animate__fadeIn">
-                <div class="login-card">
-                    <div class="login-header">
-                        <i class="bi bi-shop login-icon"></i>
-                        <h2 class="mb-0">Sistema de Ventas</h2>
-                        <p class="mb-0 mt-2 opacity-75">Ingrese sus credenciales para continuar</p>
-                    </div>
-                    
-                    <div class="login-body">
-                        <!-- Mensajes de error personalizados -->
-                        <div th:if="${mensaje}" class="alert alert-danger animate__animated animate__shakeX">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${mensaje}"></span>
-                        </div>
-                        <div th:if="${advertencia}" class="alert alert-warning animate__animated animate__shakeX">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${advertencia}"></span>
-                        </div>
-                        
-                        <!-- Mensaje de logout -->
-                        <div th:if="${param.logout}" class="alert alert-success animate__animated animate__fadeIn">
-                            <i class="bi bi-check-circle-fill me-2"></i> Has cerrado sesión correctamente
-                        </div>
-                        
-                        <!-- Formulario de login -->
-                        <form th:action="@{/login}" method="post">
-                            <div class="mb-3">
-                                <label for="username" class="form-label fw-medium">Usuario</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light">
-                                        <i class="bi bi-person"></i>
-                                    </span>
-                     <input type="text" class="form-control" id="username" name="username" 
-                         placeholder="Ingrese su usuario" required
-                         th:value="${username}">
-                                </div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label for="password" class="form-label fw-medium">Contraseña</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light">
-                                        <i class="bi bi-lock"></i>
-                                    </span>
-                                    <input type="password" class="form-control" id="password" name="password" 
-                                           placeholder="Ingrese su contraseña" required autocomplete="off">
-                                    <script th:inline="javascript">
-                                        /*<![CDATA[*/
-                                        if ([[${mensaje}]] != null) {
-                                            document.getElementById('password').value = '';
-                                        }
-                                        /*]]>*/
-                                    </script>
-                                </div>
-                            </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-login text-white">
-                                    <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+      <div class="row justify-content-center">
+        <div class="login-container animate__animated animate__fadeIn">
+          <div class="login-card">
+            <div class="login-header">
+              <i class="bi bi-shop login-icon"></i>
+              <h2 class="mb-0">Sistema de Ventas</h2>
+              <p class="mb-0 mt-2 opacity-75">
+                Ingrese sus credenciales para continuar
+              </p>
+            </div>
+
+            <div class="login-body">
+              <!-- Mensajes de error personalizados -->
+              <div
+                th:if="${mensaje}"
+                class="alert alert-danger animate__animated animate__shakeX"
+              >
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${mensaje}"></span>
+              </div>
+              <div
+                th:if="${advertencia}"
+                class="alert alert-warning animate__animated animate__shakeX"
+              >
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <span th:text="${advertencia}"></span>
+              </div>
+
+              <!-- Mensaje de logout -->
+              <div
+                th:if="${param.logout}"
+                class="alert alert-success animate__animated animate__fadeIn"
+              >
+                <i class="bi bi-check-circle-fill me-2"></i> Has cerrado sesión
+                correctamente
+              </div>
+
+              <!-- Formulario de login -->
+              <form th:action="@{/login}" method="post">
+                <div class="mb-3">
+                  <label for="username" class="form-label fw-medium"
+                    >Usuario</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text bg-light">
+                      <i class="bi bi-person"></i>
+                    </span>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="username"
+                      name="username"
+                      placeholder="Ingrese su usuario"
+                      required
+                      th:value="${username}"
+                    />
+                  </div>
                 </div>
+
+                <div class="mb-4">
+                  <label for="password" class="form-label fw-medium"
+                    >Contraseña</label
+                  >
+                  <div class="input-group">
+                    <span class="input-group-text bg-light">
+                      <i class="bi bi-lock"></i>
+                    </span>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      placeholder="Ingrese su contraseña"
+                      required
+                      autocomplete="off"
+                    />
+                    <script th:inline="javascript">
+                      /*<![CDATA[*/
+                      if ([[${mensaje}]] != null) {
+                          document.getElementById('password').value = '';
+                      }
+                      /*]]>*/
+                    </script>
+                  </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-login text-white">
+                    <i class="bi bi-box-arrow-in-right me-2"></i> Iniciar Sesión
+                  </button>
+                </div>
+              </form>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    
-        <!-- Modal de carga personalizado -->
-        <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
-            <div class="custom-loader-backdrop"></div>
-            <div class="custom-loader-content">
-                <div class="custom-spinner"></div>
-                <div class="custom-loader-text">Cargando...</div>
-            </div>
-        </div>
 
-        <style>
-            .custom-loader-modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .custom-loader-backdrop {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(44,62,80,0.25);
-                backdrop-filter: blur(2px);
-            }
-            .custom-loader-content {
-                position: relative;
-                z-index: 2;
-                background: white;
-                border-radius: 16px;
-                box-shadow: 0 4px 24px rgba(44,62,80,0.12);
-                padding: 32px 40px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-width: 220px;
-            }
-            .custom-spinner {
-                width: 48px;
-                height: 48px;
-                border: 6px solid #e0e0e0;
-                border-top: 6px solid #3498db;
-                border-radius: 50%;
-                animation: custom-spin 1s linear infinite;
-                margin-bottom: 18px;
-            }
-            @keyframes custom-spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            .custom-loader-text {
-                font-size: 1.15rem;
-                color: #2c3e50;
-                font-weight: 500;
-                letter-spacing: 0.5px;
-            }
-            @media (max-width: 576px) {
-                .custom-loader-content {
-                    padding: 24px 16px;
-                    min-width: 140px;
-                }
-                .custom-loader-text {
-                    font-size: 1rem;
-                }
-            }
-        </style>
+    <!-- Modal de carga personalizado -->
+    <div
+      id="customLoaderModal"
+      class="custom-loader-modal"
+      style="display: none"
+    >
+      <div class="custom-loader-backdrop"></div>
+      <div class="custom-loader-content">
+        <div class="custom-spinner"></div>
+        <div class="custom-loader-text">Cargando...</div>
+      </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // Modal de carga personalizado en login
-            document.addEventListener('DOMContentLoaded', function() {
-                var loginForm = document.querySelector('form[th\\:action]');
-                if (!loginForm) loginForm = document.querySelector('form[action]');
-                if (loginForm) {
-                    loginForm.addEventListener('submit', function(e) {
-                        if (loginForm.checkValidity()) {
-                            document.getElementById('customLoaderModal').style.display = 'flex';
-                        }
-                    });
-                }
-            });
-        </script>
-</body>
+    <style>
+      .custom-loader-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-loader-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44, 62, 80, 0.25);
+        backdrop-filter: blur(2px);
+      }
+      .custom-loader-content {
+        position: relative;
+        z-index: 2;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(44, 62, 80, 0.12);
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 220px;
+      }
+      .custom-spinner {
+        width: 48px;
+        height: 48px;
+        border: 6px solid #e0e0e0;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        animation: custom-spin 1s linear infinite;
+        margin-bottom: 18px;
+      }
+      @keyframes custom-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .custom-loader-text {
+        font-size: 1.15rem;
+        color: #2c3e50;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      @media (max-width: 576px) {
+        .custom-loader-content {
+          padding: 24px 16px;
+          min-width: 140px;
+        }
+        .custom-loader-text {
+          font-size: 1rem;
+        }
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Modal de carga personalizado en login
+      document.addEventListener("DOMContentLoaded", function () {
+        var loginForm = document.querySelector("form[th\\:action]");
+        if (!loginForm) loginForm = document.querySelector("form[action]");
+        if (loginForm) {
+          loginForm.addEventListener("submit", function (e) {
+            if (loginForm.checkValidity()) {
+              document.getElementById("customLoaderModal").style.display =
+                "flex";
+            }
+          });
+        }
+      });
+    </script>
+  </body>
 </html>

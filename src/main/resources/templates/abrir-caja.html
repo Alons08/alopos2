@@ -157,7 +157,7 @@
         .main-content {
           padding-bottom: 60px;
         }
-        
+
         .card-body {
           padding: 1rem;
         }
@@ -271,15 +271,20 @@
       </div>
     </main>
 
-
     <!-- Modal de carga personalizado -->
-    <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
+    <div
+      id="customLoaderModal"
+      class="custom-loader-modal"
+      style="display: none"
+    >
       <div class="custom-loader-backdrop"></div>
       <div class="custom-loader-content">
         <div class="custom-spinner"></div>
         <div class="custom-loader-text">Cargando...</div>
       </div>
     </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
     <style>
       .custom-loader-modal {
@@ -299,7 +304,7 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        background: rgba(44,62,80,0.25);
+        background: rgba(44, 62, 80, 0.25);
         backdrop-filter: blur(2px);
       }
       .custom-loader-content {
@@ -307,7 +312,7 @@
         z-index: 2;
         background: white;
         border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(44,62,80,0.12);
+        box-shadow: 0 4px 24px rgba(44, 62, 80, 0.12);
         padding: 32px 40px;
         display: flex;
         flex-direction: column;
@@ -324,8 +329,12 @@
         margin-bottom: 18px;
       }
       @keyframes custom-spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
       .custom-loader-text {
         font-size: 1.15rem;
@@ -348,26 +357,26 @@
     <script>
       // Modal de carga personalizado
       function showCustomLoader() {
-        document.getElementById('customLoaderModal').style.display = 'flex';
+        document.getElementById("customLoaderModal").style.display = "flex";
       }
       function hideCustomLoader() {
-        document.getElementById('customLoaderModal').style.display = 'none';
+        document.getElementById("customLoaderModal").style.display = "none";
       }
 
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // Loader en Abrir Caja
-        var form = document.querySelector('form');
+        var form = document.querySelector("form");
         if (form) {
-          form.addEventListener('submit', function(e) {
+          form.addEventListener("submit", function (e) {
             if (form.checkValidity()) {
               showCustomLoader();
             }
           });
         }
         // Loader en Cancelar
-        var btnCancel = document.querySelector('.btn-cancel');
+        var btnCancel = document.querySelector(".btn-cancel");
         if (btnCancel) {
-          btnCancel.addEventListener('click', function(e) {
+          btnCancel.addEventListener("click", function (e) {
             showCustomLoader();
           });
         }
