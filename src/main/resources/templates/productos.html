@@ -271,6 +271,23 @@
                     
                     <!-- Vista de escritorio -->
                     <div class="d-none d-lg-block">
+                        <nav th:if="${productosPage.totalPages > 1}" aria-label="Paginación" class="mb-3">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${productosPage.first} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/productos(q=${q},page=${productosPage.number-1},size=${productosPage.size},sort=${sort},dir=${dir})}" aria-label="Anterior">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, productosPage.totalPages-1)}" th:classappend="${productosPage.number == i} ? 'active'">
+                                    <a class="page-link" th:href="@{/productos(q=${q},page=${i},size=${productosPage.size},sort=${sort},dir=${dir})}" th:text="${i+1}"></a>
+                                </li>
+                                <li class="page-item" th:classappend="${productosPage.last} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/productos(q=${q},page=${productosPage.number+1},size=${productosPage.size},sort=${sort},dir=${dir})}" aria-label="Siguiente">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
                         <div class="table-responsive">
                             <table class="table product-table table-hover">
                                 <thead>
@@ -376,33 +393,12 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- Paginación escritorio -->
-                        <nav th:if="${productosPage.totalPages > 1}" aria-label="Paginación">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" th:classappend="${productosPage.first} ? 'disabled'">
-                                    <a class="page-link" th:href="@{/productos(q=${q},page=${productosPage.number-1},size=${productosPage.size},sort=${sort},dir=${dir})}" aria-label="Anterior">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item" th:each="i : ${#numbers.sequence(0, productosPage.totalPages-1)}" th:classappend="${productosPage.number == i} ? 'active'">
-                                    <a class="page-link" th:href="@{/productos(q=${q},page=${i},size=${productosPage.size},sort=${sort},dir=${dir})}" th:text="${i+1}"></a>
-                                </li>
-                                <li class="page-item" th:classappend="${productosPage.last} ? 'disabled'">
-                                    <a class="page-link" th:href="@{/productos(q=${q},page=${productosPage.number+1},size=${productosPage.size},sort=${sort},dir=${dir})}" aria-label="Siguiente">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+
                     </div>
                     
                     <!-- Vista móvil -->
                     <div class="d-lg-none mobile-view">
-                        <div th:each="producto : ${productos}" 
-                             th:classappend="${producto.esProductoBase} ? 'producto-base' : (${producto.productoBase} != null ? 'producto-derivado' : '')"
-                             class="mobile-product-card">
-                        <!-- Paginación móvil -->
-                        <nav th:if="${productosPage.totalPages > 1}" aria-label="Paginación">
+                        <nav th:if="${productosPage.totalPages > 1}" aria-label="Paginación" class="mb-3">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" th:classappend="${productosPage.first} ? 'disabled'">
                                     <a class="page-link" th:href="@{/productos(q=${q},page=${productosPage.number-1},size=${productosPage.size},sort=${sort},dir=${dir})}" aria-label="Anterior">
@@ -419,6 +415,9 @@
                                 </li>
                             </ul>
                         </nav>
+                        <div th:each="producto : ${productos}" 
+                             th:classappend="${producto.esProductoBase} ? 'producto-base' : (${producto.productoBase} != null ? 'producto-derivado' : '')"
+                             class="mobile-product-card">
                             <div class="mobile-product-header">
                                 <h5 class="mobile-product-title" th:text="${producto.nombre}"></h5>
                                 <div class="mobile-product-status">
