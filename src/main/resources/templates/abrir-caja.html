@@ -222,7 +222,7 @@
                 </div>
 
                 <!-- Formulario -->
-                <form th:action="@{/caja/abrir}" method="post">
+                <form th:action="@{/caja/abrir}" method="post" id="formAbrirCaja">
                   <!-- Monto de Apertura -->
                   <div class="mb-3">
                     <label for="montoApertura" class="form-label"
@@ -365,9 +365,9 @@
 
       document.addEventListener("DOMContentLoaded", function () {
         // Loader en Abrir Caja
-        var form = document.querySelector("form");
+        var form = document.getElementById('formAbrirCaja');
         if (form) {
-          form.addEventListener("submit", function (e) {
+          form.addEventListener('submit', function(e) {
             if (form.checkValidity()) {
               showCustomLoader();
             }

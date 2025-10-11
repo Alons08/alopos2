@@ -428,13 +428,15 @@
                 }
 
                 document.addEventListener('DOMContentLoaded', function() {
-                    // Loader en Guardar
+                    // Loader en Guardar SOLO si la validación es exitosa
                     var form = document.querySelector('form.needs-validation');
                     if (form) {
                         form.addEventListener('submit', function(e) {
-                            if (form.checkValidity()) {
-                                showCustomLoader();
+                            if (!form.checkValidity()) {
+                                // No mostrar spinner si hay error
+                                return;
                             }
+                            showCustomLoader();
                         });
                     }
                     // Loader en Cancelar

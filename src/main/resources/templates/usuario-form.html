@@ -500,6 +500,19 @@
         var form = document.getElementById("userForm");
         if (form) {
           form.addEventListener("submit", function (e) {
+            // Validación personalizada de roles
+            const roleCheckboxes = document.querySelectorAll('input[name="rolesIds"]:not(:disabled)');
+            let atLeastOneChecked = false;
+            roleCheckboxes.forEach((checkbox) => {
+              if (checkbox.checked) {
+                atLeastOneChecked = true;
+              }
+            });
+            if (!atLeastOneChecked) {
+              // No mostrar spinner si hay error
+              return;
+            }
+            // Validación HTML5
             if (form.checkValidity()) {
               showCustomLoader();
             }
