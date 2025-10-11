@@ -24,6 +24,14 @@ public class ClienteService {
         Optional<Cliente> optCliente = clienteRepository.findById(clienteId);
         if (optCliente.isPresent()) {
             Cliente cliente = optCliente.get();
+            // Validar RUC duplicado (ignorando mayúsculas/minúsculas)
+            String nuevoRuc = datosActualizados.getRuc();
+            if (nuevoRuc != null && !nuevoRuc.trim().isEmpty()) {
+                Cliente existente = clienteRepository.findByRuc(nuevoRuc);
+                if (existente != null && !existente.getId().equals(cliente.getId()) && existente.getRuc().equalsIgnoreCase(nuevoRuc)) {
+                    throw new IllegalArgumentException("Ya existe una empresa con ese RUC.");
+                }
+            }
             cliente.setNombre(datosActualizados.getNombre());
             cliente.setRuc(datosActualizados.getRuc());
             cliente.setEmail(datosActualizados.getEmail());

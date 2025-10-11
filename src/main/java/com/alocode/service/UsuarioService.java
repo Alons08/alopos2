@@ -56,6 +56,15 @@ public class UsuarioService {
         if (usuario.getCliente() == null || !usuario.getCliente().getId().equals(clienteId)) {
             throw new IllegalArgumentException("El usuario debe pertenecer al cliente actual");
         }
+        // Validación de username duplicado (ignorando mayúsculas/minúsculas)
+        List<Usuario> usuariosCliente = usuarioRepository.findAllByClienteIdOrderByIdAsc(clienteId);
+        boolean usernameDuplicado = usuariosCliente.stream()
+            .anyMatch(u -> u.getUsername() != null && usuario.getUsername() != null &&
+                u.getUsername().equalsIgnoreCase(usuario.getUsername()) &&
+                (usuario.getId() == null || !u.getId().equals(usuario.getId())));
+        if (usernameDuplicado) {
+            throw new IllegalArgumentException("Ya existe un usuario con este nombre de usuario en esta empresa.");
+        }
         if (usuario.getId() == null && usuario.getPassword() != null) {
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }

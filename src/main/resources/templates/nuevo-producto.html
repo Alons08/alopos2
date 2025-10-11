@@ -243,6 +243,11 @@
                 </div>
                 
                 <div class="card-body">
+                    <!-- Mensaje de error global -->
+                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <span th:text="${error}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+                    </div>
                     <form th:action="@{/productos/guardar}" th:object="${producto}" method="post" class="needs-validation" novalidate>
                         <input type="hidden" th:field="*{id}" />
                         

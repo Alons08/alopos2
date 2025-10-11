@@ -270,6 +270,11 @@
             ></h5>
           </div>
           <div class="card-body">
+      <!-- Mensaje de error global -->
+      <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
             <form
               id="userForm"
               th:action="${usuarioForm.id == null} ? @{/admin/usuarios/guardar} : @{/admin/usuarios/actualizar}"

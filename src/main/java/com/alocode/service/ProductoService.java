@@ -52,6 +52,11 @@ public class ProductoService {
             System.out.println("[ERROR] El producto no tiene el cliente correcto");
             throw new IllegalArgumentException("El producto debe pertenecer al cliente actual");
         }
+        // Validación de duplicados por nombre (ignorando mayúsculas/minúsculas) para el cliente
+        Optional<Producto> existente = productoRepository.findByNombreIgnoreCaseAndClienteId(producto.getNombre(), clienteId);
+        if (existente.isPresent() && (producto.getId() == null || !existente.get().getId().equals(producto.getId()))) {
+            throw new IllegalArgumentException("Ya existe un producto con este nombre en esta empresa.");
+        }
         if (producto.getProductoBase() != null) {
             if (producto.getFactorConversion() == null) {
                 System.out.println("[ERROR] Falta factor de conversión");

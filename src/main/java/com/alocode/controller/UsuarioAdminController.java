@@ -38,17 +38,21 @@ public class UsuarioAdminController {
     }
 
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+    public String guardarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes, org.springframework.ui.Model model) {
         try {
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
             com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
             usuario.setCliente(cliente);
             usuarioService.guardarUsuario(usuario, rolesIds);
             redirectAttributes.addFlashAttribute("success", "Usuario guardado exitosamente");
+            return "redirect:/admin/usuarios";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            model.addAttribute("usuarioForm", usuario);
+            model.addAttribute("roles", usuarioService.getRolesSinAdmin());
+            model.addAttribute("esAdmin", false);
+            model.addAttribute("error", e.getMessage());
+            return "usuario-form";
         }
-        return "redirect:/admin/usuarios";
     }
 
     @GetMapping("/editar/{id}")

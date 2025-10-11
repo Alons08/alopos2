@@ -60,7 +60,7 @@ public class ProductoController {
     }
     
     @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {
+    public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes, org.springframework.ui.Model model) {
         try {
             // Asignar el cliente actual usando TenantContext
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
@@ -69,12 +69,15 @@ public class ProductoController {
             System.out.println("[DEBUG] Guardando producto: " + producto);
             productoService.guardarProducto(producto);
             redirectAttributes.addFlashAttribute("success", "Producto guardado exitosamente");
+            return "redirect:/productos";
         } catch (Exception e) {
             System.out.println("[ERROR] " + e.getMessage());
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/productos/nuevo";
+            // Volver a la vista con los datos llenados y el error
+            model.addAttribute("producto", producto);
+            model.addAttribute("productosBase", productoService.obtenerProductosBase());
+            model.addAttribute("error", e.getMessage());
+            return "nuevo-producto";
         }
-        return "redirect:/productos";
     }
     
 

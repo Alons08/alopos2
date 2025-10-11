@@ -56,11 +56,15 @@ public class ClienteController {
             return "redirect:/home";
         }
         Long clienteId = usuario.getCliente().getId();
-        boolean actualizado = clienteService.editarCliente(clienteId, datosActualizados, usuario);
-        if (actualizado) {
-            model.addAttribute("mensaje", "Datos actualizados correctamente");
-        } else {
-            model.addAttribute("error", "No tienes permisos para editar estos datos");
+        try {
+            boolean actualizado = clienteService.editarCliente(clienteId, datosActualizados, usuario);
+            if (actualizado) {
+                model.addAttribute("mensaje", "Datos actualizados correctamente");
+            } else {
+                model.addAttribute("error", "No tienes permisos para editar estos datos");
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
         }
         // Recargar el cliente actualizado desde el servicio
         Optional<Cliente> optCliente = clienteService.findById(clienteId);
@@ -69,6 +73,6 @@ public class ClienteController {
         } else {
             model.addAttribute("cliente", null);
         }
-    return "cliente-empresa"; // redirecciona a cliente-empresa.html
+        return "cliente-empresa"; // redirecciona a cliente-empresa.html
     }
 }
