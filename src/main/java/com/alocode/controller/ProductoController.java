@@ -24,7 +24,7 @@ public class ProductoController {
     public String listarProductos(
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "2") int size, //50
+            @RequestParam(value = "size", defaultValue = "4") int size, //50
             @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "dir", defaultValue = "asc") String dir,
             Model model) {
