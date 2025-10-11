@@ -189,7 +189,11 @@ public class PedidoController {
                 .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado"));
 
         response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "inline; filename=comprobante_pedido_" + id + ".pdf");
+        String numeroPedidoStr = String.format("%06d", pedido.getNumeroPedido());
+        Cliente cliente = pedido.getCliente();
+        String serie = "B00" + cliente.getId();
+        String nombreArchivo = "Comprobante_" + serie + "-" + numeroPedidoStr + ".pdf";
+        response.setHeader("Content-Disposition", "inline; filename=" + nombreArchivo);
 
         // Tamaño comprobante típico: 80mm x 200mm (en puntos: 1 pulgada = 72 puntos)
         float width = 226.77f; // 80mm
@@ -203,7 +207,6 @@ public class PedidoController {
             Font fontTitle = new Font(Font.HELVETICA, 11, Font.BOLD);
             Font fontNormal = new Font(Font.HELVETICA, 7, Font.NORMAL);
             Font fontBold = new Font(Font.HELVETICA, 7, Font.BOLD);
-            Cliente cliente = pedido.getCliente();
             Paragraph nombreEmpresa = new Paragraph(cliente.getNombre(), fontTitle);
             nombreEmpresa.setAlignment(Element.ALIGN_CENTER);
             document.add(nombreEmpresa);
@@ -220,7 +223,8 @@ public class PedidoController {
             Paragraph tipoDoc = new Paragraph("COMPROBANTE DE VENTA ELECTRÓNICA", fontBold);
             tipoDoc.setAlignment(Element.ALIGN_CENTER);
             document.add(tipoDoc);
-            document.add(new Paragraph("N°: B001-" + String.format("%06d", pedido.getNumeroPedido()), fontBold));
+            document.add(
+                    new Paragraph("N°: " + serie + "-" + String.format("%06d", pedido.getNumeroPedido()), fontBold));
             document.add(new Paragraph(
                     "----------------------------------------------------------------------------------------",
                     fontNormal));

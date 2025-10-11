@@ -351,9 +351,11 @@
                 margin: 0.2rem 0;
                 font-weight: 600 !important;
             }
-            .detalle-dropdown-item-compact:hover,
             .detalle-dropdown-item-compact.text-warning {
                 color: #e67e22 !important;
+            }
+            .detalle-dropdown-item-compact:hover{
+                color: #6c63ff !important;
             }
         
         /* Mejoras específicas para móvil */
@@ -856,6 +858,12 @@
                                 </button>
                             </form>
                         </li>
+                        <li><hr class="dropdown-divider my-1"></li>
+                        <li>
+                            <a th:href="@{'/pedidos/' + ${pedido.id} + '/comprobante'}" class="dropdown-item detalle-dropdown-item-compact" target="_blank">
+                                <i class="bi bi-receipt text-primary"></i> Generar Comprobante
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 
@@ -903,8 +911,12 @@
                 });
             });
 
-            // Loader en formularios del dropdown de Cambiar Estado
+            // Loader en formularios del dropdown de Cambiar Estado, EXCLUYENDO Generar Comprobante
             document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(function(item) {
+                // Excluir explícitamente el botón de Generar Comprobante
+                if (item.textContent.includes('Generar Comprobante')) {
+                    return;
+                }
                 if (item.closest('form')) {
                     item.closest('form').addEventListener('submit', function(e) {
                         showCustomLoader();
