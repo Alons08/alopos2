@@ -329,11 +329,11 @@
                         <form th:action="@{/perfil/actualizar}" method="post">
                             <div class="mb-2">
                                 <label for="nombre" class="form-label">Nuevo nombre completo</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" th:value="${usuario.nombre}" required>
+                                <input type="text" class="form-control" id="nombre" name="nombre" th:value="${usuario.nombre}" placeholder="Ingrese su nuevo nombre completo" required>
                             </div>
                             <div class="mb-3 password-container">
                                 <label for="passwordActual" class="form-label">Contraseña actual</label>
-                                <input type="password" class="form-control" id="passwordActual" name="passwordActual" required>
+                                <input type="password" class="form-control" id="passwordActual" name="passwordActual" placeholder="Ingrese su contraseña actual" required>
                                 <span class="password-toggle" onclick="togglePassword('passwordActual')">
                                     <i class="bi bi-eye"></i>
                                 </span>
@@ -357,14 +357,14 @@
                             <input type="hidden" name="nombre" th:value="${usuario.nombre}" />
                             <div class="mb-2 password-container">
                                 <label for="passwordActual2" class="form-label">Contraseña actual</label>
-                                <input type="password" class="form-control" id="passwordActual2" name="passwordActual" required>
+                                <input type="password" class="form-control" id="passwordActual2" name="passwordActual" placeholder="Ingrese su contraseña actual" required>
                                 <span class="password-toggle" onclick="togglePassword('passwordActual2')">
                                     <i class="bi bi-eye"></i>
                                 </span>
                             </div>
                             <div class="mb-2 password-container">
                                 <label for="nuevaPassword" class="form-label">Nueva contraseña</label>
-                                <input type="password" class="form-control" id="nuevaPassword" name="nuevaPassword" minlength="4" required>
+                                <input type="password" class="form-control" id="nuevaPassword" name="nuevaPassword" minlength="4" placeholder="Ingrese su nueva contraseña" required>
                                 <span class="password-toggle" onclick="togglePassword('nuevaPassword')">
                                     <i class="bi bi-eye"></i>
                                 </span>
@@ -372,7 +372,7 @@
                             </div>
                             <div class="mb-3 password-container">
                                 <label for="confirmarPassword" class="form-label">Confirmar nueva contraseña</label>
-                                <input type="password" class="form-control" id="confirmarPassword" name="confirmarPassword" minlength="4" required>
+                                <input type="password" class="form-control" id="confirmarPassword" name="confirmarPassword" minlength="4" placeholder="Ingrese de nuevo su nueva contraseña" required>
                                 <span class="password-toggle" onclick="togglePassword('confirmarPassword')">
                                     <i class="bi bi-eye"></i>
                                 </span>
@@ -422,7 +422,13 @@
             hideAllForms();
             const form = document.getElementById(formId);
             form.classList.add('show');
-            
+            // Si es el formulario de cambiar nombre, limpiar el input
+            if(formId === 'formCambiarNombre') {
+                const inputNombre = form.querySelector('input[name="nombre"]');
+                if(inputNombre) {
+                    inputNombre.value = '';
+                }
+            }
             // Scroll suave al formulario
             setTimeout(() => {
                 form.scrollIntoView({ behavior: 'smooth', block: 'start' });

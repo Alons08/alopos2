@@ -297,6 +297,12 @@
                         </a>
                     </div>
                     <p class="text-muted mb-0">Gestión y seguimiento de todos los pedidos</p>
+                    <div th:if="${pedidos != null}">
+                        <span class="badge bg-info text-dark mt-2" style="font-size:1rem;">
+                            Pedidos activos:
+                            <span th:text="${pedidos.?[estado.name() != 'PAGADO' and estado.name() != 'CANCELADO']?.size()}"></span>
+                        </span>
+                    </div>
                 </div>
             </div>
             
