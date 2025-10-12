@@ -1,550 +1,683 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nuevo Producto - Sistema de Ventas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
     <style>
-        :root {
-            --primary-color: #dda742;
-            --secondary-color: #34495e;
-            --accent-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --cancel-color: #6c757d;
-            --cancel-hover: #5a6268;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f8f9fa;
-        }
-        
-        .main-content {
-            flex: 1;
-            padding-bottom: 60px;
-            margin-top: 40px;
-        }
-        
+      :root {
+        --primary-color: #dda742;
+        --secondary-color: #34495e;
+        --accent-color: #3498db;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --cancel-color: #6c757d;
+        --cancel-hover: #5a6268;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-color: #f8f9fa;
+      }
+
+      .main-content {
+        flex: 1;
+        padding-bottom: 60px;
+        margin-top: 40px;
+      }
+
+      .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      .form-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: none;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        margin-bottom: 20px;
+      }
+
+      .form-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        background-color: var(--primary-color) !important;
+        color: white;
+        padding: 0.8rem 1rem;
+      }
+
+      .card-title {
+        font-weight: 600;
+        margin-bottom: 0;
+        font-size: 1.1rem;
+      }
+
+      .card-body {
+        padding: 1.2rem;
+      }
+
+      .form-label {
+        font-weight: 500;
+        color: var(--secondary-color);
+        margin-bottom: 0.3rem;
+        font-size: 1rem;
+      }
+      .form-label .opcional {
+        color: #ff5252;
+        font-size: 0.9em;
+        font-weight: 700;
+        margin-left: 4px;
+        letter-spacing: 0.5px;
+      }
+
+      .form-control,
+      .form-select {
+        border-radius: 8px;
+        padding: 0.55rem 0.8rem;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s;
+        font-size: 1rem;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.25rem rgba(52, 144, 220, 0.25);
+      }
+
+      .btn-submit {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 0.55rem;
+        font-weight: 500;
+        transition: all 0.3s;
+        font-size: 1rem;
+      }
+
+      .btn-submit:hover {
+        background-color: #cb8b27;
+      }
+
+      .btn-cancel {
+        padding: 0.55rem;
+        transition: all 0.3s;
+        font-size: 1rem;
+        background-color: var(--cancel-color);
+        border-color: var(--cancel-color);
+        color: white;
+      }
+
+      .btn-cancel:hover {
+        background-color: var(--cancel-hover);
+        border-color: var(--cancel-hover);
+        color: white;
+      }
+
+      .form-check-input {
+        width: 1.1em;
+        height: 1.1em;
+        margin-top: 0.1em;
+        border: 2px solid #dee2e6 !important;
+        border-radius: 4px !important;
+      }
+
+      .form-check-input:focus {
+        border-color: var(--accent-color) !important;
+        box-shadow: 0 0 0 0.25rem rgba(52, 144, 220, 0.25) !important;
+      }
+
+      .form-check-input:checked {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+      }
+
+      .form-check-label {
+        margin-left: 0.3em;
+        font-size: 1rem;
+      }
+
+      .input-group-text {
+        background-color: #e9ecef;
+        border: 1px solid #dee2e6;
+        font-size: 0.9rem;
+        padding: 0.55rem 0.8rem;
+      }
+
+      .producto-base-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 0.9rem;
+        margin-bottom: 0.9rem;
+        border: 1px solid #e9ecef;
+      }
+
+      .factor-conversion-section {
+        background-color: #e8f4f8;
+        border-radius: 8px;
+        padding: 0.9rem;
+        margin-bottom: 0.9rem;
+        border: 1px solid #d1e7f0;
+      }
+
+      .form-text {
+        font-size: 0.8rem;
+      }
+
+      .form-section {
+        margin-bottom: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
         .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 0 15px;
+          padding: 0 10px;
         }
-        
-        .form-card {
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: none;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            margin-bottom: 20px;
-        }
-        
-        .form-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-        }
-        
-        .card-header {
-            background-color: var(--primary-color) !important;
-            color: white;
-            padding: 0.8rem 1rem;
-        }
-        
-        .card-title {
-            font-weight: 600;
-            margin-bottom: 0;
-            font-size: 1.1rem;
-        }
-        
+
         .card-body {
-            padding: 1.2rem;
+          padding: 1rem;
         }
-        
-        .form-label {
-            font-weight: 500;
-            color: var(--secondary-color);
-            margin-bottom: 0.3rem;
-            font-size: 1rem;
+
+        .form-control,
+        .form-select {
+          padding: 0.5rem 0.75rem;
         }
-        .form-label .opcional {
-            color: #ff5252;
-            font-size: 0.90em;
-            font-weight: 700;
-            margin-left: 4px;
-            letter-spacing: 0.5px;
+      }
+
+      @media (max-width: 576px) {
+        .main-content {
+          padding-bottom: 60px;
         }
-        
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 0.55rem 0.8rem;
-            border: 1px solid #dee2e6;
-            transition: all 0.3s;
-            font-size: 1rem;
+
+        .card-body {
+          padding: 0.9rem;
         }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 144, 220, 0.25);
+
+        .btn-group {
+          flex-direction: column;
+          gap: 0.5rem;
         }
-        
-        .btn-submit {
-            background-color: var(--primary-color);
-            border: none;
-            padding: 0.55rem;
-            font-weight: 500;
-            transition: all 0.3s;
-            font-size: 1rem;
+
+        .btn-group .btn {
+          width: 100%;
         }
-        
-        .btn-submit:hover {
-            background-color: #cb8b27;
+
+        .card-header {
+          padding: 0.7rem 0.9rem;
         }
-        
-        .btn-cancel {
-            padding: 0.55rem;
-            transition: all 0.3s;
-            font-size: 1rem;
-            background-color: var(--cancel-color);
-            border-color: var(--cancel-color);
-            color: white;
+
+        .card-title {
+          font-size: 1rem;
         }
-        
-        .btn-cancel:hover {
-            background-color: var(--cancel-hover);
-            border-color: var(--cancel-hover);
-            color: white;
+      }
+
+      @media (max-width: 400px) {
+        .form-container {
+          padding: 0 5px;
         }
-        
-        .form-check-input {
-            width: 1.1em;
-            height: 1.1em;
-            margin-top: 0.1em;
-            border: 2px solid #dee2e6 !important;
-            border-radius: 4px !important;
+
+        .card-body {
+          padding: 0.8rem;
         }
-        
-        .form-check-input:focus {
-            border-color: var(--accent-color) !important;
-            box-shadow: 0 0 0 0.25rem rgba(52, 144, 220, 0.25) !important;
-        }
-        
-        .form-check-input:checked {
-            background-color: var(--primary-color) !important;
-            border-color: var(--primary-color) !important;
-        }
-        
-        .form-check-label {
-            margin-left: 0.3em;
-            font-size: 1rem;
-        }
-        
-        .input-group-text {
-            background-color: #e9ecef;
-            border: 1px solid #dee2e6;
-            font-size: 0.9rem;
-            padding: 0.55rem 0.8rem;
-        }
-        
-        .producto-base-section {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 0.9rem;
-            margin-bottom: 0.9rem;
-            border: 1px solid #e9ecef;
-        }
-        
-        .factor-conversion-section {
-            background-color: #e8f4f8;
-            border-radius: 8px;
-            padding: 0.9rem;
-            margin-bottom: 0.9rem;
-            border: 1px solid #d1e7f0;
-        }
-        
-        .form-text {
-            font-size: 0.8rem;
-        }
-        
-        .form-section {
-            margin-bottom: 0.9rem;
-        }
-        
-        @media (max-width: 768px) {
-            .form-container {
-                padding: 0 10px;
-            }
-            
-            .card-body {
-                padding: 1rem;
-            }
-            
-            .form-control, .form-select {
-                padding: 0.5rem 0.75rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .main-content {
-                padding-bottom: 60px;
-            }
-            
-            .card-body {
-                padding: 0.9rem;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .btn-group .btn {
-                width: 100%;
-            }
-            
-            .card-header {
-                padding: 0.7rem 0.9rem;
-            }
-            
-            .card-title {
-                font-size: 1rem;
-            }
-        }
-        
-        @media (max-width: 400px) {
-            .form-container {
-                padding: 0 5px;
-            }
-            
-            .card-body {
-                padding: 0.8rem;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div th:replace="~{fragments/navbar :: navbar}"></div>
-    
+
     <div class="main-content">
-        <div class="container form-container">
-            <div class="card form-card animate__animated animate__fadeIn">
-                <div class="card-header">
-                    <h5 class="card-title">
-                        <i class="bi bi-box-seam me-2"></i>
-                        <span th:text="${producto.id == null} ? 'Registrar Nuevo Producto' : 'Editar Producto'"></span>
-                    </h5>
+      <div class="container form-container">
+        <div class="card form-card animate__animated animate__fadeIn">
+          <div class="card-header">
+            <h5 class="card-title">
+              <i class="bi bi-box-seam me-2"></i>
+              <span
+                th:text="${producto.id == null} ? 'Registrar Nuevo Producto' : 'Editar Producto'"
+              ></span>
+            </h5>
+          </div>
+
+          <div class="card-body">
+            <!-- Mensaje de error global -->
+            <div
+              th:if="${error}"
+              class="alert alert-danger alert-dismissible fade show"
+              role="alert"
+            >
+              <span th:text="${error}"></span>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Cerrar"
+              ></button>
+            </div>
+            <form
+              th:action="@{/productos/guardar}"
+              th:object="${producto}"
+              method="post"
+              class="needs-validation"
+              novalidate
+            >
+              <input type="hidden" th:field="*{id}" />
+
+              <!-- Nombre del Producto -->
+              <div class="form-section">
+                <label for="nombre" class="form-label"
+                  >Nombre del Producto</label
+                >
+                <div class="input-group">
+                  <span class="input-group-text"
+                    ><i class="bi bi-tag"></i
+                  ></span>
+                  <input
+                    type="text"
+                    id="nombre"
+                    th:field="*{nombre}"
+                    class="form-control"
+                    placeholder="Ingrese el nombre del producto"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    Por favor ingrese el nombre del producto.
+                  </div>
                 </div>
-                
-                <div class="card-body">
-                    <!-- Mensaje de error global -->
-                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <span th:text="${error}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+              </div>
+
+              <!-- Precio y Stock -->
+              <div class="row">
+                <div class="col-md-6 form-section">
+                  <label for="precio" class="form-label">Precio Unitario</label>
+                  <div class="input-group">
+                    <span class="input-group-text">S/</span>
+                    <input
+                      type="number"
+                      id="precio"
+                      th:field="*{precio}"
+                      class="form-control"
+                      step="0.01"
+                      min="0"
+                      placeholder="0.00"
+                      required
+                    />
+                    <div class="invalid-feedback">
+                      Ingrese un precio válido.
                     </div>
-                    <form th:action="@{/productos/guardar}" th:object="${producto}" method="post" class="needs-validation" novalidate>
-                        <input type="hidden" th:field="*{id}" />
-                        
-                        <!-- Nombre del Producto -->
-                        <div class="form-section">
-                            <label for="nombre" class="form-label">Nombre del Producto</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-tag"></i></span>
-                                <input type="text" id="nombre" th:field="*{nombre}" class="form-control" 
-                                       placeholder="Ingrese el nombre del producto" required />
-                                <div class="invalid-feedback">
-                                    Por favor ingrese el nombre del producto.
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Precio y Stock -->
-                        <div class="row">
-                            <div class="col-md-6 form-section">
-                                <label for="precio" class="form-label">Precio Unitario</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">S/</span>
-                                    <input type="number" id="precio" th:field="*{precio}" class="form-control" 
-                                           step="0.01" min="0" placeholder="0.00" required />
-                                    <div class="invalid-feedback">
-                                        Ingrese un precio válido.
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6 form-section">
-                                <label for="stock" class="form-label">Stock</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-boxes"></i></span>
-                                    <input type="number" id="stock" th:field="*{stock}" class="form-control" 
-                                           min="0" placeholder="Cantidad disponible" required />
-                                    <div class="invalid-feedback">
-                                        Ingrese una cantidad válida.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tipo de Producto -->
-                        <div class="form-section">
-                            <label class="form-label">Tipo de Producto <span class="opcional">(opcional)</span></label>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" id="esProductoBase" th:field="*{esProductoBase}">
-                                <label class="form-check-label" for="esProductoBase">
-                                    Este producto es base (sirve como stock para otros productos)
-                                </label>
-                            </div>
-                            
-                            <div class="producto-base-section" id="productoBaseSection" style="display: none;">
-                                <label for="productoBase" class="form-label">Producto Base <span class="opcional">(opcional)</span></label>
-                                <select class="form-select" id="productoBase" th:field="*{productoBase}">
-                                    <option value="">Seleccione un producto base...</option>
-                                    <option th:each="productoBase : ${productosBase}" 
-                                            th:value="${productoBase.id}"
-                                            th:text="${productoBase.nombre}"></option>
-                                </select>
-                                <small class="form-text text-muted">
-                                    Seleccione el producto base del cual este producto deriva su stock.
-                                </small>
-                                
-                                <div class="factor-conversion-section mt-2" id="factorConversionSection" style="display: none;">
-                                    <label for="factorConversion" class="form-label">Factor de Conversión</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-arrow-left-right"></i></span>
-                                        <input type="number" id="factorConversion" th:field="*{factorConversion}" 
-                                            class="form-control" step="any" min="0.001" required onfocus="this.value=''" autocomplete="off">
-                                    </div>
-                                    <small class="form-text text-muted">
-                                        Ej: 0.125 para octavo de pollo, 0.25 para cuarto de pollo, 0.5 para medio pollo.
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Estado -->
-                        <div class="form-check form-switch form-section">
-                            <input class="form-check-input" type="checkbox" role="switch" id="activo" th:field="*{activo}" checked />
-                            <label class="form-check-label" for="activo">Producto activo</label>
-                        </div>
-                        
-                        <!-- Botones -->
-                        <div class="d-flex flex-column flex-md-row gap-2 mt-3 btn-group">
-                            <button type="submit" class="btn btn-submit text-white flex-fill">
-                                <i class="bi bi-save me-2"></i>
-                                <span th:text="${producto.id == null} ? 'Guardar' : 'Actualizar'"></span>
-                            </button>
-                            <a th:href="@{/productos}" class="btn btn-cancel flex-fill">
-                                <i class="bi bi-x-circle me-2"></i> Cancelar
-                            </a>
-                        </div>
-                    </form>
+                  </div>
                 </div>
-            </div>
+
+                <div class="col-md-6 form-section">
+                  <label for="stock" class="form-label">Stock</label>
+                  <div class="input-group">
+                    <span class="input-group-text"
+                      ><i class="bi bi-boxes"></i
+                    ></span>
+                    <input
+                      type="number"
+                      id="stock"
+                      th:field="*{stock}"
+                      class="form-control"
+                      min="0"
+                      placeholder="Cantidad disponible"
+                      required
+                    />
+                    <div class="invalid-feedback">
+                      Ingrese una cantidad válida.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tipo de Producto -->
+              <div class="form-section">
+                <label class="form-label"
+                  >Tipo de Producto
+                  <span class="opcional">(opcional)</span></label
+                >
+                <div class="form-check mb-2">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="esProductoBase"
+                    th:field="*{esProductoBase}"
+                  />
+                  <label class="form-check-label" for="esProductoBase">
+                    Este producto es base (sirve como stock para otros
+                    productos)
+                  </label>
+                </div>
+
+                <div
+                  class="producto-base-section"
+                  id="productoBaseSection"
+                  style="display: none"
+                >
+                  <label for="productoBase" class="form-label"
+                    >Producto Base
+                    <span class="opcional">(opcional)</span></label
+                  >
+                  <select
+                    class="form-select"
+                    id="productoBase"
+                    th:field="*{productoBase}"
+                  >
+                    <option value="">Seleccione un producto base...</option>
+                    <option
+                      th:each="productoBase : ${productosBase}"
+                      th:value="${productoBase.id}"
+                      th:text="${productoBase.nombre}"
+                    ></option>
+                  </select>
+                  <small class="form-text text-muted">
+                    Seleccione el producto base del cual este producto deriva su
+                    stock.
+                  </small>
+
+                  <div
+                    class="factor-conversion-section mt-2"
+                    id="factorConversionSection"
+                    style="display: none"
+                  >
+                    <label for="factorConversion" class="form-label"
+                      >Factor de Conversión</label
+                    >
+                    <div class="input-group">
+                      <span class="input-group-text"
+                        ><i class="bi bi-arrow-left-right"></i
+                      ></span>
+                      <input
+                        type="number"
+                        id="factorConversion"
+                        th:field="*{factorConversion}"
+                        class="form-control"
+                        step="any"
+                        min="0.001"
+                        required
+                        onfocus="this.value=''"
+                        autocomplete="off"
+                      />
+                    </div>
+                    <small class="form-text text-muted">
+                      Ej: 0.125 para octavo de pollo, 0.25 para cuarto de pollo,
+                      0.5 para medio pollo.
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Estado -->
+              <div class="form-check form-switch form-section">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="activo"
+                  th:field="*{activo}"
+                  checked
+                />
+                <label class="form-check-label" for="activo"
+                  >Producto activo</label
+                >
+              </div>
+
+              <!-- Botones -->
+              <div class="d-flex flex-column flex-md-row gap-2 mt-3 btn-group">
+                <button
+                  type="submit"
+                  class="btn btn-submit text-white flex-fill"
+                >
+                  <i class="bi bi-save me-2"></i>
+                  <span
+                    th:text="${producto.id == null} ? 'Guardar' : 'Actualizar'"
+                  ></span>
+                </button>
+                <a th:href="@{/productos}" class="btn btn-cancel flex-fill">
+                  <i class="bi bi-x-circle me-2"></i> Cancelar
+                </a>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
-    
 
-        <!-- Modal de carga personalizado -->
-        <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
-            <div class="custom-loader-backdrop"></div>
-            <div class="custom-loader-content">
-                <div class="custom-spinner"></div>
-                <div class="custom-loader-text">Cargando...</div>
-            </div>
-        </div>
+    <!-- Modal de carga personalizado -->
+    <div
+      id="customLoaderModal"
+      class="custom-loader-modal"
+      style="display: none"
+    >
+      <div class="custom-loader-backdrop"></div>
+      <div class="custom-loader-content">
+        <div class="custom-spinner"></div>
+        <div class="custom-loader-text">Cargando...</div>
+      </div>
+    </div>
 
-        <style>
-            .custom-loader-modal {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .custom-loader-backdrop {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(44,62,80,0.25);
-                backdrop-filter: blur(2px);
-            }
-            .custom-loader-content {
-                position: relative;
-                z-index: 2;
-                background: white;
-                border-radius: 16px;
-                box-shadow: 0 4px 24px rgba(44,62,80,0.12);
-                padding: 32px 40px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-width: 220px;
-            }
-            .custom-spinner {
-                width: 48px;
-                height: 48px;
-                border: 6px solid #e0e0e0;
-                border-top: 6px solid #3498db;
-                border-radius: 50%;
-                animation: custom-spin 1s linear infinite;
-                margin-bottom: 18px;
-            }
-            @keyframes custom-spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            .custom-loader-text {
-                font-size: 1.15rem;
-                color: #2c3e50;
-                font-weight: 500;
-                letter-spacing: 0.5px;
-            }
-            @media (max-width: 576px) {
-                .custom-loader-content {
-                    padding: 24px 16px;
-                    min-width: 140px;
-                }
-                .custom-loader-text {
-                    font-size: 1rem;
-                }
-            }
-        </style>
-    
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script>
-                // Modal de carga personalizado
-                function showCustomLoader() {
-                    document.getElementById('customLoaderModal').style.display = 'flex';
-                }
-                function hideCustomLoader() {
-                    document.getElementById('customLoaderModal').style.display = 'none';
-                }
+    <style>
+      .custom-loader-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-loader-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44, 62, 80, 0.25);
+        backdrop-filter: blur(2px);
+      }
+      .custom-loader-content {
+        position: relative;
+        z-index: 2;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(44, 62, 80, 0.12);
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 220px;
+      }
+      .custom-spinner {
+        width: 48px;
+        height: 48px;
+        border: 6px solid #e0e0e0;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        animation: custom-spin 1s linear infinite;
+        margin-bottom: 18px;
+      }
+      @keyframes custom-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .custom-loader-text {
+        font-size: 1.15rem;
+        color: #2c3e50;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      @media (max-width: 576px) {
+        .custom-loader-content {
+          padding: 24px 16px;
+          min-width: 140px;
+        }
+        .custom-loader-text {
+          font-size: 1rem;
+        }
+      }
+    </style>
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Loader en Guardar SOLO si la validación es exitosa
-                    var form = document.querySelector('form.needs-validation');
-                    if (form) {
-                        form.addEventListener('submit', function(e) {
-                            if (!form.checkValidity()) {
-                                // No mostrar spinner si hay error
-                                return;
-                            }
-                            showCustomLoader();
-                        });
-                    }
-                    // Loader en Cancelar
-                    var btnCancel = document.querySelector('.btn-cancel');
-                    if (btnCancel) {
-                        btnCancel.addEventListener('click', function(e) {
-                            showCustomLoader();
-                        });
-                    }
-                });
-        // Deshabilitar el campo de stock si el producto es derivado
-        function toggleStockField() {
-            var stockInput = document.getElementById('stock');
-            var productoBaseSelect = document.getElementById('productoBase');
-            if (productoBaseSelect && productoBaseSelect.value) {
-                stockInput.disabled = true;
-                stockInput.value = '';
-            } else {
-                stockInput.disabled = false;
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // Modal de carga personalizado
+      function showCustomLoader() {
+        document.getElementById("customLoaderModal").style.display = "flex";
+      }
+      function hideCustomLoader() {
+        document.getElementById("customLoaderModal").style.display = "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Loader en Guardar SOLO si la validación es exitosa
+        var form = document.querySelector("form.needs-validation");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            if (!form.checkValidity()) {
+              // No mostrar spinner si hay error
+              return;
             }
+            showCustomLoader();
+          });
         }
-        
-        // Mostrar/ocultar sección de producto base
-        const esProductoBaseCheckbox = document.getElementById('esProductoBase');
-        const productoBaseSection = document.getElementById('productoBaseSection');
-        const productoBaseSelect = document.getElementById('productoBase');
-        const factorConversionSection = document.getElementById('factorConversionSection');
-        
-        function toggleProductoBaseSection() {
-            if (esProductoBaseCheckbox.checked) {
-                productoBaseSection.style.display = 'none';
-                productoBaseSelect.value = '';
-                factorConversionSection.style.display = 'none';
-            } else {
-                productoBaseSection.style.display = 'block';
-            }
+        // Loader en Cancelar
+        var btnCancel = document.querySelector(".btn-cancel");
+        if (btnCancel) {
+          btnCancel.addEventListener("click", function (e) {
+            showCustomLoader();
+          });
         }
-        
-        function toggleFactorConversionSection() {
-            if (productoBaseSelect.value) {
-                factorConversionSection.style.display = 'block';
-            } else {
-                factorConversionSection.style.display = 'none';
-            }
+      });
+      // Deshabilitar el campo de stock si el producto es derivado
+      function toggleStockField() {
+        var stockInput = document.getElementById("stock");
+        var productoBaseSelect = document.getElementById("productoBase");
+        if (productoBaseSelect && productoBaseSelect.value) {
+          stockInput.disabled = true;
+          stockInput.value = "";
+        } else {
+          stockInput.disabled = false;
         }
-        
-        // Validación de formulario
-        (function() {
-            'use strict';
-            
-            var forms = document.querySelectorAll('.needs-validation');
-            
-            Array.prototype.slice.call(forms)
-                .forEach(function(form) {
-                    form.addEventListener('submit', function(event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-        })();
-        
-        // Formatear precio mientras se escribe
-        document.getElementById('precio')?.addEventListener('input', function(e) {
-            if (this.value && parseFloat(this.value) < 0) {
-                this.value = 0;
-            }
+      }
+
+      // Mostrar/ocultar sección de producto base
+      const esProductoBaseCheckbox = document.getElementById("esProductoBase");
+      const productoBaseSection = document.getElementById(
+        "productoBaseSection"
+      );
+      const productoBaseSelect = document.getElementById("productoBase");
+      const factorConversionSection = document.getElementById(
+        "factorConversionSection"
+      );
+
+      function toggleProductoBaseSection() {
+        if (esProductoBaseCheckbox.checked) {
+          productoBaseSection.style.display = "none";
+          productoBaseSelect.value = "";
+          factorConversionSection.style.display = "none";
+        } else {
+          productoBaseSection.style.display = "block";
+        }
+      }
+
+      function toggleFactorConversionSection() {
+        if (productoBaseSelect.value) {
+          factorConversionSection.style.display = "block";
+        } else {
+          factorConversionSection.style.display = "none";
+        }
+      }
+
+      // Validación de formulario
+      (function () {
+        "use strict";
+
+        var forms = document.querySelectorAll(".needs-validation");
+
+        Array.prototype.slice.call(forms).forEach(function (form) {
+          form.addEventListener(
+            "submit",
+            function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
         });
-        
-        // Validar stock no negativo
-        document.getElementById('stock')?.addEventListener('input', function(e) {
-            if (this.value && parseInt(this.value) < 0) {
-                this.value = 0;
-            }
+      })();
+
+      // Formatear precio mientras se escribe
+      document
+        .getElementById("precio")
+        ?.addEventListener("input", function (e) {
+          if (this.value && parseFloat(this.value) < 0) {
+            this.value = 0;
+          }
         });
-        
-        // Inicializar estado
-        document.addEventListener('DOMContentLoaded', function() {
-            toggleProductoBaseSection();
-            toggleFactorConversionSection();
-            toggleStockField();
-            
-            // Si ya tiene producto base seleccionado, mostrar las secciones
-            if (productoBaseSelect.value) {
-                esProductoBaseCheckbox.checked = false;
-                toggleProductoBaseSection();
-                toggleFactorConversionSection();
-            }
-            
-            // Event listeners
-            esProductoBaseCheckbox.addEventListener('change', function() {
-                toggleProductoBaseSection();
-                toggleStockField();
-            });
-            
-            productoBaseSelect.addEventListener('change', function() {
-                toggleFactorConversionSection();
-                toggleStockField();
-            });
+
+      // Validar stock no negativo
+      document.getElementById("stock")?.addEventListener("input", function (e) {
+        if (this.value && parseInt(this.value) < 0) {
+          this.value = 0;
+        }
+      });
+
+      // Inicializar estado
+      document.addEventListener("DOMContentLoaded", function () {
+        toggleProductoBaseSection();
+        toggleFactorConversionSection();
+        toggleStockField();
+
+        // Si ya tiene producto base seleccionado, mostrar las secciones
+        if (productoBaseSelect.value) {
+          esProductoBaseCheckbox.checked = false;
+          toggleProductoBaseSection();
+          toggleFactorConversionSection();
+        }
+
+        // Event listeners
+        esProductoBaseCheckbox.addEventListener("change", function () {
+          toggleProductoBaseSection();
+          toggleStockField();
         });
+
+        productoBaseSelect.addEventListener("change", function () {
+          toggleFactorConversionSection();
+          toggleStockField();
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
