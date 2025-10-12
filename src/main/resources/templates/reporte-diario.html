@@ -137,35 +137,42 @@
     <div th:replace="~{fragments/navbar :: navbar}"></div>
     
     <div class="container mt-4 mb-5">
-        <!-- Encabezado con título y botón de exportación -->
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h1 class="page-title">Reporte Diario</h1>
-                <p class="text-muted mb-0" th:text="${#dates.format(reporte.fecha, 'EEEE, d MMMM yyyy')}"></p>
+        <div id="reporteDiarioContent">
+            <!-- Encabezado con título y botón de exportación -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1 class="page-title">Reporte Diario</h1>
+                    <p class="text-muted mb-0" th:text="${#dates.format(reporte.fecha, 'EEEE, d MMMM yyyy')}"></p>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
+                    <a th:href="@{'/reportes/exportar/diario?fecha=' + ${#dates.format(reporte.fecha, 'yyyy-MM-dd')}}" class="btn btn-success">
+                        <i class="bi bi-file-excel me-2"></i> Exportar a Excel
+                    </a>
+                    <button id="btnExportarExcel" type="button" class="btn btn-success d-none">
+                        <i class="bi bi-file-excel me-2"></i> Exportar a Excel
+                    </button>
+                </div>
             </div>
-            <div class="col-md-4 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
-                <a th:href="@{'/reportes/exportar/diario?fecha=' + ${#dates.format(reporte.fecha, 'yyyy-MM-dd')}}" class="btn btn-success">
-                    <i class="bi bi-file-excel me-2"></i> Exportar a Excel
-                </a>
+            <!-- El resto del contenido del reporte diario va aquí (copiado del HTML original) -->
+            <div class="date-navigation">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a th:href="@{'/reportes/diario?fecha=' + ${diaAnterior}}" class="btn btn-outline-secondary me-2 btn-dia-navegacion">
+                            <i class="bi bi-chevron-left"></i> Día anterior
+                        </a>
+                        <a th:if="${diaSiguiente <= T(java.time.LocalDate).now().toString()}" th:href="@{'/reportes/diario?fecha=' + ${diaSiguiente}}" class="btn btn-outline-secondary btn-dia-navegacion">
+                            Día siguiente <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </div>
+                    <div class="d-none d-md-block">
+                        <span class="text-muted" th:text="${#dates.format(reporte.fecha, 'EEEE, d MMMM yyyy')}"></span>
+                    </div>
+                </div>
             </div>
+            <!-- ...el resto del contenido del reporte diario permanece igual... -->
         </div>
         
-        <!-- Navegación por fechas -->
-        <div class="date-navigation">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <a th:href="@{'/reportes/diario?fecha=' + ${diaAnterior}}" class="btn btn-outline-secondary me-2">
-                        <i class="bi bi-chevron-left"></i> Día anterior
-                    </a>
-                    <a th:if="${diaSiguiente <= T(java.time.LocalDate).now().toString()}" th:href="@{'/reportes/diario?fecha=' + ${diaSiguiente}}" class="btn btn-outline-secondary">
-                        Día siguiente <i class="bi bi-chevron-right"></i>
-                    </a>
-                </div>
-                <div class="d-none d-md-block">
-                    <span class="text-muted" th:text="${#dates.format(reporte.fecha, 'EEEE, d MMMM yyyy')}"></span>
-                </div>
-            </div>
-        </div>
+        
         
         <!-- Resumen del día -->
         <div class="card mb-4 border-0 shadow-sm">
@@ -303,8 +310,186 @@
     </div>
     
     <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <!-- Modal de carga personalizado (spinner) -->
+    <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
+        <div class="custom-loader-backdrop"></div>
+        <div class="custom-loader-content">
+            <div class="custom-spinner"></div>
+            <div class="custom-loader-text">Cargando...</div>
+        </div>
+    </div>
+
+    <style>
+        .custom-loader-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-loader-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(44,62,80,0.25);
+            backdrop-filter: blur(2px);
+        }
+        .custom-loader-content {
+            position: relative;
+            z-index: 2;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.12);
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 220px;
+        }
+        .custom-spinner {
+            width: 48px;
+            height: 48px;
+            border: 6px solid #e0e0e0;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            animation: custom-spin 1s linear infinite;
+            margin-bottom: 18px;
+        }
+        @keyframes custom-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .custom-loader-text {
+            font-size: 1.15rem;
+            color: #2c3e50;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 576px) {
+            .custom-loader-content {
+                padding: 24px 16px;
+                min-width: 140px;
+            }
+            .custom-loader-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Modal de carga personalizado
+        function showCustomLoader() {
+            document.getElementById('customLoaderModal').style.display = 'flex';
+        }
+        function hideCustomLoader() {
+            document.getElementById('customLoaderModal').style.display = 'none';
+        }
+
+        // Función para volver a enlazar eventos después de AJAX
+        function rebindDiaNavegacionAjax() {
+            var navBtns = document.querySelectorAll('.btn-dia-navegacion');
+            navBtns.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showCustomLoader();
+                    var url = btn.getAttribute('href');
+                    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                        .then(function(response) {
+                            if (!response.ok) throw new Error('Error al cargar el reporte');
+                            return response.text();
+                        })
+                        .then(function(html) {
+                            // Extraer solo el contenido del reporte diario
+                            var parser = new DOMParser();
+                            var doc = parser.parseFromString(html, 'text/html');
+                            var newContent = doc.getElementById('reporteDiarioContent');
+                            if (newContent) {
+                                document.getElementById('reporteDiarioContent').innerHTML = newContent.innerHTML;
+                                rebindDiaNavegacionAjax(); // Volver a enlazar eventos
+                                rebindExportarExcelAjax();
+                            }
+                            hideCustomLoader();
+                        })
+                        .catch(function(err) {
+                            hideCustomLoader();
+                            alert('No se pudo cargar el reporte.');
+                        });
+                });
+            });
+        }
+
+        // Función para AJAX en exportar Excel
+        function rebindExportarExcelAjax() {
+            var aExportar = document.querySelector('a.btn-success');
+            var btnExportar = document.getElementById('btnExportarExcel');
+            if (aExportar && btnExportar) {
+                btnExportar.classList.remove('d-none');
+                aExportar.classList.add('d-none');
+                btnExportar.onclick = function(e) {
+                    e.preventDefault();
+                    showCustomLoader();
+                    var url = aExportar.getAttribute('href');
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        }
+                    })
+                    .then(function(response) {
+                        if (!response.ok) throw new Error('Error al exportar');
+                        return response.blob();
+                    })
+                    .then(function(blob) {
+                        var link = document.createElement('a');
+                        var fecha = new Date().toISOString().slice(0,10);
+                        var nombreArchivo = 'Reporte_Diario_' + fecha + '.xlsx';
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = nombreArchivo;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        hideCustomLoader();
+                    })
+                    .catch(function(err) {
+                        hideCustomLoader();
+                        alert('No se pudo exportar el archivo.');
+                    });
+                };
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            rebindDiaNavegacionAjax();
+            rebindExportarExcelAjax();
+        });
+    </script>
+    <script>
+        // Modal de carga personalizado
+        function showCustomLoader() {
+            document.getElementById('customLoaderModal').style.display = 'flex';
+        }
+        function hideCustomLoader() {
+            document.getElementById('customLoaderModal').style.display = 'none';
+        }
+
+        // Mostrar spinner al hacer clic en los botones de navegación de fecha
+        document.addEventListener('DOMContentLoaded', function() {
+            var navBtns = document.querySelectorAll('.btn-dia-navegacion');
+            navBtns.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    showCustomLoader();
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -393,30 +393,108 @@
     </div>
     
     <div th:replace="~{fragments/footer :: footer}"></div>
-    
+
+    <!-- Modal de carga personalizado -->
+    <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
+      <div class="custom-loader-backdrop"></div>
+      <div class="custom-loader-content">
+        <div class="custom-spinner"></div>
+        <div class="custom-loader-text">Cargando...</div>
+      </div>
+    </div>
+    <style>
+      .custom-loader-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-loader-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(44,62,80,0.25);
+        backdrop-filter: blur(2px);
+      }
+      .custom-loader-content {
+        position: relative;
+        z-index: 2;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(44,62,80,0.12);
+        padding: 32px 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 220px;
+      }
+      .custom-spinner {
+        width: 48px;
+        height: 48px;
+        border: 6px solid #e0e0e0;
+        border-top: 6px solid #dda742;
+        border-radius: 50%;
+        animation: custom-spin 1s linear infinite;
+        margin-bottom: 18px;
+      }
+      @keyframes custom-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .custom-loader-text {
+        font-size: 1.15rem;
+        color: #2c3e50;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+      @media (max-width: 576px) {
+        .custom-loader-content {
+          padding: 24px 16px;
+          min-width: 140px;
+        }
+        .custom-loader-text {
+          font-size: 1rem;
+        }
+      }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Función para alternar visibilidad de contraseña
         function togglePassword(inputId) {
             const input = document.getElementById(inputId);
-            const icon = input.parentElement.querySelector('.bi-eye');
-            
+            const icon = input.parentElement.querySelector('.bi-eye, .bi-eye-slash');
             if (input.type === "password") {
                 input.type = "text";
-                icon.classList.replace("bi-eye", "bi-eye-slash");
+                if(icon) icon.classList.replace("bi-eye", "bi-eye-slash");
             } else {
                 input.type = "password";
-                icon.classList.replace("bi-eye-slash", "bi-eye");
+                if(icon) icon.classList.replace("bi-eye-slash", "bi-eye");
             }
         }
-        
+
+        // Modal loader helpers
+        function showCustomLoader() {
+          document.getElementById('customLoaderModal').style.display = 'flex';
+        }
+        function hideCustomLoader() {
+          document.getElementById('customLoaderModal').style.display = 'none';
+        }
+
         // Función para ocultar todos los formularios
         function hideAllForms() {
             document.querySelectorAll('.form-section').forEach(form => {
                 form.classList.remove('show');
             });
         }
-        
+
         // Mostrar formulario específico
         function showForm(formId) {
             hideAllForms();
@@ -434,29 +512,124 @@
                 form.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 50);
         }
-        
-        // Event listeners para los botones principales
-        document.getElementById('btnCambiarNombre').addEventListener('click', () => showForm('formCambiarNombre'));
-        document.getElementById('btnCambiarPassword').addEventListener('click', () => showForm('formCambiarPassword'));
-        
-        // Event listeners para los botones cancelar
-        document.querySelectorAll('.btn-cancel-form').forEach(button => {
-            button.addEventListener('click', hideAllForms);
-        });
-        
-        // Validación de contraseña
+
+        // Función para asignar event listeners a los botones y formularios dinámicamente
+        function bindPerfilEventListeners() {
+            const btnCambiarNombre = document.getElementById('btnCambiarNombre');
+            if (btnCambiarNombre) {
+                btnCambiarNombre.addEventListener('click', () => showForm('formCambiarNombre'));
+            }
+            const btnCambiarPassword = document.getElementById('btnCambiarPassword');
+            if (btnCambiarPassword) {
+                btnCambiarPassword.addEventListener('click', () => showForm('formCambiarPassword'));
+            }
+            document.querySelectorAll('.btn-cancel-form').forEach(button => {
+                button.addEventListener('click', hideAllForms);
+            });
+        }
+
+        // Validación de contraseña (solo para el form de cambiar contraseña)
         document.getElementById('passwordForm')?.addEventListener('submit', function(e) {
             const nuevaPassword = document.getElementById('nuevaPassword').value;
             const confirmarPassword = document.getElementById('confirmarPassword').value;
-            
             if (nuevaPassword !== confirmarPassword) {
                 e.preventDefault();
                 alert('Las contraseñas no coinciden. Por favor verifica.');
             }
         });
-        
-        // Ocultar formularios al cargar la página
-        document.addEventListener('DOMContentLoaded', hideAllForms);
+
+        // AJAX para ambos formularios y rebind de listeners tras actualizar contenido
+        function bindPerfilAjaxForms() {
+            // Cambiar nombre
+            const formCambiarNombre = document.querySelector('#formCambiarNombre form');
+            if (formCambiarNombre) {
+                formCambiarNombre.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    showCustomLoader();
+                    const formData = new FormData(formCambiarNombre);
+                    fetch(formCambiarNombre.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(async response => {
+                        hideCustomLoader();
+                        if (response.ok) {
+                            const html = await response.text();
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            const newMain = tempDiv.querySelector('.main-content');
+                            if (newMain) {
+                                document.querySelector('.main-content').innerHTML = newMain.innerHTML;
+                                // Reasignar listeners tras AJAX
+                                bindPerfilEventListeners();
+                                bindPerfilAjaxForms();
+                                hideAllForms();
+                            } else {
+                                location.reload();
+                            }
+                        } else {
+                            location.reload();
+                        }
+                    })
+                    .catch(() => {
+                        hideCustomLoader();
+                        location.reload();
+                    });
+                });
+            }
+            // Cambiar contraseña
+            const formCambiarPassword = document.querySelector('#formCambiarPassword form');
+            if (formCambiarPassword) {
+                formCambiarPassword.addEventListener('submit', function(e) {
+                    const nuevaPassword = document.getElementById('nuevaPassword')?.value;
+                    const confirmarPassword = document.getElementById('confirmarPassword')?.value;
+                    if (nuevaPassword !== undefined && confirmarPassword !== undefined && nuevaPassword !== confirmarPassword) {
+                        e.preventDefault();
+                        alert('Las contraseñas no coinciden. Por favor verifica.');
+                        return;
+                    }
+                    e.preventDefault();
+                    showCustomLoader();
+                    const formData = new FormData(formCambiarPassword);
+                    fetch(formCambiarPassword.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                    .then(async response => {
+                        hideCustomLoader();
+                        if (response.ok) {
+                            const html = await response.text();
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = html;
+                            const newMain = tempDiv.querySelector('.main-content');
+                            if (newMain) {
+                                document.querySelector('.main-content').innerHTML = newMain.innerHTML;
+                                // Reasignar listeners tras AJAX
+                                bindPerfilEventListeners();
+                                bindPerfilAjaxForms();
+                                hideAllForms();
+                            } else {
+                                location.reload();
+                            }
+                        } else {
+                            location.reload();
+                        }
+                    })
+                    .catch(() => {
+                        hideCustomLoader();
+                        location.reload();
+                    });
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            hideAllForms();
+            bindPerfilEventListeners();
+            bindPerfilAjaxForms();
+        });
     </script>
 </body>
 </html>
