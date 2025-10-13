@@ -625,6 +625,22 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+      // Modal de carga personalizado
+      function showCustomLoader() {
+        document.getElementById("customLoaderModal").style.display = "flex";
+      }
+      function hideCustomLoader() {
+        document.getElementById("customLoaderModal").style.display = "none";
+      }
+
+      // Ocultar loader al cargar la página o volver con el navegador
+      window.addEventListener('pageshow', function () {
+        hideCustomLoader();
+      });
+      window.addEventListener('DOMContentLoaded', function () {
+        hideCustomLoader();
+      });
+
       document.addEventListener("DOMContentLoaded", function () {
         // Configuración automática del toast con Bootstrap
         var toastEl = document.querySelector(".toast-improved");
@@ -660,8 +676,7 @@
               el = el.parentElement;
             }
             if (!inNavbar) {
-              document.getElementById("customLoaderModal").style.display =
-                "flex";
+              showCustomLoader();
             }
           });
         });

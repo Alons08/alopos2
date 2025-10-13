@@ -608,6 +608,13 @@
                     }
                 });
             }
+            // Ocultar loader al cargar o volver a la página (incluso desde caché)
+            window.addEventListener('pageshow', function() {
+                hideCustomLoader();
+            });
+            window.addEventListener('DOMContentLoaded', function() {
+                hideCustomLoader();
+            });
             // Loader en Cancelar
             var btnCancel = document.querySelector('a.btn-secondary[href*="/pedidos"]');
             if (btnCancel) {

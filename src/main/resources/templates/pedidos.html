@@ -592,37 +592,45 @@
         </style>
 
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                // Modal de carga personalizado
-                function showCustomLoader() {
-                    document.getElementById('customLoaderModal').style.display = 'flex';
-                }
-                function hideCustomLoader() {
-                    document.getElementById('customLoaderModal').style.display = 'none';
-                }
+            // Modal de carga personalizado
+            function showCustomLoader() {
+                document.getElementById('customLoaderModal').style.display = 'flex';
+            }
+            function hideCustomLoader() {
+                document.getElementById('customLoaderModal').style.display = 'none';
+            }
 
-                        // Loader en Nuevo Pedido, Crear Pedido, Ver Detalle, Editar Pedido
-                        document.querySelectorAll('a[href*="/pedidos/nuevo"], a[href*="/pedidos/crear"], a[href*="/pedidos/detalle"], a[href*="/pedidos/editar"], .pedidos-action-btn.btn-primary, .pedidos-action-btn.btn-warning').forEach(function(link) {
-                            link.addEventListener('click', function(e) {
+            // Ocultar loader al cargar la página o volver con el navegador
+            window.addEventListener('pageshow', function () {
+                hideCustomLoader();
+            });
+            window.addEventListener('DOMContentLoaded', function () {
+                hideCustomLoader();
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Loader en Nuevo Pedido, Crear Pedido, Ver Detalle, Editar Pedido
+                document.querySelectorAll('a[href*="/pedidos/nuevo"], a[href*="/pedidos/crear"], a[href*="/pedidos/detalle"], a[href*="/pedidos/editar"], .pedidos-action-btn.btn-primary, .pedidos-action-btn.btn-warning').forEach(function(link) {
+                    link.addEventListener('click', function(e) {
+                        showCustomLoader();
+                    });
+                });
+
+                // Loader en formularios del menú desplegable de Más Opciones (excepto Generar Comprobante)
+                document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(function(item) {
+                    if (!item.textContent.includes('Generar Comprobante')) {
+                        // Si el botón está dentro de un formulario, interceptar el submit
+                        if (item.closest('form')) {
+                            item.closest('form').addEventListener('submit', function(e) {
                                 showCustomLoader();
                             });
-                        });
-
-                        // Loader en formularios del menú desplegable de Más Opciones (excepto Generar Comprobante)
-                        document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(function(item) {
-                            if (!item.textContent.includes('Generar Comprobante')) {
-                                // Si el botón está dentro de un formulario, interceptar el submit
-                                if (item.closest('form')) {
-                                    item.closest('form').addEventListener('submit', function(e) {
-                                        showCustomLoader();
-                                    });
-                                } else {
-                                    item.addEventListener('click', function(e) {
-                                        showCustomLoader();
-                                    });
-                                }
-                            }
-                        });
+                        } else {
+                            item.addEventListener('click', function(e) {
+                                showCustomLoader();
+                            });
+                        }
+                    }
+                });
             });
         </script>
         </body>

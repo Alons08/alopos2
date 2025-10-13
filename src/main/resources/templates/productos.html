@@ -706,6 +706,13 @@
                         showCustomLoader();
                     });
                 });
+                // Ocultar loader al cargar o volver a la página (incluso desde caché)
+                window.addEventListener('pageshow', function() {
+                    hideCustomLoader();
+                });
+                window.addEventListener('DOMContentLoaded', function() {
+                    hideCustomLoader();
+                });
             });
         </script>
 </body>

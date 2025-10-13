@@ -500,6 +500,14 @@
         document.getElementById("customLoaderModal").style.display = "none";
       }
 
+      // Ocultar loader al cargar la página o volver con el navegador
+      window.addEventListener('pageshow', function () {
+        hideCustomLoader();
+      });
+      window.addEventListener('DOMContentLoaded', function () {
+        hideCustomLoader();
+      });
+
       document.addEventListener("DOMContentLoaded", function () {
         // Loader en Guardar
         var form = document.getElementById("userForm");
