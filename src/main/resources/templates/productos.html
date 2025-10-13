@@ -642,6 +642,30 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                // Enviar formulario automáticamente si el input de búsqueda queda vacío tras borrar
+                var searchInput = document.querySelector('.search-container input[name="q"]');
+                var searchForm = document.querySelector('.search-container form');
+                var searchBtn = document.querySelector('.search-container button[type="submit"]');
+                var lastValue = searchInput ? searchInput.value : '';
+                function showCustomLoader() {
+                    document.getElementById('customLoaderModal').style.display = 'flex';
+                }
+                if (searchInput && searchForm) {
+                    // Spinner al limpiar el input y enviar
+                    searchInput.addEventListener('input', function(e) {
+                        if (lastValue && this.value === '') {
+                            showCustomLoader();
+                            searchForm.submit();
+                        }
+                        lastValue = this.value;
+                    });
+                    // Spinner al presionar el botón de buscar
+                    if (searchBtn) {
+                        searchBtn.addEventListener('click', function() {
+                            showCustomLoader();
+                        });
+                    }
+                }
                 // Inicializar tooltips si es necesario
                 const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                 tooltipTriggerList.map(function (tooltipTriggerEl) {

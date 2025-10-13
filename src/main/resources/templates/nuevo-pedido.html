@@ -745,6 +745,17 @@
 
                 searchBtn.addEventListener('click', function() {
                     currentSelectElement = productoSelect;
+                    // Limpiar el campo de búsqueda
+                    const searchInput = document.getElementById('productSearchInput');
+                    if (searchInput) {
+                        searchInput.value = '';
+                        // Mostrar todos los productos
+                        const productItems = document.querySelectorAll('.search-results .search-product-item');
+                        productItems.forEach(item => {
+                            item.classList.remove('d-none');
+                            item.classList.add('d-flex');
+                        });
+                    }
                     searchModal.show();
                 });
 
