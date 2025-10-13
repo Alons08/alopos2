@@ -338,8 +338,10 @@
                       th:field="*{stock}"
                       class="form-control"
                       min="0"
+                      step="any"
                       placeholder="Cantidad disponible"
                       required
+                      th:disabled="${producto.productoBase != null}"
                     />
                     <div class="invalid-feedback">
                       Ingrese una cantidad válida.
