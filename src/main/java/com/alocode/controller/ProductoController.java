@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alocode.model.Cliente;
 import com.alocode.model.Producto;
 import com.alocode.service.ProductoService;
 
@@ -24,7 +25,7 @@ public class ProductoController {
     public String listarProductos(
             @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "4") int size, //50
+            @RequestParam(value = "size", defaultValue = "4") int size, // 50
             @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "dir", defaultValue = "asc") String dir,
             Model model) {
@@ -39,12 +40,16 @@ public class ProductoController {
         model.addAttribute("productosPage", productosPage);
         model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("productosBase", productoService.obtenerProductosBase());
+        // Agregar el cliente actual al modelo para control de visibilidad
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        Cliente cliente = productoService.obtenerClientePorId(clienteId);
+        model.addAttribute("cliente", cliente);
         model.addAttribute("q", q);
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
         return "productos";
     }
-    
+
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevoProducto(Model model, @RequestParam(value = "id", required = false) Long id) {
         if (id != null) {
@@ -52,15 +57,18 @@ public class ProductoController {
         } else {
             model.addAttribute("producto", new Producto());
         }
-        
         // Agregar lista de productos base para el formulario
         model.addAttribute("productosBase", productoService.obtenerProductosBase());
-        
+        // Agregar el cliente actual al modelo para control de visibilidad
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        Cliente cliente = productoService.obtenerClientePorId(clienteId);
+        model.addAttribute("cliente", cliente);
         return "nuevo-producto";
     }
-    
+
     @PostMapping("/guardar")
-    public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes, org.springframework.ui.Model model) {
+    public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes,
+            org.springframework.ui.Model model) {
         try {
             // Asignar el cliente actual usando TenantContext
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
@@ -79,7 +87,6 @@ public class ProductoController {
             return "nuevo-producto";
         }
     }
-    
 
     @PostMapping("/desactivar/{id}")
     public String desactivarProducto(@PathVariable Long id, RedirectAttributes redirectAttributes) {
@@ -91,15 +98,15 @@ public class ProductoController {
         }
         return "redirect:/productos";
     }
-    
+
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditarProducto(@PathVariable Long id, Model model) {
         model.addAttribute("producto", productoService.obtenerProductoPorId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado")));
-        
+
         // Agregar lista de productos base para el formulario
         model.addAttribute("productosBase", productoService.obtenerProductosBase());
-        
+
         return "nuevo-producto";
     }
 

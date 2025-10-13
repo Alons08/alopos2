@@ -289,7 +289,7 @@
                                                 <i th:if="${sort == 'nombre'}" th:class="${dir == 'asc'} ? 'bi bi-caret-up-fill sort-icon-active' : 'bi bi-caret-down-fill sort-icon-active'"></i>
                                             </a>
                                         </th>
-                                        <th>Tipo</th>
+                                        <th th:if="${cliente != null and cliente.permitirProductosDerivados}">Tipo</th>
                                         <th>
                                             <a th:href="@{/productos(q=${q},sort='precio',dir=${sort == 'precio' and dir == 'asc' ? 'desc' : 'asc'})}" class="text-white text-decoration-none sort-link">
                                                 Precio
@@ -320,7 +320,7 @@
                                     <tr th:each="producto : ${productos}" 
                                         th:classappend="${producto.esProductoBase} ? 'producto-base' : (${producto.productoBase} != null ? 'producto-derivado' : '')">
                                         <td class="col-nombre" th:text="${producto.nombre}"></td>
-                                        <td>
+                                        <td th:if="${cliente != null and cliente.permitirProductosDerivados}">
                                             <span th:if="${producto.esProductoBase}" class="badge badge-base">Base</span>
                                             <span th:if="${producto.productoBase != null}" class="badge badge-derivado">
                                                 Derivado de: <span th:text="${producto.productoBase.nombre}"></span>
@@ -427,7 +427,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="mobile-product-detail">
+                            <div class="mobile-product-detail" th:if="${cliente != null and cliente.permitirProductosDerivados}">
                                 <span class="mobile-detail-label">Tipo:</span>
                                 <span th:if="${producto.esProductoBase}">Producto Base</span>
                                 <span th:if="${producto.productoBase != null}">

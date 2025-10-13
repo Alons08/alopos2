@@ -36,6 +36,10 @@ public class Cliente {
     private Date fechaRegistro;
     
     private Boolean activo = true;
+
+    // Controla si la empresa puede usar productos derivados/producto base
+    @Column(name = "permitir_productos_derivados")
+    private Boolean permitirProductosDerivados = true;
     
     @PrePersist
     protected void onCreate() {

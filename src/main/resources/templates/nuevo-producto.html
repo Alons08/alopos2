@@ -348,12 +348,11 @@
                 </div>
               </div>
 
-              <!-- Tipo de Producto -->
-              <div class="form-section">
+              <!-- Tipo de Producto (solo si el cliente lo permite) -->
+              <div class="form-section" th:if="${cliente != null and cliente.permitirProductosDerivados}">
                 <label class="form-label"
                   >Tipo de Producto
-                  <span class="opcional">(opcional)</span></label
-                >
+                  <span class="opcional">(opcional)</span></label>
                 <div class="form-check mb-2">
                   <input
                     class="form-check-input"
@@ -374,8 +373,7 @@
                 >
                   <label for="productoBase" class="form-label"
                     >Producto Base
-                    <span class="opcional">(opcional)</span></label
-                  >
+                    <span class="opcional">(opcional)</span></label>
                   <select
                     class="form-select"
                     id="productoBase"
@@ -399,12 +397,11 @@
                     style="display: none"
                   >
                     <label for="factorConversion" class="form-label"
-                      >Factor de Conversión</label
-                    >
+                      >Factor de Conversión</label>
                     <div class="input-group">
                       <span class="input-group-text"
-                        ><i class="bi bi-arrow-left-right"></i
-                      ></span>
+                        ><i class="bi bi-arrow-left-right"></i>
+                      </span>
                       <input
                         type="number"
                         id="factorConversion"
