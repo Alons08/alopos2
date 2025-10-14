@@ -825,7 +825,7 @@
                         <i class="bi bi-lightning-charge"></i> Cambiar Estado
                     </button>
                     <ul class="dropdown-menu detalle-dropdown-menu-compact">
-                        <li th:if="${cliente != null and cliente.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PENDIENTE'}">
+                        <li th:if="${cliente != null and cliente.configuracion != null and cliente.configuracion.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PENDIENTE'}">
                             <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post" class="d-inline w-100">
                                 <input type="hidden" name="estado" value="PREPARANDO">
                                 <button type="submit" class="dropdown-item detalle-dropdown-item-compact text-primary w-100 text-start">
@@ -833,7 +833,7 @@
                                 </button>
                             </form>
                         </li>
-                        <li th:if="${cliente != null and cliente.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PREPARANDO'}">
+                        <li th:if="${cliente != null and cliente.configuracion != null and cliente.configuracion.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PREPARANDO'}">
                             <form th:action="@{'/pedidos/{id}/estado'(id=${pedido.id})}" method="post" class="d-inline w-100">
                                 <input type="hidden" name="estado" value="ENTREGANDO">
                                 <button type="submit" class="dropdown-item detalle-dropdown-item-compact text-warning w-100 text-start">

@@ -351,7 +351,7 @@
               </div>
 
               <!-- Tipo de Producto (solo si el cliente lo permite) -->
-              <div class="form-section" th:if="${cliente != null and cliente.permitirProductosDerivados}">
+              <div class="form-section" th:if="${cliente != null and cliente.configuracion != null and cliente.configuracion.permitirProductosDerivados}">
                 <label class="form-label"
                   >Tipo de Producto
                   <span class="opcional">(opcional)</span></label>

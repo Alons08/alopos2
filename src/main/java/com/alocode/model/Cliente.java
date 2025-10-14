@@ -37,13 +37,10 @@ public class Cliente {
     
     private Boolean activo = true;
 
-    // Controla si la empresa puede usar productos derivados/producto base
-    @Column(name = "permitir_productos_derivados")
-    private Boolean permitirProductosDerivados = true;
 
-    // Controla si se muestran los estados PREPARANDO y ENTREGANDO en los HTML de productos y detalle-producto
-    @Column(name = "mostrar_estados_preparando_entregando")
-    private Boolean mostrarEstadosPreparandoEntregando = true;
+    // Configuración avanzada del cliente
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private ClienteConfiguracion configuracion;
     
     @PrePersist
     protected void onCreate() {

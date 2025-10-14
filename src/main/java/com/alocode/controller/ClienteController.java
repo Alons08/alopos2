@@ -25,7 +25,7 @@ public class ClienteController {
             return "redirect:/home";
         }
         Long clienteId = usuario.getCliente().getId();
-        Optional<Cliente> optCliente = clienteService.findById(clienteId);
+        Optional<Cliente> optCliente = clienteService.buscarPorId(clienteId);
         if (optCliente.isEmpty()) {
             model.addAttribute("error", "No se encontró la información de la empresa");
             return "cliente-empresa"; // redirecciona a cliente-empresa.html
@@ -67,7 +67,7 @@ public class ClienteController {
             model.addAttribute("error", e.getMessage());
         }
         // Recargar el cliente actualizado desde el servicio
-        Optional<Cliente> optCliente = clienteService.findById(clienteId);
+        Optional<Cliente> optCliente = clienteService.buscarPorId(clienteId);
         if (optCliente.isPresent()) {
             model.addAttribute("cliente", optCliente.get());
         } else {
