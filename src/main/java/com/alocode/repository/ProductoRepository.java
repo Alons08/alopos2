@@ -30,4 +30,9 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByClienteIdAndProductoBaseIsNotNullAndActivoTrue(Long clienteId);
     
     List<Producto> findByClienteIdAndProductoBaseId(Long clienteId, Long productoBaseId);
+    
+    // Contar productos activos por cliente
+    long countByClienteIdAndActivoTrue(Long clienteId);
+    // Contar productos inactivos por cliente
+    long countByClienteIdAndActivoFalse(Long clienteId);
 }

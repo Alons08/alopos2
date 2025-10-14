@@ -40,6 +40,9 @@ public class ProductoController {
         model.addAttribute("productosPage", productosPage);
         model.addAttribute("productos", productosPage.getContent());
         model.addAttribute("productosBase", productoService.obtenerProductosBase());
+        // Totales globales de productos activos/inactivos
+        model.addAttribute("totalActivos", productoService.contarProductosActivos());
+        model.addAttribute("totalInactivos", productoService.contarProductosInactivos());
         // Agregar el cliente actual al modelo para control de visibilidad
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
         Cliente cliente = productoService.obtenerClientePorId(clienteId);

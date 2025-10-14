@@ -19,8 +19,10 @@ public class MesaController {
 
     @GetMapping
     public String listarMesas(@RequestParam(value = "q", required = false) String q, Model model) {
-        model.addAttribute("mesas", mesaService.buscarMesas(q));
-        return "mesas";
+    model.addAttribute("mesas", mesaService.buscarMesas(q));
+    model.addAttribute("totalActivas", mesaService.contarMesasActivas());
+    model.addAttribute("totalInactivas", mesaService.contarMesasInactivas());
+    return "mesas";
     }
     
     @GetMapping("/nuevo")

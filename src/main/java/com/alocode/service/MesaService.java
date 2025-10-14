@@ -78,5 +78,16 @@ public class MesaService {
             mesaRepository.save(mesa);
         }
     }
+
+    // Nuevos métodos para contar mesas activas e inactivas
+    public long contarMesasActivas() {
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        return mesaRepository.countByClienteIdAndActiva(clienteId);
+    }
+
+    public long contarMesasInactivas() {
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        return mesaRepository.countByClienteIdAndInactiva(clienteId);
+    }
     
 }

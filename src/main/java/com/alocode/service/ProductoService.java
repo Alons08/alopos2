@@ -179,4 +179,14 @@ public class ProductoService {
             productoRepository.save(producto);
         }
     }
+
+    public long contarProductosActivos() {
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        return productoRepository.countByClienteIdAndActivoTrue(clienteId);
+    }
+
+    public long contarProductosInactivos() {
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        return productoRepository.countByClienteIdAndActivoFalse(clienteId);
+    }
 }
