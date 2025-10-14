@@ -40,6 +40,10 @@ public class Cliente {
     // Controla si la empresa puede usar productos derivados/producto base
     @Column(name = "permitir_productos_derivados")
     private Boolean permitirProductosDerivados = true;
+
+    // Controla si se muestran los estados PREPARANDO y ENTREGANDO en los HTML de productos y detalle-producto
+    @Column(name = "mostrar_estados_preparando_entregando")
+    private Boolean mostrarEstadosPreparandoEntregando = true;
     
     @PrePersist
     protected void onCreate() {

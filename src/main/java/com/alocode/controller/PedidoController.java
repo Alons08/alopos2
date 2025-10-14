@@ -41,6 +41,10 @@ public class PedidoController {
     public String listarPedidos(Model model) {
         List<Pedido> pedidos = pedidoService.obtenerPedidosPendientes();
         model.addAttribute("pedidos", pedidos);
+        // Agregar el cliente actual al modelo para control de visibilidad de estados
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        Cliente cliente = productoService.obtenerClientePorId(clienteId);
+        model.addAttribute("cliente", cliente);
         return "pedidos";
     }
 
@@ -143,6 +147,10 @@ public class PedidoController {
         return pedidoService.obtenerPedidoPorId(id)
                 .map(pedido -> {
                     model.addAttribute("pedido", pedido);
+                    // Agregar el cliente actual al modelo para visibilidad de estados
+                    if (pedido.getCliente() != null) {
+                        model.addAttribute("cliente", pedido.getCliente());
+                    }
                     return "detalle-pedido";
                 })
                 .orElseGet(() -> {

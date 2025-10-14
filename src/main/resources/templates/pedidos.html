@@ -358,7 +358,7 @@
                                                             <i class="bi bi-gear"></i>
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-end pedidos-dropdown-menu" aria-labelledby="dropdownMenuButton${pedido.id}">
-                                                            <li th:if="${pedido.estado.name() == 'PENDIENTE'}">
+                                                            <li th:if="${cliente != null and cliente.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PENDIENTE'}">
                                                                 <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
                                                                     <input type="hidden" name="estado" value="PREPARANDO">
                                                                     <button type="submit" class="dropdown-item pedidos-dropdown-item">
@@ -366,7 +366,7 @@
                                                                     </button>
                                                                 </form>
                                                             </li>
-                                                            <li th:if="${pedido.estado.name() == 'PREPARANDO'}">
+                                                            <li th:if="${cliente != null and cliente.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PREPARANDO'}">
                                                                 <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
                                                                     <input type="hidden" name="estado" value="ENTREGANDO">
                                                                     <button type="submit" class="dropdown-item pedidos-dropdown-item">
