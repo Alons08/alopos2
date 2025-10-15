@@ -180,13 +180,20 @@
           padding: 0.9rem;
         }
 
-        .btn-group {
-          flex-direction: column;
+        .btn-group-mobile {
+          flex-direction: row !important;
           gap: 0.5rem;
+          align-items: stretch;
+        }
+        .btn-group-mobile .btn {
+          width: 100%;
+          max-width: 100%;
         }
 
-        .btn-group .btn {
-          width: 100%;
+        .btn-submit {
+          background-color: var(--primary-color) !important;
+          color: #fff !important;
+          border: none !important;
         }
 
         .card-header {
@@ -329,15 +336,14 @@
               </div>
 
               <!-- Botones -->
-              <div class="d-flex flex-column flex-md-row gap-2 mt-3 btn-group">
+              <div class="d-flex flex-md-row gap-2 mt-3 btn-group-mobile justify-content-center">
                 <button
                   type="submit"
-                  class="btn btn-submit text-white flex-fill"
+                  class="btn btn-primary px-3 flex-fill"
+                  id="btnGuardar"
                 >
-                  <i class="bi bi-save me-2"></i>
-                  <span
-                    th:text="${mesa.id == null} ? 'Guardar' : 'Actualizar'"
-                  ></span>
+                  <i class="bi bi-check-circle me-2"></i>
+                  <span th:text="${mesa.id == null} ? 'Guardar' : 'Actualizar'"></span>
                 </button>
                 <a th:href="@{/mesas}" class="btn btn-cancel flex-fill">
                   <i class="bi bi-x-circle me-2"></i> Cancelar

@@ -228,13 +228,14 @@
           justify-content: flex-start;
         }
 
-        .btn-group {
-          flex-direction: column;
+        .btn-group-mobile {
+          flex-direction: row !important;
           gap: 0.5rem;
+          align-items: stretch;
         }
-
-        .btn-group .btn {
+        .btn-group-mobile .btn {
           width: 100%;
+          max-width: 100%;
         }
 
         .card-header {
@@ -385,15 +386,14 @@
               </div>
 
               <!-- Botones -->
-              <div class="d-flex flex-column flex-md-row gap-2 mt-3 btn-group">
+              <div class="d-flex flex-md-row gap-2 mt-3 btn-group-mobile justify-content-center">
                 <button
                   type="submit"
-                  class="btn btn-submit text-white flex-fill"
+                  class="btn btn-primary px-3 flex-fill"
+                  id="btnGuardar"
                 >
-                  <i class="bi bi-save me-2"></i>
-                  <span
-                    th:text="${usuarioForm.id == null ? 'Guardar' : 'Actualizar'}"
-                  ></span>
+                  <i class="bi bi-check-circle me-2"></i>
+                  <span th:text="${usuarioForm.id == null ? 'Guardar' : 'Actualizar'}"></span>
                 </button>
                 <a
                   th:href="@{/admin/usuarios}"

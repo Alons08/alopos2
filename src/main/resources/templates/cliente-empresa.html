@@ -176,27 +176,24 @@
             padding: 0.5rem 1rem;
             font-weight: 500;
             font-size: 0.9rem;
-            color: #fff;
+            color: #fff !important;
             border-radius: 8px;
         }
         .btn-cancel:hover {
             background-color: var(--cancel-hover);
             color: #fff !important;
         }
-        .btn-group {
+        .btn-group-mobile {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: row !important;
+            gap: 0.5rem;
+            align-items: stretch;
         }
-        @media (max-width: 768px) {
-            .btn-group {
-                flex-direction: column;
-            }
-            .btn-submit, .btn-cancel {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 0.5rem;
-            }
+        .btn-group-mobile .btn {
+            width: 100%;
+            max-width: 100%;
         }
+
         
         .btn-back {
             color: white;
@@ -379,11 +376,11 @@
                                 <input type="text" class="form-control" id="direccion" th:field="*{direccion}" required>
                             </div>
                             
-                            <div class="d-flex flex-wrap btn-group">
-                                <button type="submit" class="btn btn-submit text-white">
-                                    <i class="bi bi-save me-1"></i> Guardar
+                            <div class="d-flex flex-md-row gap-2 btn-group-mobile justify-content-center">
+                                <button type="submit" class="btn btn-primary px-3 flex-fill" id="btnGuardar">
+                                    <i class="bi bi-check-circle me-1"></i> Actualizar
                                 </button>
-                                <button type="button" class="btn btn-cancel text-white btn-cancel-form">
+                                <button type="button" class="btn btn-cancel flex-fill btn-cancel-form">
                                     <i class="bi bi-x-circle me-1"></i> Cancelar
                                 </button>
                             </div>
