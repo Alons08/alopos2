@@ -257,12 +257,12 @@
             }
             
             .btn-group-mobile {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 0.5rem;
             }
-            
             .btn-group-mobile .btn {
-                width: 100%;
+                width: auto;
+                flex: 1 1 0;
             }
         }
         
@@ -446,7 +446,7 @@
                         </div>
                         
                         <!-- Botones de acción -->
-                        <div class="d-flex flex-column flex-md-row gap-2 justify-content-end btn-group-mobile">
+                        <div class="d-flex flex-md-row gap-2 justify-content-end btn-group-mobile">
                             <button type="submit" class="btn btn-primary px-3" id="btnGuardar">
                                 <i class="bi bi-check-circle me-1"></i> Guardar
                             </button>
