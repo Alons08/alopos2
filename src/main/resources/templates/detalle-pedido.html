@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Pedido - Sistema de Ventas</title>
@@ -860,10 +862,52 @@
                         </li>
                         <li><hr class="dropdown-divider my-1"></li>
                         <li>
-                            <a th:href="@{'/pedidos/' + ${pedido.id} + '/comprobante'}" class="dropdown-item detalle-dropdown-item-compact" target="_blank">
+                            <button type="button" class="dropdown-item detalle-dropdown-item-compact" th:attr="data-pedido-id=${pedido.id}" onclick="generarComprobanteYCompletarDetalle(this)">
                                 <i class="bi bi-receipt text-primary"></i> Generar Comprobante
-                            </a>
+                            </button>
                         </li>
+    <script>
+    function generarComprobanteYCompletarDetalle(btn) {
+        const pedidoId = btn.getAttribute('data-pedido-id');
+        if (!pedidoId) return;
+        document.getElementById('customLoaderModal').style.display = 'flex';
+        // Obtener CSRF token y header
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+        let headers = {
+            'Accept': 'application/pdf',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+        headers[csrfHeader] = csrfToken;
+        fetch(`/pedidos/${pedidoId}/comprobante-pagado`, {
+            method: 'POST',
+            headers: headers
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error al generar el comprobante');
+            return response.blob();
+        })
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            // Descargar el PDF automáticamente
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'comprobante.pdf';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                // Redirigir a pedidos.html
+                window.location.href = '/pedidos';
+            }, 1000);
+        })
+        .catch(err => {
+            document.getElementById('customLoaderModal').style.display = 'none';
+            alert('No se pudo generar el comprobante.');
+        });
+    }
+    </script>
                     </ul>
                 </div>
                 

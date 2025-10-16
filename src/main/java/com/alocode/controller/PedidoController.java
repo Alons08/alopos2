@@ -291,4 +291,105 @@ public class PedidoController {
         }
     }
 
+        @PostMapping("/{id}/comprobante-pagado")
+        public void generarComprobanteYMarcarPagado(@PathVariable Long id, HttpServletResponse response, @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+            try {
+                Pedido pedido = pedidoService.obtenerPedidoPorId(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Pedido no encontrado"));
+
+                // Cambiar estado a PAGADO si no lo está
+                if (pedido.getEstado() != EstadoPedido.PAGADO) {
+                    Usuario usuario = null;
+                    if (userDetails instanceof MyUserDetails myUserDetails) {
+                        usuario = myUserDetails.getUsuario();
+                    }
+                    if (usuario == null) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("text/plain");
+                        response.getWriter().write("Usuario no autenticado");
+                        return;
+                    }
+                    pedidoService.actualizarEstadoPedido(id, EstadoPedido.PAGADO, usuario);
+                    // Recargar el pedido actualizado
+                    pedido = pedidoService.obtenerPedidoPorId(id).orElse(pedido);
+                }
+
+                response.setContentType("application/pdf");
+                String numeroPedidoStr = String.format("%06d", pedido.getNumeroPedido());
+                Cliente cliente = pedido.getCliente();
+                String serie = "B00" + cliente.getId();
+                String nombreArchivo = "Comprobante_" + serie + "-" + numeroPedidoStr + ".pdf";
+                response.setHeader("Content-Disposition", "inline; filename=" + nombreArchivo);
+
+                float width = 226.77f; // 80mm
+                float height = 566.93f; // 200mm
+                Document document = new Document(new Rectangle(width, height), 10, 10, 10, 10);
+                try {
+                    PdfWriter.getInstance(document, response.getOutputStream());
+                    document.open();
+                    Font fontTitle = new Font(Font.HELVETICA, 11, Font.BOLD);
+                    Font fontNormal = new Font(Font.HELVETICA, 7, Font.NORMAL);
+                    Font fontBold = new Font(Font.HELVETICA, 7, Font.BOLD);
+                    Paragraph nombreEmpresa = new Paragraph(cliente.getNombre(), fontTitle);
+                    nombreEmpresa.setAlignment(Element.ALIGN_CENTER);
+                    document.add(nombreEmpresa);
+                    Paragraph ruc = new Paragraph("RUC: " + cliente.getRuc(), fontNormal);
+                    ruc.setAlignment(Element.ALIGN_CENTER);
+                    document.add(ruc);
+                    Paragraph direccion = new Paragraph(cliente.getDireccion() != null ? cliente.getDireccion() : "", fontNormal);
+                    direccion.setAlignment(Element.ALIGN_CENTER);
+                    document.add(direccion);
+                    document.add(new Paragraph("----------------------------------------------------------------------------------------", fontNormal));
+                    Paragraph tipoDoc = new Paragraph("COMPROBANTE DE VENTA ELECTRÓNICA", fontBold);
+                    tipoDoc.setAlignment(Element.ALIGN_CENTER);
+                    document.add(tipoDoc);
+                    document.add(new Paragraph("N°: " + serie + "-" + String.format("%06d", pedido.getNumeroPedido()), fontBold));
+                    document.add(new Paragraph("----------------------------------------------------------------------------------------", fontNormal));
+                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    document.add(new Paragraph("Fecha y Hora: " +
+                            sdf.format(pedido.getFechaPagado() != null ? pedido.getFechaPagado() : pedido.getFecha()),
+                            fontNormal));
+                    if (pedido.getMesa() != null) {
+                        document.add(new Paragraph("Mesa: " + pedido.getMesa().getNumero(), fontNormal));
+                    }
+                    document.add(new Paragraph("Atiende: " + (pedido.getUsuario() != null ? pedido.getUsuario().getNombre() : "-"), fontNormal));
+                    document.add(new Paragraph("----------------------------------------------------------------------------------------", fontNormal));
+                    com.lowagie.text.pdf.PdfPTable table = new com.lowagie.text.pdf.PdfPTable(4);
+                    table.setWidthPercentage(100);
+                    table.setWidths(new float[] { 2, 8, 3, 4 });
+                    table.addCell(new com.lowagie.text.Phrase("Cant", fontBold));
+                    table.addCell(new com.lowagie.text.Phrase("Descripción", fontBold));
+                    table.addCell(new com.lowagie.text.Phrase("P.U.", fontBold));
+                    table.addCell(new com.lowagie.text.Phrase("Importe", fontBold));
+                    double subtotal = 0.0;
+                    for (var det : pedido.getDetalles()) {
+                        table.addCell(new com.lowagie.text.Phrase(String.valueOf(det.getCantidad()), fontNormal));
+                        table.addCell(new com.lowagie.text.Phrase(det.getProducto().getNombre(), fontNormal));
+                        table.addCell(new com.lowagie.text.Phrase(String.format("%.2f", det.getPrecioUnitario()), fontNormal));
+                        table.addCell(new com.lowagie.text.Phrase(String.format("%.2f", det.getSubtotal()), fontNormal));
+                        subtotal += det.getSubtotal();
+                    }
+                    document.add(table);
+                    document.add(new Paragraph("----------------------------------------------------------------------------------------", fontNormal));
+                    double igv = subtotal * 0.18;
+                    document.add(new Paragraph(String.format("SUBTOTAL:   S/ %.2f", subtotal), fontNormal));
+                    document.add(new Paragraph(String.format("IGV (18%%):     S/ %.2f", igv), fontNormal));
+                    document.add(new Paragraph(String.format("RECARGO:    S/ %.2f", pedido.getRecargo()), fontNormal));
+                    document.add(new Paragraph(String.format("TOTAL:          S/ %.2f", pedido.getTotal()), fontBold));
+                    document.add(new Paragraph("----------------------------------------------------------------------------------------", fontNormal));
+                    document.add(new Paragraph(" "));
+                    Paragraph gracias = new Paragraph("¡Gracias por su compra!", fontNormal);
+                    gracias.setAlignment(Element.ALIGN_CENTER);
+                    document.add(gracias);
+                } finally {
+                    document.close();
+                }
+            } catch (Exception ex) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setContentType("text/plain");
+                response.getWriter().write("Error: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+
 }

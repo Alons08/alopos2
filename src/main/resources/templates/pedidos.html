@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos - Sistema de Ventas</title>
@@ -394,9 +396,9 @@
                                                                 <hr class="dropdown-divider">
                                                             </li>
                                                             <li>
-                                                                <a th:href="@{/pedidos/{id}/comprobante(id=${pedido.id})}" class="dropdown-item pedidos-dropdown-item" target="_blank">
+                                                                <button type="button" class="dropdown-item pedidos-dropdown-item" th:attr="data-pedido-id=${pedido.id}" onclick="generarComprobanteYCompletar(this)">
                                                                     <i class="bi bi-receipt me-2 text-primary"></i>Generar Comprobante
-                                                                </a>
+                                                                </button>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -518,6 +520,63 @@
                 }
             });
         });
+    </script>
+    <script>
+    // Función para marcar como PAGADO y luego imprimir el comprobante
+    function generarComprobanteYCompletar(btn) {
+        const pedidoId = btn.getAttribute('data-pedido-id');
+        if (!pedidoId) return;
+        showCustomLoader();
+        // Obtener CSRF token y header
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+        let headers = {
+            'Accept': 'application/pdf',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+        headers[csrfHeader] = csrfToken;
+        fetch(`/pedidos/${pedidoId}/comprobante-pagado`, {
+            method: 'POST',
+            headers: headers
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Error al generar el comprobante');
+            return response.blob();
+        })
+        .then(blob => {
+            hideCustomLoader();
+            const url = URL.createObjectURL(blob);
+            // Descargar el PDF automáticamente
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'comprobante.pdf';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }, 1000);
+
+            // Eliminar la fila del pedido de la tabla (sin recargar la página)
+            const tr = btn.closest('tr');
+            if (tr) {
+                tr.remove();
+            }
+
+            // Si ya no hay filas, mostrar el estado vacío
+            const tbody = document.querySelector('.pedidos-table tbody');
+            if (tbody && tbody.children.length === 0) {
+                const emptyState = document.querySelector('.pedidos-empty-state');
+                if (emptyState) {
+                    emptyState.style.display = 'flex';
+                }
+            }
+        })
+        .catch(err => {
+            hideCustomLoader();
+            alert('No se pudo generar el comprobante.');
+        });
+    }
     </script>
         <!-- Modal de carga personalizado -->
         <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
