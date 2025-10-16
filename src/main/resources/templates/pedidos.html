@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <meta name="empresa-id" th:content="${cliente.id}"/>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
@@ -310,109 +311,112 @@
             
             <div class="row">
                 <div class="col-12">
-                    <div th:unless="${#lists.isEmpty(pedidos)}" class="card border-0 shadow-sm pedidos-order-card">
-                        <div class="card-body p-0">
-                            <div class="table-responsive pedidos-table-responsive">
-                                <table class="table table-hover mb-0 pedidos-table pedidos-table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>N° Pedido</th>
-                                            <th>Tipo</th>
-                                            <th>Mesa</th>
-                                            <th>Total</th>
-                                            <th>Estado</th>
-                                            <th>Fecha</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr th:each="pedido : ${pedidos}">
-                                            <td data-label="N° Pedido" th:text="${pedido.numeroPedido}"></td>
-                                            <td data-label="Tipo" th:text="${pedido.tipo}"></td>
-                                            <td data-label="Mesa" th:text="${pedido.mesa != null} ? '# '+${pedido.mesa.numero} : 'N/A'"></td>
-                                            <td data-label="Total" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
-                                            <td data-label="Estado" th:text="${pedido.estado}"></td>
-                                            <td data-label="Fecha" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}" class="text-muted"></td>
-                                            <td data-label="Acciones">
-                                                <div class="d-flex gap-2 pedidos-d-flex">
-                                                    <a th:href="@{/pedidos/{id}/detalle(id=${pedido.id})}" 
-                                                       class="pedidos-action-btn btn btn-primary" 
-                                                       title="Ver Detalle"
-                                                       data-bs-toggle="tooltip">
-                                                        <i class="bi bi-eye"></i>
-                                                    </a>
-                                                    
-                                                    <a th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}"
-                                                       th:href="@{/pedidos/{id}/editar(id=${pedido.id})}"
-                                                       class="pedidos-action-btn btn btn-warning"
-                                                       title="Editar Pedido"
-                                                       data-bs-toggle="tooltip">
-                                                        <i class="bi bi-pencil-square"></i>
-                                                    </a>
-                                                    
-                                                    <div class="dropdown">
-                                                        <button class="pedidos-action-btn btn btn-secondary dropdown-toggle pedidos-dropdown-toggle" 
-                                                                type="button" 
-                                                                id="dropdownMenuButton${pedido.id}"
-                                                                data-bs-toggle="dropdown"
-                                                                aria-expanded="false"
-                                                                title="Más opciones">
-                                                            <i class="bi bi-gear"></i>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-menu-end pedidos-dropdown-menu" aria-labelledby="dropdownMenuButton${pedido.id}">
-                                                            <li th:if="${cliente != null and cliente.configuracion != null and cliente.configuracion.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PENDIENTE'}">
-                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
-                                                                    <input type="hidden" name="estado" value="PREPARANDO">
-                                                                    <button type="submit" class="dropdown-item pedidos-dropdown-item">
-                                                                        <i class="bi bi-egg-fried me-2 text-info"></i>Marcar como Preparando
+                    <div id="pedidos-table-card-wrapper" th:attr="style=${#lists.isEmpty(pedidos)} ? 'display:none' : 'display:block'">
+                        <div class="card border-0 shadow-sm pedidos-order-card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive pedidos-table-responsive">
+                                    <table class="table table-hover mb-0 pedidos-table pedidos-table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>N° Pedido</th>
+                                                <th>Tipo</th>
+                                                <th>Mesa</th>
+                                                <th>Total</th>
+                                                <th>Estado</th>
+                                                <th>Fecha</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="pedido : ${pedidos}">
+                                                <td data-label="N° Pedido" th:text="${pedido.numeroPedido}"></td>
+                                                <td data-label="Tipo" th:text="${pedido.tipo}"></td>
+                                                <td data-label="Mesa" th:text="${pedido.mesa != null} ? '# '+${pedido.mesa.numero} : 'N/A'"></td>
+                                                <td data-label="Total" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
+                                                <td data-label="Estado" th:text="${pedido.estado}"></td>
+                                                <td data-label="Fecha" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}" class="text-muted"></td>
+                                                <td data-label="Acciones">
+                                                    <div class="d-flex gap-2 pedidos-d-flex">
+                                                        <a th:href="@{/pedidos/{id}/detalle(id=${pedido.id})}" 
+                                                           class="pedidos-action-btn btn btn-primary" 
+                                                           title="Ver Detalle"
+                                                           data-bs-toggle="tooltip">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        
+                                                        <a th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}"
+                                                           th:href="@{/pedidos/{id}/editar(id=${pedido.id})}"
+                                                           class="pedidos-action-btn btn btn-warning"
+                                                           title="Editar Pedido"
+                                                           data-bs-toggle="tooltip">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </a>
+                                                        
+                                                        <div class="dropdown">
+                                                            <button class="pedidos-action-btn btn btn-secondary dropdown-toggle pedidos-dropdown-toggle" 
+                                                                    type="button" 
+                                                                    id="dropdownMenuButton${pedido.id}"
+                                                                    data-bs-toggle="dropdown"
+                                                                    aria-expanded="false"
+                                                                    title="Más opciones">
+                                                                <i class="bi bi-gear"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-end pedidos-dropdown-menu" aria-labelledby="dropdownMenuButton${pedido.id}">
+                                                                <li th:if="${cliente != null and cliente.configuracion != null and cliente.configuracion.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PENDIENTE'}">
+                                                                    <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                        <input type="hidden" name="estado" value="PREPARANDO">
+                                                                        <button type="submit" class="dropdown-item pedidos-dropdown-item">
+                                                                            <i class="bi bi-egg-fried me-2 text-info"></i>Marcar como Preparando
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                                <li th:if="${cliente != null and cliente.configuracion != null and cliente.configuracion.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PREPARANDO'}">
+                                                                    <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                        <input type="hidden" name="estado" value="ENTREGANDO">
+                                                                        <button type="submit" class="dropdown-item pedidos-dropdown-item">
+                                                                            <i class="bi bi-check-circle me-2 text-naranja"></i>Marcar como Entregando
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                                <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
+                                                                    <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                        <input type="hidden" name="estado" value="PAGADO">
+                                                                        <button type="submit" class="dropdown-item pedidos-dropdown-item">
+                                                                            <i class="bi bi-check-circle-fill me-2 text-success"></i>Finalizar Pedido
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                                <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
+                                                                    <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                                                                        <input type="hidden" name="estado" value="CANCELADO">
+                                                                        <button type="submit" class="dropdown-item pedidos-dropdown-item">
+                                                                            <i class="bi bi-x-circle-fill me-2 text-danger"></i>Cancelar Pedido
+                                                                        </button>
+                                                                    </form>
+                                                                </li>
+                                                                <li>
+                                                                    <hr class="dropdown-divider">
+                                                                </li>
+                                                                <li>
+                                                                    <button type="button" class="dropdown-item pedidos-dropdown-item" th:attr="data-pedido-id=${pedido.id}" onclick="generarComprobanteYCompletar(this)">
+                                                                        <i class="bi bi-receipt me-2 text-primary"></i>Generar Comprobante
                                                                     </button>
-                                                                </form>
-                                                            </li>
-                                                            <li th:if="${cliente != null and cliente.configuracion != null and cliente.configuracion.mostrarEstadosPreparandoEntregando and pedido.estado.name() == 'PREPARANDO'}">
-                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
-                                                                    <input type="hidden" name="estado" value="ENTREGANDO">
-                                                                    <button type="submit" class="dropdown-item pedidos-dropdown-item">
-                                                                        <i class="bi bi-check-circle me-2 text-naranja"></i>Marcar como Entregando
-                                                                    </button>
-                                                                </form>
-                                                            </li>
-                                                            <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
-                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
-                                                                    <input type="hidden" name="estado" value="PAGADO">
-                                                                    <button type="submit" class="dropdown-item pedidos-dropdown-item">
-                                                                        <i class="bi bi-check-circle-fill me-2 text-success"></i>Finalizar Pedido
-                                                                    </button>
-                                                                </form>
-                                                            </li>
-                                                            <li th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}">
-                                                                <form th:action="@{/pedidos/{id}/estado(id=${pedido.id})}" method="post">
-                                                                    <input type="hidden" name="estado" value="CANCELADO">
-                                                                    <button type="submit" class="dropdown-item pedidos-dropdown-item">
-                                                                        <i class="bi bi-x-circle-fill me-2 text-danger"></i>Cancelar Pedido
-                                                                    </button>
-                                                                </form>
-                                                            </li>
-                                                            <li>
-                                                                <hr class="dropdown-divider">
-                                                            </li>
-                                                            <li>
-                                                                <button type="button" class="dropdown-item pedidos-dropdown-item" th:attr="data-pedido-id=${pedido.id}" onclick="generarComprobanteYCompletar(this)">
-                                                                    <i class="bi bi-receipt me-2 text-primary"></i>Generar Comprobante
-                                                                </button>
-                                                            </li>
-                                                        </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Empty State -->
-                    <div th:if="${#lists.isEmpty(pedidos)}" class="pedidos-empty-state animate__animated animate__fadeIn">
+                    <!-- Empty State SIEMPRE en el DOM, solo visible por CSS -->
+                    <div class="pedidos-empty-state animate__animated animate__fadeIn"
+                         th:attr="style=${#lists.isEmpty(pedidos)} ? 'display:flex' : 'display:none'">
                         <i class="bi bi-inbox text-muted"></i>
                         <h4 class="mb-2">No hay pedidos registrados</h4>
                         <p class="text-muted mb-3">Comienza creando tu primer pedido</p>
@@ -546,10 +550,29 @@
         .then(blob => {
             hideCustomLoader();
             const url = URL.createObjectURL(blob);
+            // Obtener id de empresa del meta
+            let idEmpresa = '';
+            const metaEmpresa = document.querySelector('meta[name="empresa-id"]');
+            if (metaEmpresa) {
+                idEmpresa = metaEmpresa.getAttribute('content');
+            }
+            // Obtener número de pedido de la fila
+            let numeroPedido = '';
+            const tr = btn.closest('tr');
+            if (tr) {
+                const tds = tr.querySelectorAll('td');
+                if (tds.length > 0) {
+                    numeroPedido = tds[0].textContent.trim().padStart(6, '0');
+                }
+            }
+            let nombreArchivo = 'comprobante.pdf';
+            if (idEmpresa && numeroPedido) {
+                nombreArchivo = `comprobante_B00${idEmpresa}-${numeroPedido}.pdf`;
+            }
             // Descargar el PDF automáticamente
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'comprobante.pdf';
+            a.download = nombreArchivo;
             document.body.appendChild(a);
             a.click();
             setTimeout(() => {
@@ -558,17 +581,44 @@
             }, 1000);
 
             // Eliminar la fila del pedido de la tabla (sin recargar la página)
-            const tr = btn.closest('tr');
             if (tr) {
                 tr.remove();
             }
 
-            // Si ya no hay filas, mostrar el estado vacío
+            // Actualizar el contador de pedidos activos
             const tbody = document.querySelector('.pedidos-table tbody');
+            let activos = 0;
+            if (tbody) {
+                // Contar filas que NO sean PAGADO ni CANCELADO
+                activos = Array.from(tbody.querySelectorAll('tr')).filter(row => {
+                    const estadoTd = row.querySelector('td[data-label="Estado"]');
+                    if (!estadoTd) return false;
+                    const estado = estadoTd.textContent.trim().toUpperCase();
+                    return estado !== 'PAGADO' && estado !== 'CANCELADO';
+                }).length;
+            }
+            const badge = document.querySelector('.badge.bg-info.text-dark span');
+            if (badge) {
+                badge.textContent = activos;
+            }
+
+            // Si ya no hay filas, mostrar el estado vacío y ocultar la card de la tabla
             if (tbody && tbody.children.length === 0) {
                 const emptyState = document.querySelector('.pedidos-empty-state');
                 if (emptyState) {
                     emptyState.style.display = 'flex';
+                }
+                // Ocultar la card de la tabla
+                const cardWrapper = document.getElementById('pedidos-table-card-wrapper');
+                if (cardWrapper) {
+                    cardWrapper.style.display = 'none';
+                }
+            }
+            // Si hay filas, asegurarse de mostrar la card de la tabla
+            else {
+                const cardWrapper = document.getElementById('pedidos-table-card-wrapper');
+                if (cardWrapper) {
+                    cardWrapper.style.display = 'block';
                 }
             }
         })

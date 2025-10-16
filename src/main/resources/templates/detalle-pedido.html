@@ -3,6 +3,9 @@
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta name="empresa-id" th:content="${pedido.cliente.id}"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Pedido - Sistema de Ventas</title>
@@ -888,11 +891,28 @@
             return response.blob();
         })
         .then(blob => {
+            // Construir nombre del archivo: comprobante_B00[id empresa]-0000[numero pedido].pdf
+            let idEmpresa = '';
+            let numeroPedido = '';
+            // Obtener id de empresa del meta
+            const metaEmpresa = document.querySelector('meta[name="empresa-id"]');
+            if (metaEmpresa) {
+                idEmpresa = metaEmpresa.getAttribute('content');
+            }
+            // Obtener número de pedido del header
+            const h2 = document.querySelector('.detalle-compact-header h2 span');
+            if (h2) {
+                numeroPedido = h2.textContent.trim().padStart(6, '0');
+            }
+            let nombreArchivo = 'comprobante.pdf';
+            if (idEmpresa && numeroPedido) {
+                nombreArchivo = `comprobante_B00${idEmpresa}-${numeroPedido}.pdf`;
+            }
             const url = URL.createObjectURL(blob);
             // Descargar el PDF automáticamente
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'comprobante.pdf';
+            a.download = nombreArchivo;
             document.body.appendChild(a);
             a.click();
             setTimeout(() => {
