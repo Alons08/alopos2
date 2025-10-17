@@ -31,6 +31,19 @@ public class UsuarioService {
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
         return usuarioRepository.findAllByClienteIdOrderByIdAsc(clienteId);
     }
+        // Contar usuarios activos por cliente
+        public long contarUsuariosActivos() {
+            Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+            return usuarioRepository.findAllByClienteIdOrderByIdAsc(clienteId)
+                .stream().filter(Usuario::getActivo).count();
+        }
+
+        // Contar usuarios inactivos por cliente
+        public long contarUsuariosInactivos() {
+            Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+            return usuarioRepository.findAllByClienteIdOrderByIdAsc(clienteId)
+                .stream().filter(u -> !u.getActivo()).count();
+        }
 
     // Buscar usuario por ID
     public Usuario findById(Long id) {

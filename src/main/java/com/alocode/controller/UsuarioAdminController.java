@@ -23,6 +23,8 @@ public class UsuarioAdminController {
     public String listarUsuarios(Model model) {
         List<Usuario> usuarios = usuarioService.findAll();
         model.addAttribute("usuarios", usuarios);
+        model.addAttribute("totalActivos", usuarioService.contarUsuariosActivos());
+        model.addAttribute("totalInactivos", usuarioService.contarUsuariosInactivos());
         return "usuarios";
     }
 

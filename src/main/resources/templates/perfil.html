@@ -350,7 +350,6 @@
                                 <span class="password-toggle" onclick="togglePassword('passwordActual')">
                                     <i class="bi bi-eye"></i>
                                 </span>
-                                <small class="text-muted">Necesitamos verificar tu identidad</small>
                             </div>
                             <div class="d-flex flex-wrap btn-group">
                                 <div class="d-flex flex-md-row gap-2 btn-group-mobile justify-content-center w-100">
@@ -509,6 +508,22 @@
         function hideAllForms() {
             document.querySelectorAll('.form-section').forEach(form => {
                 form.classList.remove('show');
+                // Limpiar todos los campos de los formularios al ocultarlos
+                const inputs = form.querySelectorAll('input[type="text"], input[type="password"]');
+                inputs.forEach(input => {
+                    // No limpiar el campo nombre en formCambiarNombre si es el valor original del usuario
+                    if (input.name !== 'nombre' || form.id !== 'formCambiarNombre') {
+                        input.value = '';
+                    }
+                });
+                // Restablecer iconos de contraseña a "ojo"
+                const eyeIcons = form.querySelectorAll('.password-toggle .bi-eye-slash');
+                eyeIcons.forEach(icon => {
+                    icon.classList.replace('bi-eye-slash', 'bi-eye');
+                    const inputId = icon.closest('.password-container').querySelector('input').id;
+                    const input = document.getElementById(inputId);
+                    if (input) input.type = 'password';
+                });
             });
         }
 
@@ -517,13 +532,21 @@
             hideAllForms();
             const form = document.getElementById(formId);
             form.classList.add('show');
-            // Si es el formulario de cambiar nombre, limpiar el input
+            
+            // Limpiar campos específicos al mostrar el formulario
             if(formId === 'formCambiarNombre') {
-                const inputNombre = form.querySelector('input[name="nombre"]');
-                if(inputNombre) {
-                    inputNombre.value = '';
-                }
+                const inputPassword = form.querySelector('input[name="passwordActual"]');
+                if(inputPassword) inputPassword.value = '';
+            } else if(formId === 'formCambiarPassword') {
+                // Limpiar todos los campos de contraseña
+                const inputPasswordActual = form.querySelector('input[name="passwordActual"]');
+                const inputNuevaPassword = form.querySelector('input[name="nuevaPassword"]');
+                const inputConfirmarPassword = form.querySelector('input[name="confirmarPassword"]');
+                if(inputPasswordActual) inputPasswordActual.value = '';
+                if(inputNuevaPassword) inputNuevaPassword.value = '';
+                if(inputConfirmarPassword) inputConfirmarPassword.value = '';
             }
+            
             // Scroll suave al formulario
             setTimeout(() => {
                 form.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -551,7 +574,7 @@
             const confirmarPassword = document.getElementById('confirmarPassword').value;
             if (nuevaPassword !== confirmarPassword) {
                 e.preventDefault();
-                alert('Las contraseñas no coinciden. Por favor verifica.');
+                mostrarAlertaPersonalizada('Las contraseñas no coinciden. Por favor verifica.');
             }
         });
 
@@ -603,7 +626,7 @@
                     const confirmarPassword = document.getElementById('confirmarPassword')?.value;
                     if (nuevaPassword !== undefined && confirmarPassword !== undefined && nuevaPassword !== confirmarPassword) {
                         e.preventDefault();
-                        alert('Las contraseñas no coinciden. Por favor verifica.');
+                        mostrarAlertaPersonalizada('Las contraseñas no coinciden. Por favor verifica.');
                         return;
                     }
                     e.preventDefault();
@@ -647,6 +670,38 @@
             bindPerfilEventListeners();
             bindPerfilAjaxForms();
         });
+
+        // Función para mostrar alerta personalizada
+        function mostrarAlertaPersonalizada(mensaje) {
+            const modal = document.getElementById('alertModalPersonalizado');
+            const modalTexto = document.getElementById('alertModalTexto');
+            modalTexto.textContent = mensaje;
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+        }
     </script>
+
+    <!-- Modal de Alerta Personalizado -->
+    <div class="modal fade" id="alertModalPersonalizado" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-warning bg-opacity-10 border-0">
+                    <h5 class="modal-title d-flex align-items-center" id="alertModalLabel">
+                        <i class="bi bi-exclamation-triangle-fill text-warning me-2" style="font-size: 1.5rem;"></i>
+                        <span class="fw-bold">Atención</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p id="alertModalTexto" class="mb-0 text-center fs-6"></p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-warning px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-check-circle me-1"></i> Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

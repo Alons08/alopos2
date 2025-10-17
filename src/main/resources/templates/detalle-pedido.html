@@ -924,10 +924,43 @@
         })
         .catch(err => {
             document.getElementById('customLoaderModal').style.display = 'none';
-            alert('No se pudo generar el comprobante.');
+            mostrarAlertaPersonalizada('No se pudo generar el comprobante.');
         });
     }
+
+    // Función para mostrar alerta personalizada
+    function mostrarAlertaPersonalizada(mensaje) {
+        const modal = document.getElementById('alertModalPersonalizado');
+        const modalTexto = document.getElementById('alertModalTexto');
+        modalTexto.textContent = mensaje;
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
     </script>
+
+                    <!-- Modal de Alerta Personalizado -->
+                    <div class="modal fade" id="alertModalPersonalizado" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 shadow-lg">
+                                <div class="modal-header bg-warning bg-opacity-10 border-0">
+                                    <h5 class="modal-title d-flex align-items-center" id="alertModalLabel">
+                                        <i class="bi bi-exclamation-triangle-fill text-warning me-2" style="font-size: 1.5rem;"></i>
+                                        <span class="fw-bold">Atención</span>
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body py-4">
+                                    <p id="alertModalTexto" class="mb-0 text-center fs-6"></p>
+                                </div>
+                                <div class="modal-footer border-0 justify-content-center pb-4">
+                                    <button type="button" class="btn btn-warning px-4" data-bs-dismiss="modal">
+                                        <i class="bi bi-check-circle me-1"></i> Entendido
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     </ul>
                 </div>
                 

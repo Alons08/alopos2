@@ -133,11 +133,22 @@
         /* REGLAS ESPECÍFICAS PARA MÓVIL - AISLADAS */
         @media (max-width: 768px) {
             .pedidos-table-responsive {
-                border: 1px solid #dee2e6;
-                border-radius: 8px;
-                overflow-x: auto;
+                border: none;
+                border-radius: 0;
+                overflow-x: visible;
                 padding-bottom: 0;
                 margin-bottom: 0;
+            }
+            
+            .pedidos-order-card {
+                background: transparent;
+                box-shadow: none;
+                border: none;
+            }
+            
+            .pedidos-order-card .card-body {
+                padding: 0;
+                background: transparent;
             }
             
             /* Prevenir scroll automático en dropdowns móviles */
@@ -162,7 +173,7 @@
             
             .pedidos-table {
                 width: 100%;
-                margin-bottom: 1rem;
+                margin-bottom: 0;
                 display: block;
             }
             
@@ -175,36 +186,41 @@
                 width: 100%;
             }
             
+            /* Estilo de tarjetas similar a usuarios.html */
             .pedidos-table tr {
                 display: block;
-                margin-bottom: 1rem;
-                border: 1px solid #dee2e6;
-                border-radius: 8px;
-                padding: 0.75rem;
+                margin-bottom: 1.2rem;
+                border: 2.5px solid #dee2e6 !important;
+                border-radius: 12px;
+                padding: 1.1rem 1rem 0.7rem 1rem;
+                background: #fff;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             }
             
             .pedidos-table td {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                padding: 0.5rem;
+                padding: 6px 0;
                 border: none;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid #f1f1f1;
             }
             
             .pedidos-table td:before {
                 content: attr(data-label);
-                font-weight: bold;
+                font-weight: 500;
                 margin-right: 1rem;
-                color: #34495e;
+                color: #6c757d;
+                flex-shrink: 0;
             }
             
             .pedidos-table td:last-child {
                 border-bottom: none;
+                padding-top: 1rem;
             }
             
             .pedidos-btn-group {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 0.5rem;
             }
             
@@ -212,7 +228,7 @@
                 width: 36px;
                 height: 36px;
                 font-size: 0.9rem;
-                margin-bottom: 0.25rem;
+                margin-bottom: 0;
             }
             
             .pedidos-d-flex.gap-2 {
@@ -227,7 +243,7 @@
             }
             
             .pedidos-table td[data-label="Acciones"] {
-                padding: 1rem 0.5rem;
+                padding: 1rem 0 0.5rem 0;
             }
         }
 
@@ -419,10 +435,6 @@
                          th:attr="style=${#lists.isEmpty(pedidos)} ? 'display:flex' : 'display:none'">
                         <i class="bi bi-inbox text-muted"></i>
                         <h4 class="mb-2">No hay pedidos registrados</h4>
-                        <p class="text-muted mb-3">Comienza creando tu primer pedido</p>
-                        <a th:href="@{/pedidos/nuevo}" class="btn btn-primary">
-                            <i class="bi bi-plus-circle"></i> Crear Pedido
-                        </a>
                     </div>
                 </div>
             </div>
@@ -624,10 +636,43 @@
         })
         .catch(err => {
             hideCustomLoader();
-            alert('No se pudo generar el comprobante.');
+            mostrarAlertaPersonalizada('No se pudo generar el comprobante.');
         });
     }
+
+    // Función para mostrar alerta personalizada
+    function mostrarAlertaPersonalizada(mensaje) {
+        const modal = document.getElementById('alertModalPersonalizado');
+        const modalTexto = document.getElementById('alertModalTexto');
+        modalTexto.textContent = mensaje;
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
     </script>
+
+        <!-- Modal de Alerta Personalizado -->
+        <div class="modal fade" id="alertModalPersonalizado" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-warning bg-opacity-10 border-0">
+                        <h5 class="modal-title d-flex align-items-center" id="alertModalLabel">
+                            <i class="bi bi-exclamation-triangle-fill text-warning me-2" style="font-size: 1.5rem;"></i>
+                            <span class="fw-bold">Atención</span>
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body py-4">
+                        <p id="alertModalTexto" class="mb-0 text-center fs-6"></p>
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button type="button" class="btn btn-warning px-4" data-bs-dismiss="modal">
+                            <i class="bi bi-check-circle me-1"></i> Entendido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Modal de carga personalizado -->
         <div id="customLoaderModal" class="custom-loader-modal" style="display:none;">
             <div class="custom-loader-backdrop"></div>
