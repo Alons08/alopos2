@@ -693,12 +693,32 @@
         }
         
         @media (max-width: 576px) {
-            .modal-dialog {
-                margin: 0.5rem;
+            /* Posicionar el modal en la parte superior en móviles */
+            #searchProductModal .modal-dialog {
+                margin: 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                max-width: 100%;
             }
             
-            .modal-content {
-                border-radius: 12px;
+            #searchProductModal .modal-content {
+                border-radius: 0 0 12px 12px;
+                border-top: none;
+                max-height: 70vh;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            #searchProductModal .modal-body {
+                flex: 1;
+                overflow-y: auto;
+                padding: 1rem;
+            }
+            
+            #searchProductModal .search-results {
+                max-height: none !important;
             }
             
             .search-product-item {
@@ -995,6 +1015,15 @@
                         });
                     }
                     searchModal.show();
+                    
+                    // En móviles, enfocar el input después de que se muestre el modal
+                    if (window.innerWidth <= 576) {
+                        setTimeout(() => {
+                            searchInput.focus();
+                            // Scroll al input para asegurar visibilidad
+                            searchInput.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 300);
+                    }
                 });
 
                 updatePrices();
