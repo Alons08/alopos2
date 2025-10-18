@@ -98,6 +98,12 @@
             background-color: rgba(0, 98, 230, 0.05);
         }
         
+        /* Clase para mantener la fila resaltada después de ver detalle (solo móvil) */
+        .pedidos-fila-seleccionada {
+            background-color: rgba(0, 98, 230, 0.1) !important;
+            box-shadow: 0 0 0 2px rgba(0, 98, 230, 0.3) inset;
+        }
+        
         .pedidos-action-btn {
             width: 32px;
             height: 32px;
@@ -820,6 +826,27 @@
                         }
                     }
                 });
+                
+                // Remover resaltado de fila seleccionada en móvil al hacer scroll o touch
+                if (window.innerWidth <= 768) {
+                    let scrollTimeout;
+                    window.addEventListener('scroll', function() {
+                        clearTimeout(scrollTimeout);
+                        scrollTimeout = setTimeout(function() {
+                            document.querySelectorAll('.pedidos-fila-seleccionada').forEach(fila => {
+                                fila.classList.remove('pedidos-fila-seleccionada');
+                            });
+                        }, 100);
+                    }, { passive: true });
+                    
+                    // Remover al tocar fuera de la fila
+                    document.addEventListener('touchstart', function(e) {
+                        const filaSeleccionada = document.querySelector('.pedidos-fila-seleccionada');
+                        if (filaSeleccionada && !filaSeleccionada.contains(e.target) && !e.target.closest('.modal')) {
+                            filaSeleccionada.classList.remove('pedidos-fila-seleccionada');
+                        }
+                    }, { passive: true });
+                }
             });
         </script>
         
@@ -903,6 +930,20 @@
         <script>
         function cargarDetallePedido(button){
             const pedidoId=button.getAttribute('data-pedido-id');
+            
+            // En móvil, marcar la fila como seleccionada
+            if (window.innerWidth <= 768) {
+                // Remover clase de cualquier fila previamente seleccionada
+                document.querySelectorAll('.pedidos-fila-seleccionada').forEach(fila => {
+                    fila.classList.remove('pedidos-fila-seleccionada');
+                });
+                // Agregar clase a la fila actual
+                const filaActual = button.closest('tr');
+                if (filaActual) {
+                    filaActual.classList.add('pedidos-fila-seleccionada');
+                }
+            }
+            
             // Limpiar datos anteriores del modal
             document.getElementById('modalNumeroPedido').textContent='';
             document.getElementById('modalEstadoBadge').textContent='';
