@@ -57,6 +57,31 @@
             gap: 0.3rem;
         }
         
+        /* Estilos para badges de tipo de pedido personalizados */
+        .pedido-tipo-mesa {
+            background-color: #6366f1 !important;
+            color: white !important;
+            font-weight: 500;
+            padding: 0.45em 0.9em;
+            font-size: 0.85rem;
+        }
+        
+        .pedido-tipo-local {
+            background-color: #10b981 !important;
+            color: white !important;
+            font-weight: 500;
+            padding: 0.45em 0.9em;
+            font-size: 0.85rem;
+        }
+        
+        .pedido-tipo-delivery {
+            background-color: #ec4899 !important;
+            color: white !important;
+            font-weight: 500;
+            padding: 0.45em 0.9em;
+            font-size: 0.85rem;
+        }
+        
         .pedidos-table-responsive {
             border-radius: 8px;
             overflow: visible;
@@ -346,19 +371,29 @@
                                         <tbody>
                                             <tr th:each="pedido : ${pedidos}">
                                                 <td data-label="N° Pedido" th:text="${pedido.numeroPedido}"></td>
-                                                <td data-label="Tipo" th:text="${pedido.tipo}"></td>
+                                                <td data-label="Tipo">
+                                                    <span th:if="${pedido.tipo.name() == 'MESA'}" class="badge pedido-tipo-mesa">Mesa</span>
+                                                    <span th:if="${pedido.tipo.name() == 'LOCAL'}" class="badge pedido-tipo-local">Local</span>
+                                                    <span th:if="${pedido.tipo.name() == 'DELIVERY'}" class="badge pedido-tipo-delivery">Delivery</span>
+                                                </td>
                                                 <td data-label="Mesa" th:text="${pedido.mesa != null} ? '# '+${pedido.mesa.numero} : 'N/A'"></td>
                                                 <td data-label="Total" th:text="'S/ ' + ${T(java.lang.String).format('%.2f', pedido.total).replace(',', '.')}"></td>
                                                 <td data-label="Estado" th:text="${pedido.estado}"></td>
-                                                <td data-label="Fecha" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}" class="text-muted"></td>
+                                                <td data-label="Fecha" class="text-muted">
+                                                    <span class="d-none d-md-inline" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></span>
+                                                    <span class="d-md-none" th:text="${#dates.format(pedido.fecha, 'dd/MM HH:mm')}"></span>
+                                                </td>
                                                 <td data-label="Acciones">
                                                     <div class="d-flex gap-2 pedidos-d-flex">
-                                                        <a th:href="@{/pedidos/{id}/detalle(id=${pedido.id})}" 
+                                                        <button type="button"
                                                            class="pedidos-action-btn btn btn-primary" 
                                                            title="Ver Detalle"
-                                                           data-bs-toggle="tooltip">
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#detalleModal"
+                                                           th:attr="data-pedido-id=${pedido.id}"
+                                                           onclick="cargarDetallePedido(this)">
                                                             <i class="bi bi-eye"></i>
-                                                        </a>
+                                                        </button>
                                                         
                                                         <a th:if="${pedido.estado.name() != 'PAGADO' && pedido.estado.name() != 'CANCELADO'}"
                                                            th:href="@{/pedidos/{id}/editar(id=${pedido.id})}"
@@ -763,8 +798,8 @@
             });
 
             document.addEventListener("DOMContentLoaded", function () {
-                // Loader en Nuevo Pedido, Crear Pedido, Ver Detalle, Editar Pedido
-                document.querySelectorAll('a[href*="/pedidos/nuevo"], a[href*="/pedidos/crear"], a[href*="/pedidos/detalle"], a[href*="/pedidos/editar"], .pedidos-action-btn.btn-primary, .pedidos-action-btn.btn-warning').forEach(function(link) {
+                // Loader en Nuevo Pedido, Crear Pedido, Editar Pedido (EXCLUIR botón Ver Detalle que abre modal)
+                document.querySelectorAll('a[href*="/pedidos/nuevo"], a[href*="/pedidos/crear"], a[href*="/pedidos/editar"], .pedidos-action-btn.btn-warning').forEach(function(link) {
                     link.addEventListener('click', function(e) {
                         showCustomLoader();
                     });
@@ -787,5 +822,140 @@
                 });
             });
         </script>
+        
+
+        <!-- Modal de Detalle del Pedido -->
+        <div class="modal fade" id="detalleModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content border-0 shadow-lg" style="border-radius:15px">
+                    <div class="modal-header bg-primary bg-opacity-10 border-0">
+                        <div class="w-100">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="modal-title fw-bold text-dark mb-1">
+                                        <i class="bi bi-receipt-cutoff me-2 text-primary"></i>N° Pedido: <span id="modalNumeroPedido">-</span>
+                                    </h5>
+                                    <p class="mb-0 text-muted small">Detalles del pedido</p>
+                                </div>
+                                <span id="modalEstadoBadge" class="badge rounded-pill"></span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close ms-2" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div id="modalLoader" class="text-center py-5">
+                            <div class="spinner-border text-primary"><span class="visually-hidden">Cargando...</span></div>
+                            <p class="mt-3 text-muted">Cargando detalles...</p>
+                        </div>
+                        <div id="modalContenido" style="display:none">
+                            <div class="card border-0 shadow-sm mb-3">
+                                <div class="card-header bg-warning bg-opacity-25 border-0 py-2">
+                                    <h6 class="mb-0 fw-semibold"><i class="bi bi-info-circle me-2"></i>Información del Pedido</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-6"><div class="d-flex"><span class="text-muted fw-semibold me-2" style="min-width:100px">Tipo:</span><span id="modalTipo"></span></div></div>
+                                        <div class="col-md-6"><div class="d-flex"><span class="text-muted fw-semibold me-2" style="min-width:100px">Mesa:</span><span id="modalMesa"></span></div></div>
+                                        <div class="col-md-6"><div class="d-flex"><span class="text-muted fw-semibold me-2" style="min-width:100px">Recargo:</span><span id="modalRecargo" class="fw-bold text-success"></span></div></div>
+                                        <div class="col-md-6"><div class="d-flex"><span class="text-muted fw-semibold me-2" style="min-width:100px">Total:</span><span id="modalTotal" class="fw-bold text-primary fs-5"></span></div></div>
+                                        <div class="col-md-6"><div class="d-flex"><span class="text-muted fw-semibold me-2" style="min-width:100px">Fecha:</span><span id="modalFecha"></span></div></div>
+                                        <div class="col-md-6"><div class="d-flex"><span class="text-muted fw-semibold me-2" style="min-width:100px">Atiende:</span><span id="modalUsuario"></span></div></div>
+                                        <div class="col-12" id="modalObservacionesContainer" style="display:none"><div class="d-flex"><span class="text-muted fw-semibold me-2" style="min-width:100px">Observaciones:</span><span id="modalObservaciones" class="fst-italic"></span></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-success bg-opacity-25 border-0 py-2">
+                                    <h6 class="mb-0 fw-semibold"><i class="bi bi-cart-check me-2"></i>Productos del Pedido</h6>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="py-2">Producto</th>
+                                                    <th class="py-2 text-center" style="width:80px">Cant.</th>
+                                                    <th class="py-2 text-end" style="width:120px">P. Unit.</th>
+                                                    <th class="py-2 text-end" style="width:120px">Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="modalProductosBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="bi bi-x-circle me-1"></i> Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+        .badge-estado-pendiente{background-color:#fff3e0!important;color:#ef6c00!important;border:1px solid #ffb74d}
+        .badge-estado-preparando{background-color:#e3f2fd!important;color:#1565c0!important;border:1px solid #64b5f6}
+        .badge-estado-entregando{background-color:#f3e5f5!important;color:#7b1fa2!important;border:1px solid #ba68c8}
+        .badge-estado-pagado{background-color:#e8f5e9!important;color:#2e7d32!important;border:1px solid #81c784}
+        .badge-estado-cancelado{background-color:#ffebee!important;color:#c62828!important;border:1px solid #e57373}
+        @media (max-width:768px){#detalleModal .modal-dialog{margin:.5rem}#detalleModal .modal-body{padding:1rem!important}#detalleModal .table{font-size:.85rem}#detalleModal .table th,#detalleModal .table td{padding:.5rem .3rem}}
+        </style>
+        <script>
+        function cargarDetallePedido(button){
+            const pedidoId=button.getAttribute('data-pedido-id');
+            // Limpiar datos anteriores del modal
+            document.getElementById('modalNumeroPedido').textContent='';
+            document.getElementById('modalEstadoBadge').textContent='';
+            document.getElementById('modalTipo').textContent='';
+            document.getElementById('modalMesa').textContent='';
+            document.getElementById('modalRecargo').textContent='';
+            document.getElementById('modalTotal').textContent='';
+            document.getElementById('modalFecha').textContent='';
+            document.getElementById('modalUsuario').textContent='';
+            document.getElementById('modalObservaciones').textContent='';
+            document.getElementById('modalProductosBody').innerHTML='';
+            document.getElementById('modalObservacionesContainer').style.display='none';
+            // Mostrar loader y ocultar contenido
+            document.getElementById('modalLoader').style.display='block';
+            document.getElementById('modalContenido').style.display='none';
+            const csrfToken=document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader=document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            let headers={'Accept':'application/json'};
+            headers[csrfHeader]=csrfToken;
+            fetch(`/pedidos/${pedidoId}/detalle-pedido-json`,{method:'GET',headers:headers})
+            .then(response=>{if(!response.ok)throw new Error('Error');return response.json();})
+            .then(pedido=>{
+                document.getElementById('modalNumeroPedido').textContent=pedido.numeroPedido;
+                const badge=document.getElementById('modalEstadoBadge');
+                badge.textContent=pedido.estado;
+                badge.className='badge rounded-pill badge-estado-'+pedido.estado.toLowerCase();
+                document.getElementById('modalTipo').textContent=pedido.tipo;
+                document.getElementById('modalMesa').textContent=pedido.mesa||'N/A';
+                document.getElementById('modalRecargo').textContent='S/ '+parseFloat(pedido.recargo).toFixed(2);
+                document.getElementById('modalTotal').textContent='S/ '+parseFloat(pedido.total).toFixed(2);
+                document.getElementById('modalFecha').textContent=pedido.fecha;
+                document.getElementById('modalUsuario').textContent=pedido.usuario||'N/A';
+                if(pedido.observaciones&&pedido.observaciones.trim()!==''){
+                    document.getElementById('modalObservaciones').textContent=pedido.observaciones;
+                    document.getElementById('modalObservacionesContainer').style.display='block';
+                }else{
+                    document.getElementById('modalObservacionesContainer').style.display='none';
+                }
+                const tbody=document.getElementById('modalProductosBody');
+                tbody.innerHTML='';
+                pedido.detalles.forEach(detalle=>{
+                    const tr=document.createElement('tr');
+                    tr.innerHTML=`<td class="py-2">${detalle.producto}</td><td class="py-2 text-center">${detalle.cantidad}</td><td class="py-2 text-end">S/ ${parseFloat(detalle.precioUnitario).toFixed(2)}</td><td class="py-2 text-end fw-semibold">S/ ${parseFloat(detalle.subtotal).toFixed(2)}</td>`;
+                    tbody.appendChild(tr);
+                });
+                document.getElementById('modalLoader').style.display='none';
+                document.getElementById('modalContenido').style.display='block';
+            })
+            .catch(error=>{
+                document.getElementById('modalLoader').innerHTML='<div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i>No se pudo cargar los detalles.</div>';
+            });
+        }
+        </script>
+
         </body>
 </html>

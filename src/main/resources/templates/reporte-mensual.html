@@ -204,7 +204,7 @@
             <div class="row mb-4">
                 <div class="col-md-8">
                     <h1 class="page-title">Reporte Mensual</h1>
-                    <p class="text-muted mb-0" th:text="${#dates.format(reporte.inicio, 'MMMM yyyy')}"></p>
+                    <p class="text-muted mb-0 d-md-none" th:text="${#dates.format(reporte.inicio, 'MMMM yyyy')}"></p>
                 </div>
                 <div class="col-md-4 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
                     <a th:href="@{'/reportes/exportar/mensual?inicio=' + ${#dates.format(reporte.inicio, 'yyyy-MM-dd')} + '&fin=' + ${#dates.format(reporte.fin, 'yyyy-MM-dd')}}" class="btn btn-success">

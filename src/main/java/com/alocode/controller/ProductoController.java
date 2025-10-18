@@ -77,15 +77,25 @@ public class ProductoController {
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
             com.alocode.model.Cliente cliente = productoService.obtenerClientePorId(clienteId);
             producto.setCliente(cliente);
-            System.out.println("[DEBUG] Guardando producto: " + producto);
             productoService.guardarProducto(producto);
             redirectAttributes.addFlashAttribute("success", "Producto guardado exitosamente");
             return "redirect:/productos";
         } catch (Exception e) {
-            System.out.println("[ERROR] " + e.getMessage());
+            // Si es un error de productos derivados Y estamos editando (producto.getId() != null),
+            // recargar el producto original de la BD para mostrar su estado actual
+            Producto productoParaMostrar = producto;
+            if (producto.getId() != null && e.getMessage().contains("producto(s) derivado(s)")) {
+                productoParaMostrar = productoService.obtenerProductoPorId(producto.getId())
+                    .orElse(producto);
+            }
+            
             // Volver a la vista con los datos llenados y el error
-            model.addAttribute("producto", producto);
+            model.addAttribute("producto", productoParaMostrar);
             model.addAttribute("productosBase", productoService.obtenerProductosBase());
+            // Agregar el cliente actual al modelo para control de visibilidad
+            Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+            Cliente cliente = productoService.obtenerClientePorId(clienteId);
+            model.addAttribute("cliente", cliente);
             model.addAttribute("error", e.getMessage());
             return "nuevo-producto";
         }
@@ -109,6 +119,11 @@ public class ProductoController {
 
         // Agregar lista de productos base para el formulario
         model.addAttribute("productosBase", productoService.obtenerProductosBase());
+        
+        // Agregar el cliente actual al modelo para control de visibilidad
+        Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        Cliente cliente = productoService.obtenerClientePorId(clienteId);
+        model.addAttribute("cliente", cliente);
 
         return "nuevo-producto";
     }

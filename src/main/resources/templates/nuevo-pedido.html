@@ -34,14 +34,39 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             border: none;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             margin-bottom: 1.2rem;
             border-top: 4px solid var(--primary-color);
+            background: white;
         }
         
         .form-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Animación de entrada para las cards */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-card {
+            animation: slideInUp 0.4s ease-out;
+        }
+        
+        .form-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        
+        .form-card:nth-child(2) {
+            animation-delay: 0.2s;
         }
         
         .card-header-custom {
@@ -136,11 +161,21 @@
             padding: 0.5rem 0.8rem;
             border: 1px solid #dee2e6;
             font-size: 0.95rem;
+            transition: all 0.3s ease;
         }
         
         .form-control:focus, .form-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+            box-shadow: 0 0 0 0.25rem rgba(221, 167, 66, 0.25);
+            transform: translateY(-1px);
+        }
+        
+        .form-control:invalid, .form-select:invalid {
+            border-color: #e74c3c;
+        }
+        
+        .form-control.is-valid, .form-select.is-valid {
+            border-color: #27ae60;
         }
         
         .input-group-text {
@@ -235,17 +270,77 @@
                 padding: 1rem;
             }
             
-            .product-table {
-                font-size: 0.85rem;
+            /* Ocultar tabla y mostrar vista de tarjetas en móvil */
+            .product-table thead {
+                display: none;
             }
             
-            .product-table th, 
-            .product-table td {
+            .product-table tbody {
+                display: block;
+            }
+            
+            .product-table .producto-row {
+                display: block;
+                margin-bottom: 1rem;
+                border: 2.5px solid #dee2e6 !important;
+                border-radius: 12px;
+                padding: 0.8rem;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+            
+            .product-table .producto-row td {
+                display: block;
+                width: 100%;
+                padding: 0.4rem 0;
+                border: none;
+                text-align: left !important;
+            }
+            
+            .product-table .producto-row td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #6c757d;
+                display: block;
+                margin-bottom: 0.25rem;
+                font-size: 0.8rem;
+            }
+            
+            /* Ocultar etiquetas en selectores y inputs que ya tienen before */
+            .product-table .producto-row td:first-child::before {
+                content: 'Producto:';
+            }
+            
+            .product-table .producto-row td:nth-child(2)::before {
+                content: 'Cantidad:';
+            }
+            
+            .product-table .producto-row td:nth-child(3)::before {
+                content: 'Precio Unitario:';
+            }
+            
+            .product-table .producto-row td:nth-child(4)::before {
+                content: 'Subtotal:';
+            }
+            
+            .product-table .producto-row td:last-child::before {
+                content: '';
+            }
+            
+            .product-table .producto-row td:last-child {
+                text-align: center !important;
+                padding-top: 0.8rem;
+                border-top: 1px solid #f1f1f1;
+                margin-top: 0.4rem;
+            }
+            
+            .product-select-container {
+                width: 100%;
+            }
+            
             .product-select {
-                min-width: 120px;
                 font-size: 0.95rem;
-                max-width: 100%;
-                white-space: normal;
+                width: 100%;
             }
             
             .product-select option {
@@ -253,21 +348,59 @@
                 word-wrap: break-word;
                 padding: 0.5rem;
             }
-                padding: 0.5rem;
+            
+            /* Mantener tamaños originales de inputs */
+            .form-control, .form-select {
+                font-size: 0.95rem;
+                padding: 0.5rem 0.8rem;
             }
             
+            .cantidad {
+                width: 100%;
+            }
+            
+            /* Botones de acción más grandes */
+            .btn-action {
+                width: 40px;
+                height: 40px;
+            }
+            
+            /* Botones en una sola fila en móvil */
             .btn-group-mobile {
                 flex-direction: row;
-                gap: 0.5rem;
+                gap: 0.6rem;
             }
+            
             .btn-group-mobile .btn {
-                width: auto;
-                flex: 1 1 0;
+                flex: 1;
+                padding: 0.7rem;
+                font-size: 0.95rem;
+            }
+            
+            /* Total row en móvil */
+            .product-table tfoot tr {
+                display: block;
+                padding: 1rem;
+                background-color: rgba(221, 167, 66, 0.1);
+                border-radius: 8px;
+                margin-top: 1rem;
+            }
+            
+            .product-table tfoot td {
+                display: inline;
+                border: none;
+                padding: 0;
+            }
+            
+            .product-table tfoot td:first-child {
+                display: inline;
+                margin-right: 0.5rem;
             }
         }
         
         @media (max-width: 576px) {
             .main-content {
+                padding: 0.5rem 0;
                 padding-bottom: 60px;
             }
             
@@ -275,13 +408,24 @@
                 padding: 0.9rem;
             }
             
-            .product-table {
-                font-size: 0.8rem;
+            /* Botones tamaño original */
+            .btn-add-product {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
             }
             
             .form-control, .form-select {
                 padding: 0.45rem 0.7rem;
                 font-size: 0.9rem;
+            }
+            
+            .input-group-text {
+                padding: 0.5rem 0.8rem;
+            }
+            
+            /* Tabla total tamaño original */
+            .product-table tfoot {
+                font-size: 1rem;
             }
         }
     </style>
@@ -385,8 +529,9 @@
                                                             <option value="" disabled>Seleccione producto...</option>
                                                             <option th:each="producto : ${productos}"
                                                                 th:value="${producto.id}"
-                                                                th:text="${producto.nombre + ' - S/' + #numbers.formatDecimal(producto.precio, 1, 2)}"
+                                                                th:text="${producto.nombre + ' - S/' + #numbers.formatDecimal(producto.precio, 1, 2) + (producto.productoBase == null && producto.stock <= 0 ? ' (Sin stock)' : '')}"
                                                                 th:data-precio="${producto.precio}"
+                                                                th:disabled="${producto.productoBase == null && producto.stock <= 0}"
                                                                 th:selected="${producto.id == detalle.producto.id}"></option>
                                                         </select>
                                                         <button type="button" class="btn btn-outline-secondary btn-search-product">
@@ -413,8 +558,9 @@
                                                             <option value="" disabled selected>Seleccione producto...</option>
                                                             <option th:each="producto : ${productos}"
                                                                 th:value="${producto.id}"
-                                                                th:text="${producto.nombre + ' - S/' + #numbers.formatDecimal(producto.precio, 1, 2)}"
-                                                                th:data-precio="${producto.precio}"></option>
+                                                                th:text="${producto.nombre + ' - S/' + #numbers.formatDecimal(producto.precio, 1, 2) + (producto.productoBase == null && producto.stock <= 0 ? ' (Sin stock)' : '')}"
+                                                                th:data-precio="${producto.precio}"
+                                                                th:disabled="${producto.productoBase == null && producto.stock <= 0}"></option>
                                                         </select>
                                                         <button type="button" class="btn btn-outline-secondary btn-search-product">
                                                             <i class="bi bi-search"></i>
@@ -422,7 +568,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input type="number" min="1" class="form-control cantidad" value="1" required disabled>
+                                                    <input type="number" min="1" class="form-control cantidad" value="1" required disabled onfocus="if(this.value=='1') this.value='';" onblur="if(this.value=='') this.value='1';">
                                                 </td>
                                                 <td class="precio-unitario">S/0.00</td>
                                                 <td class="subtotal text-end">S/0.00</td>
@@ -441,6 +587,12 @@
                                             </tr>
                                         </tfoot>
                                     </table>
+                                </div>
+                                <!-- Mensaje cuando no hay productos -->
+                                <div id="emptyProductsMessage" class="text-center py-4" style="display: none;">
+                                    <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                                    <p class="text-muted mt-3 mb-0">No hay productos agregados</p>
+                                    <p class="text-muted small">Haz clic en "Agregar" para añadir productos al pedido</p>
                                 </div>
                             </div>
                         </div>
@@ -464,7 +616,7 @@
 
     <!-- Modal de búsqueda de productos -->
     <div class="modal fade" id="searchProductModal" tabindex="-1" aria-labelledby="searchProductModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-md modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title" id="searchProductModalLabel">
@@ -478,22 +630,69 @@
                                placeholder="Buscar producto por nombre..." autocomplete="off">
                     </div>
                     <div class="search-results" id="searchResults" style="max-height: 300px; overflow-y: auto;">
-                        <div th:each="producto : ${productos}" class="search-product-item d-flex justify-content-between align-items-center p-2 border-bottom"
+                        <div th:each="producto : ${productos}" class="search-product-item d-flex justify-content-between align-items-center p-3 border-bottom"
                              th:data-id="${producto.id}"
                              th:data-precio="${producto.precio}"
                              th:data-nombre="${producto.nombre}"
-                             style="cursor: pointer;">
-                            <span class="product-name" th:text="${producto.nombre}"></span>
-                            <span class="product-price text-success" th:text="'S/' + ${#numbers.formatDecimal(producto.precio, 1, 2)}"></span>
+                             th:data-stock="${producto.stock}"
+                             th:data-tiene-producto-base="${producto.productoBase != null}"
+                             th:classappend="${producto.productoBase == null && producto.stock <= 0 ? 'product-no-stock' : ''}"
+                             th:style="${producto.productoBase == null && producto.stock <= 0 ? 'cursor: not-allowed; opacity: 0.6;' : 'cursor: pointer; transition: background-color 0.2s;'}">
+                            <div>
+                                <span class="product-name" th:text="${producto.nombre}"></span>
+                                <small th:if="${producto.productoBase == null && producto.stock <= 0}" class="text-danger ms-2 fw-semibold">(Sin stock)</small>
+                            </div>
+                            <span class="product-price text-success fw-bold" th:text="'S/' + ${#numbers.formatDecimal(producto.precio, 1, 2)}"></span>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
     </div>
+    
+    <style>
+        /* Estilos adicionales para el modal de búsqueda */
+        .search-product-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .search-product-item:active {
+            background-color: #e9ecef;
+        }
+        
+        /* Estilos para productos sin stock */
+        .product-no-stock {
+            background-color: #f8d7da !important;
+            border-left: 3px solid #dc3545 !important;
+        }
+        
+        .product-no-stock:hover {
+            background-color: #f8d7da !important;
+        }
+        
+        /* Estilos para opciones deshabilitadas en select */
+        select option:disabled {
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        @media (max-width: 576px) {
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+            
+            .modal-content {
+                border-radius: 12px;
+            }
+            
+            .search-product-item {
+                padding: 0.8rem !important;
+            }
+        }
+    </style>
     
     <div th:replace="~{fragments/footer :: footer}"></div>
 
@@ -688,10 +887,16 @@
                 // Hacer scroll hacia la nueva fila
                 newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 
-                // Remover el resaltado después de 4 segundos
-                setTimeout(() => {
+                // Remover el resaltado cuando el usuario realmente interactúe con los campos
+                const removeHighlight = () => {
                     newRow.classList.remove('nueva-fila');
-                }, 4000);
+                };
+                
+                // Escuchar solo cuando realmente seleccione un producto (no en focus)
+                select.addEventListener('change', removeHighlight, { once: true });
+                
+                // Escuchar cuando empiece a escribir en cantidad
+                cantidadInput.addEventListener('input', removeHighlight, { once: true });
                 
                 // En dispositivos móviles, enfocar automáticamente el select de producto
                 if (window.innerWidth <= 768) {
@@ -795,6 +1000,16 @@
             document.addEventListener('click', function(e) {
                 if (e.target.closest('.search-product-item')) {
                     const item = e.target.closest('.search-product-item');
+                    
+                    // Prevenir selección si no hay stock Y NO tiene producto base
+                    const stock = parseFloat(item.dataset.stock);
+                    const tieneProductoBase = item.dataset.tieneProductoBase === 'true';
+                    if (!tieneProductoBase && stock <= 0) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return;
+                    }
+                    
                     if (currentSelectElement) {
                         const productId = item.dataset.id;
                         const options = currentSelectElement.options;

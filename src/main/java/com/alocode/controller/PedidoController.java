@@ -26,7 +26,13 @@ import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @Controller
 @RequestMapping("/pedidos")
@@ -142,21 +148,40 @@ public class PedidoController {
         return "redirect:/pedidos";
     }
 
-    @GetMapping("/{id}/detalle")
-    public String verDetallePedido(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        return pedidoService.obtenerPedidoPorId(id)
-                .map(pedido -> {
-                    model.addAttribute("pedido", pedido);
-                    // Agregar el cliente actual al modelo para visibilidad de estados
-                    if (pedido.getCliente() != null) {
-                        model.addAttribute("cliente", pedido.getCliente());
-                    }
-                    return "detalle-pedido";
-                })
-                .orElseGet(() -> {
-                    redirectAttributes.addFlashAttribute("error", "Pedido no encontrado");
-                    return "redirect:/pedidos";
-                });
+    @GetMapping("/{id}/detalle-pedido-json")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> obtenerDetallePedidoJson(@PathVariable Long id) {
+        try {
+            return pedidoService.obtenerPedidoPorId(id)
+                    .map(pedido -> {
+                        Map<String, Object> response = new HashMap<>();
+                        response.put("numeroPedido", pedido.getNumeroPedido());
+                        response.put("estado", pedido.getEstado().name());
+                        response.put("tipo", pedido.getTipo().name());
+                        response.put("mesa", pedido.getMesa() != null ? "Mesa #" + pedido.getMesa().getNumero() : null);
+                        response.put("recargo", pedido.getRecargo());
+                        response.put("total", pedido.getTotal());
+                        response.put("fecha", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(pedido.getFecha()));
+                        response.put("usuario", pedido.getUsuario() != null ? pedido.getUsuario().getUsername() : null);
+                        response.put("observaciones", pedido.getObservaciones());
+                        
+                        List<Map<String, Object>> detalles = new ArrayList<>();
+                        for (DetallePedido detalle : pedido.getDetalles()) {
+                            Map<String, Object> detalleMap = new HashMap<>();
+                            detalleMap.put("producto", detalle.getProducto().getNombre());
+                            detalleMap.put("cantidad", detalle.getCantidad());
+                            detalleMap.put("precioUnitario", detalle.getPrecioUnitario());
+                            detalleMap.put("subtotal", detalle.getSubtotal());
+                            detalles.add(detalleMap);
+                        }
+                        response.put("detalles", detalles);
+                        
+                        return ResponseEntity.ok(response);
+                    })
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("/{id}/editar")

@@ -52,6 +52,26 @@ public class ProductoService {
             System.out.println("[ERROR] El producto no tiene el cliente correcto");
             throw new IllegalArgumentException("El producto debe pertenecer al cliente actual");
         }
+        
+        // Validación: Si el producto está siendo editado (tiene ID)
+        if (producto.getId() != null) {
+            Optional<Producto> productoExistente = productoRepository.findById(producto.getId());
+            if (productoExistente.isPresent()) {
+                Producto productoAnterior = productoExistente.get();
+                // Si antes era producto base y ahora se quiere desmarcar
+                if (productoAnterior.getEsProductoBase() != null && productoAnterior.getEsProductoBase() 
+                    && (producto.getEsProductoBase() == null || !producto.getEsProductoBase())) {
+                    // Verificar si hay productos derivados que dependen de este producto base
+                    List<Producto> productosDerivados = productoRepository.findByClienteIdAndProductoBaseId(clienteId, producto.getId());
+                    if (!productosDerivados.isEmpty()) {
+                        throw new IllegalArgumentException("No se puede desmarcar como producto base porque tiene " + 
+                            productosDerivados.size() + " producto(s) derivado(s) que dependen de él: " + 
+                            productosDerivados.stream().map(Producto::getNombre).reduce((a, b) -> a + ", " + b).orElse(""));
+                    }
+                }
+            }
+        }
+        
         // Validación de duplicados por nombre (ignorando mayúsculas/minúsculas) para el cliente
         Optional<Producto> existente = productoRepository.findByNombreIgnoreCaseAndClienteId(producto.getNombre(), clienteId);
         if (existente.isPresent() && (producto.getId() == null || !existente.get().getId().equals(producto.getId()))) {
