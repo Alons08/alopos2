@@ -40,6 +40,7 @@ public class Cliente {
 
     // Configuración avanzada del cliente
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @lombok.ToString.Exclude
     private ClienteConfiguracion configuracion;
     
     @PrePersist

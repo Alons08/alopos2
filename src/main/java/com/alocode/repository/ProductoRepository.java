@@ -35,4 +35,14 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     long countByClienteIdAndActivoTrue(Long clienteId);
     // Contar productos inactivos por cliente
     long countByClienteIdAndActivoFalse(Long clienteId);
+    
+    /**
+     * Obtiene productos con stock bajo (≤ umbral) ordenados por stock ascendente
+     */
+    @Query("SELECT p FROM Producto p WHERE p.cliente.id = :clienteId " +
+           "AND p.activo = TRUE " +
+           "AND p.stock <= :umbral " +
+           "AND p.productoBase IS NULL " + // Solo productos base, no derivados
+           "ORDER BY p.stock ASC")
+    List<Producto> findProductosConStockBajo(@Param("clienteId") Long clienteId, @Param("umbral") Integer umbral);
 }

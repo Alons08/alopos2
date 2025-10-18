@@ -22,5 +22,6 @@ public class ClienteConfiguracion {
     // Relación uno a uno con Cliente
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false, unique = true)
+    @lombok.ToString.Exclude
     private Cliente cliente;
 }
