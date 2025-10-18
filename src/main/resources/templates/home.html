@@ -971,7 +971,7 @@
                           <strong th:text="${producto.nombre}"></strong>
                         </td>
                         <td class="text-center align-middle">
-                          <span class="badge bg-secondary" th:text="${T(java.lang.String).format('%.2f', producto.stock).replace(',', '.')}"></span>
+                          <span class="badge bg-secondary" th:text="${@formatoStock.formatear(producto.stock, permitirProductosDerivados)}"></span>
                         </td>
                         <td class="text-center align-middle">
                           <span 

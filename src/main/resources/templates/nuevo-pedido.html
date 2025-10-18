@@ -165,17 +165,18 @@
         }
         
         .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(221, 167, 66, 0.25);
-            transform: translateY(-1px);
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            outline: 0;
         }
         
-        .form-control:invalid, .form-select:invalid {
-            border-color: #e74c3c;
+        /* Quitar resaltado cuando el campo pierde el foco */
+        .form-control, .form-select {
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
         
-        .form-control.is-valid, .form-select.is-valid {
-            border-color: #27ae60;
+        .form-control:not(:focus), .form-select:not(:focus) {
+            box-shadow: none;
         }
         
         .input-group-text {
@@ -215,6 +216,18 @@
             border-bottom-right-radius: 0 !important;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        /* Quitar resaltado del select cuando pierde el foco */
+        .product-select:not(:focus) {
+            box-shadow: none !important;
+            border-color: #dee2e6;
+        }
+        
+        .product-select:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
         
         .product-select option {
@@ -842,12 +855,29 @@
                     if (idInput && !idInput.value) {
                         mesaSelect.value = '';
                     }
+                    // Enfocar automáticamente el select de mesa
+                    setTimeout(() => {
+                        mesaSelect.focus();
+                    }, 100);
                 } else {
                     mesaContainer.style.display = 'none';
                     mesaSelect.required = false;
                     mesaSelect.value = '';
                 }
             });
+
+            // Quitar resaltado automáticamente al seleccionar una opción en cualquier select
+            function setupSelectBlurOnChange() {
+                const selects = document.querySelectorAll('select.form-select, select.product-select');
+                selects.forEach(select => {
+                    select.addEventListener('change', function() {
+                        this.blur(); // Quitar el foco automáticamente
+                    });
+                });
+            }
+            
+            // Ejecutar al cargar y también después de agregar nuevas filas
+            setupSelectBlurOnChange();
 
             // Variables para el modal de búsqueda
             const searchModal = new bootstrap.Modal(document.getElementById('searchProductModal'));
@@ -880,6 +910,9 @@
 
                 tbody.appendChild(newRow);
                 setupProductRow(newRow);
+                
+                // Aplicar evento blur automático al nuevo select
+                setupSelectBlurOnChange();
                 
                 // Aplicar efecto de resaltado a la nueva fila
                 newRow.classList.add('nueva-fila');
@@ -1075,10 +1108,7 @@
                         select.disabled = false;
                         select.setAttribute('name', 'productos[]');
                         if (!select.value) {
-                            select.classList.add('is-invalid');
                             hasErrors = true;
-                        } else {
-                            select.classList.remove('is-invalid');
                         }
                     }
                     if (cantidadInput) {

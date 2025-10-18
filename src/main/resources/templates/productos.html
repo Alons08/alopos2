@@ -337,9 +337,9 @@
                                             <span th:if="${producto.productoBase == null and !producto.esProductoBase}" class="badge bg-secondary">Independiente</span>
                                         </td>
                                         <td class="price-cell" th:text="'S/ ' + ${T(java.lang.String).format('%.2f', producto.precio).replace(',', '.')}"></td>
-                                        <td class="text-center" th:text="${producto.stock}"></td>
-                                        <td class="text-center" th:text="${producto.stockOcupado}"></td>
-                                        <td class="text-center" th:text="${producto.stock - producto.stockOcupado}"></td>
+                                        <td class="text-center" th:text="${@formatoStock.formatear(producto.stock, permitirProductosDerivados)}"></td>
+                                        <td class="text-center" th:text="${@formatoStock.formatear(producto.stockOcupado, permitirProductosDerivados)}"></td>
+                                        <td class="text-center" th:text="${@formatoStock.formatearDiferencia(producto.stock, producto.stockOcupado, permitirProductosDerivados)}"></td>
                                         <td class="text-center">
                                             <span th:if="${producto.activo}" class="status-badge status-active">
                                                 <i class="bi bi-check-circle-fill"></i> Activo
@@ -461,15 +461,15 @@
                             </div>
                             <div class="mobile-product-detail">
                                 <span class="mobile-detail-label">Stock:</span>
-                                <span th:text="${producto.stock}"></span>
+                                <span th:text="${@formatoStock.formatear(producto.stock, permitirProductosDerivados)}"></span>
                             </div>
                             <div class="mobile-product-detail">
                                 <span class="mobile-detail-label">Ocupado:</span>
-                                <span th:text="${producto.stockOcupado}"></span>
+                                <span th:text="${@formatoStock.formatear(producto.stockOcupado, permitirProductosDerivados)}"></span>
                             </div>
                             <div class="mobile-product-detail">
                                 <span class="mobile-detail-label">Disponible:</span>
-                                <span th:text="${producto.stock - producto.stockOcupado}"></span>
+                                <span th:text="${@formatoStock.formatearDiferencia(producto.stock, producto.stockOcupado, permitirProductosDerivados)}"></span>
                             </div>
                             <div class="action-group mt-3">
                                 <a th:href="@{/productos/editar/{id}(id=${producto.id})}"

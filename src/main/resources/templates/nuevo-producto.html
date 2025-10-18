@@ -339,7 +339,7 @@
                       th:field="*{stock}"
                       class="form-control"
                       min="0"
-                      step="any"
+                      th:step="${permitirProductosDerivados != null and permitirProductosDerivados} ? 'any' : '1'"
                       placeholder="Cantidad disponible"
                       required
                       th:disabled="${producto.productoBase != null}"
@@ -546,7 +546,7 @@
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       crossorigin="anonymous"
     ></script>
-    <script>
+    <script th:inline="javascript">
       // Modal de carga personalizado
       function showCustomLoader() {
         document.getElementById("customLoaderModal").style.display = "flex";
@@ -582,6 +582,12 @@
           });
         }
       });
+      // Configuración de productos derivados (viene del servidor)
+      // Usar th:inline="javascript" para inyección segura
+      /*<![CDATA[*/
+      const permitirProductosDerivados = /*[[${permitirProductosDerivados}]]*/ true;
+      /*]]>*/
+      
       // Deshabilitar el campo de stock si el producto es derivado
       function toggleStockField() {
         var stockInput = document.getElementById("stock");
@@ -592,6 +598,79 @@
         } else {
           stockInput.disabled = false;
         }
+      }
+      
+      // Formatear y validar el campo de stock según configuración
+      function configurarCampoStock() {
+        const stockInput = document.getElementById("stock");
+        if (!stockInput) return;
+        
+        // Formatear el valor inicial al cargar
+        if (stockInput.value && stockInput.value.trim() !== "") {
+          const valorActual = parseFloat(stockInput.value);
+          if (!isNaN(valorActual)) {
+            if (permitirProductosDerivados === true) {
+              // Mostrar con decimales (2 decimales)
+              stockInput.value = valorActual.toFixed(2);
+            } else {
+              // Mostrar como entero (redondear hacia abajo)
+              stockInput.value = Math.floor(valorActual).toString();
+            }
+          }
+        }
+        
+        // BLOQUEAR punto y coma si NO se permiten decimales
+        stockInput.addEventListener('keydown', function(e) {
+          if (permitirProductosDerivados === false) {
+            // Bloquear punto (.) y coma (,)
+            if (e.key === '.' || e.key === ',' || e.key === 'Decimal') {
+              e.preventDefault();
+              
+              // Feedback visual: borde rojo temporalmente
+              stockInput.style.borderColor = '#dc3545';
+              stockInput.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
+              
+              // Quitar el borde rojo después de 500ms
+              setTimeout(() => {
+                stockInput.style.borderColor = '';
+                stockInput.style.boxShadow = '';
+              }, 500);
+            }
+          }
+        });
+        
+        // Validar entrada en tiempo real (para no negativos y paste)
+        stockInput.addEventListener('input', function(e) {
+          let valor = e.target.value;
+          
+          // Validar no negativos
+          if (valor && parseFloat(valor) < 0) {
+            e.target.value = 0;
+            return;
+          }
+          
+          // Limpiar si se pegó texto con punto o coma (cuando no se permiten decimales)
+          if (permitirProductosDerivados === false && valor) {
+            const valorLimpio = valor.replace(/\./g, '').replace(/,/g, '');
+            if (valorLimpio !== valor) {
+              e.target.value = valorLimpio;
+            }
+          }
+        });
+        
+        // Al perder el foco, formatear correctamente
+        stockInput.addEventListener('blur', function(e) {
+          if (!e.target.value || e.target.value.trim() === "") return;
+          
+          const valor = parseFloat(e.target.value);
+          if (!isNaN(valor) && valor >= 0) {
+            if (permitirProductosDerivados === true) {
+              e.target.value = valor.toFixed(2);
+            } else {
+              e.target.value = Math.floor(valor).toString();
+            }
+          }
+        });
       }
 
       // Mostrar/ocultar sección de producto base
@@ -605,16 +684,20 @@
       );
 
       function toggleProductoBaseSection() {
+        if (!esProductoBaseCheckbox || !productoBaseSection) return;
+        
         if (esProductoBaseCheckbox.checked) {
           productoBaseSection.style.display = "none";
-          productoBaseSelect.value = "";
-          factorConversionSection.style.display = "none";
+          if (productoBaseSelect) productoBaseSelect.value = "";
+          if (factorConversionSection) factorConversionSection.style.display = "none";
         } else {
           productoBaseSection.style.display = "block";
         }
       }
 
       function toggleFactorConversionSection() {
+        if (!productoBaseSelect || !factorConversionSection) return;
+        
         if (productoBaseSelect.value) {
           factorConversionSection.style.display = "block";
         } else {
@@ -653,36 +736,36 @@
           }
         });
 
-      // Validar stock no negativo
-      document.getElementById("stock")?.addEventListener("input", function (e) {
-        if (this.value && parseInt(this.value) < 0) {
-          this.value = 0;
-        }
-      });
-
       // Inicializar estado
       document.addEventListener("DOMContentLoaded", function () {
+        // IMPORTANTE: Configurar el campo stock PRIMERO, antes de otras inicializaciones
+        configurarCampoStock();
+        
         toggleProductoBaseSection();
         toggleFactorConversionSection();
         toggleStockField();
 
         // Si ya tiene producto base seleccionado, mostrar las secciones
-        if (productoBaseSelect.value) {
-          esProductoBaseCheckbox.checked = false;
+        if (productoBaseSelect && productoBaseSelect.value) {
+          if (esProductoBaseCheckbox) esProductoBaseCheckbox.checked = false;
           toggleProductoBaseSection();
           toggleFactorConversionSection();
         }
 
-        // Event listeners
-        esProductoBaseCheckbox.addEventListener("change", function () {
-          toggleProductoBaseSection();
-          toggleStockField();
-        });
+        // Event listeners (solo si los elementos existen)
+        if (esProductoBaseCheckbox) {
+          esProductoBaseCheckbox.addEventListener("change", function () {
+            toggleProductoBaseSection();
+            toggleStockField();
+          });
+        }
 
-        productoBaseSelect.addEventListener("change", function () {
-          toggleFactorConversionSection();
-          toggleStockField();
-        });
+        if (productoBaseSelect) {
+          productoBaseSelect.addEventListener("change", function () {
+            toggleFactorConversionSection();
+            toggleStockField();
+          });
+        }
       });
     </script>
   </body>

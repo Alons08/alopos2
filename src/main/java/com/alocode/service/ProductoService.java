@@ -46,10 +46,7 @@ public class ProductoService {
 
     public Producto guardarProducto(Producto producto) {
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        System.out.println("[DEBUG] Cliente actual: " + clienteId);
-        System.out.println("[DEBUG] Producto recibido: " + producto);
         if (producto.getCliente() == null || !producto.getCliente().getId().equals(clienteId)) {
-            System.out.println("[ERROR] El producto no tiene el cliente correcto");
             throw new IllegalArgumentException("El producto debe pertenecer al cliente actual");
         }
         
@@ -79,14 +76,12 @@ public class ProductoService {
         }
         if (producto.getProductoBase() != null) {
             if (producto.getFactorConversion() == null) {
-                System.out.println("[ERROR] Falta factor de conversión");
                 throw new IllegalArgumentException("Los productos derivados deben tener un factor de conversión");
             }
             producto.setStock(0.0);
             producto.setStockOcupado(0.0);
         }
         Producto guardado = productoRepository.save(producto);
-        System.out.println("[DEBUG] Producto guardado: " + guardado);
         return guardado;
     }
 

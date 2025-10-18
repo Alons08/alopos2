@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alocode.model.Cliente;
+import com.alocode.model.ClienteConfiguracion;
 import com.alocode.model.Producto;
 import com.alocode.service.ProductoService;
+import com.alocode.repository.ClienteConfiguracionRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductoController {
     private final ProductoService productoService;
+    private final ClienteConfiguracionRepository clienteConfiguracionRepository;
 
     @GetMapping
     public String listarProductos(
@@ -48,6 +51,11 @@ public class ProductoController {
         if (clienteId != null) {
             Cliente cliente = productoService.obtenerClientePorId(clienteId);
             model.addAttribute("cliente", cliente);
+            
+            // Obtener configuración del cliente para el formateo de stock
+            ClienteConfiguracion config = clienteConfiguracionRepository.findByClienteId(clienteId);
+            model.addAttribute("permitirProductosDerivados", 
+                config != null ? config.getPermitirProductosDerivados() : true);
         }
         model.addAttribute("q", q);
         model.addAttribute("sort", sort);
@@ -69,6 +77,16 @@ public class ProductoController {
         if (clienteId != null) {
             Cliente cliente = productoService.obtenerClientePorId(clienteId);
             model.addAttribute("cliente", cliente);
+            
+            // Obtener configuración del cliente para el formateo de stock
+            ClienteConfiguracion config = clienteConfiguracionRepository.findByClienteId(clienteId);
+            Boolean permitir = (config != null && config.getPermitirProductosDerivados() != null) 
+                ? config.getPermitirProductosDerivados() 
+                : true;
+            model.addAttribute("permitirProductosDerivados", permitir);
+        } else {
+            // Por defecto, si no hay cliente, permitir productos derivados
+            model.addAttribute("permitirProductosDerivados", true);
         }
         return "nuevo-producto";
     }
@@ -103,6 +121,16 @@ public class ProductoController {
             if (clienteId != null) {
                 Cliente cliente = productoService.obtenerClientePorId(clienteId);
                 model.addAttribute("cliente", cliente);
+                
+                // Obtener configuración del cliente para el formateo de stock
+                ClienteConfiguracion config = clienteConfiguracionRepository.findByClienteId(clienteId);
+                Boolean permitir = (config != null && config.getPermitirProductosDerivados() != null) 
+                    ? config.getPermitirProductosDerivados() 
+                    : true;
+                model.addAttribute("permitirProductosDerivados", permitir);
+            } else {
+                // Por defecto, si no hay cliente, permitir productos derivados
+                model.addAttribute("permitirProductosDerivados", true);
             }
             model.addAttribute("error", e.getMessage());
             return "nuevo-producto";
@@ -130,9 +158,20 @@ public class ProductoController {
         
         // Agregar el cliente actual al modelo para control de visibilidad
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
+        
         if (clienteId != null) {
             Cliente cliente = productoService.obtenerClientePorId(clienteId);
             model.addAttribute("cliente", cliente);
+            
+            // Obtener configuración del cliente para el formateo de stock
+            ClienteConfiguracion config = clienteConfiguracionRepository.findByClienteId(clienteId);
+            Boolean permitir = (config != null && config.getPermitirProductosDerivados() != null) 
+                ? config.getPermitirProductosDerivados() 
+                : true;
+            model.addAttribute("permitirProductosDerivados", permitir);
+        } else {
+            // Por defecto, si no hay cliente, permitir productos derivados
+            model.addAttribute("permitirProductosDerivados", true);
         }
 
         return "nuevo-producto";

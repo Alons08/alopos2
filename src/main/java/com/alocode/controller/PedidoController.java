@@ -75,19 +75,13 @@ public class PedidoController {
             @RequestParam List<Integer> cantidades,
             @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails,
             RedirectAttributes redirectAttributes) {
-        System.out.println("--- [LOG] Guardar Pedido ---");
-        System.out.println("Pedido recibido: " + pedido);
-        System.out.println("Productos: " + productos);
-        System.out.println("Cantidades: " + cantidades);
         Usuario usuario = null;
         if (userDetails instanceof MyUserDetails myUserDetails) {
             usuario = myUserDetails.getUsuario();
         }
-        System.out.println("Usuario: " + (usuario != null ? usuario.getUsername() : "null"));
         try {
             // Validar caja abierta
             if (!cajaService.obtenerCajaAbiertaHoy().isPresent()) {
-                System.out.println("[LOG] No hay caja abierta hoy");
                 redirectAttributes.addFlashAttribute("error", "No hay caja abierta hoy");
                 return "redirect:/pedidos/nuevo";
             }
@@ -109,9 +103,6 @@ public class PedidoController {
                     detalle.setPrecioUnitario(producto.getPrecio());
                     detalle.setSubtotal(producto.getPrecio() * cantidades.get(i));
                     pedido.getDetalles().add(detalle);
-                    System.out.println(
-                            "[LOG] Detalle agregado: Producto=" + producto.getNombre() + ", Cantidad="
-                                    + cantidades.get(i));
                 }
                 if (usuario == null) {
                     throw new IllegalStateException("No se pudo obtener el usuario autenticado");
@@ -120,7 +111,6 @@ public class PedidoController {
                 redirectAttributes.addFlashAttribute("success", "Pedido creado exitosamente");
             }
         } catch (Exception e) {
-            System.out.println("[ERROR] " + e.getMessage());
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/pedidos/nuevo";

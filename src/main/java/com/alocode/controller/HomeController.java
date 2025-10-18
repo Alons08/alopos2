@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.alocode.service.CajaService;
 import com.alocode.service.DashboardService;
 import com.alocode.service.MyUserDetails;
+import com.alocode.repository.ClienteConfiguracionRepository;
 
 import lombok.RequiredArgsConstructor;
 
 import com.alocode.model.Usuario;
+import com.alocode.model.ClienteConfiguracion;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.Map;
 public class HomeController {
     private final CajaService cajaService;
     private final DashboardService dashboardService;
+    private final ClienteConfiguracionRepository clienteConfiguracionRepository;
 
     @GetMapping({"/", "/home"})
     public String home(Model model, @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails) {
@@ -45,6 +48,13 @@ public class HomeController {
         model.addAttribute("ventasUltimos7Dias", ventasUltimos7Dias);
         model.addAttribute("top10Productos", top10Productos);
         model.addAttribute("productosStockBajo", productosStockBajo);
+        
+        // Obtener configuración del cliente para el formateo de stock
+        if (clienteId != null) {
+            ClienteConfiguracion config = clienteConfiguracionRepository.findByClienteId(clienteId);
+            model.addAttribute("permitirProductosDerivados", 
+                config != null ? config.getPermitirProductosDerivados() : true);
+        }
         
         return "home";
     }
