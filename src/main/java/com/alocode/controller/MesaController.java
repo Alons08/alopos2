@@ -37,8 +37,10 @@ public class MesaController {
         try {
             // Asignar el cliente actual usando TenantContext
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-            com.alocode.model.Cliente cliente = mesaService.obtenerClientePorId(clienteId);
-            mesa.setCliente(cliente);
+            if (clienteId != null) {
+                com.alocode.model.Cliente cliente = mesaService.obtenerClientePorId(clienteId);
+                mesa.setCliente(cliente);
+            }
             mesaService.guardarMesa(mesa);
             redirectAttributes.addFlashAttribute("success", "Mesa guardada exitosamente");
             return "redirect:/mesas";

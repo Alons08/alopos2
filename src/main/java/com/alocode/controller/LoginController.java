@@ -40,7 +40,7 @@ public class LoginController {
                     }
                 }
             } else {
-                mensaje = "//El usuario no existe.";
+                mensaje = "El usuario no existe.";
             }
         }
         model.addAttribute("mensaje", mensaje);

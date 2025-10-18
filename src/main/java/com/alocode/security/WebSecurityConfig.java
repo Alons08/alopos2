@@ -86,6 +86,14 @@ public class WebSecurityConfig {
             .successHandler(customAuthenticationSuccessHandler)
             .permitAll()
         )
+                // Configura "Remember Me" para mantener la sesión activa incluso al cerrar el navegador
+                .rememberMe(remember -> remember
+                    .key("uniqueAndSecretKey") // Clave secreta para encriptar la cookie
+                    .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 días de validez (balance profesional)
+                    .userDetailsService(userDetailsService())
+                    .rememberMeParameter("remember-me") // Nombre del parámetro en el formulario
+                    .rememberMeCookieName("alopos-remember-me") // Nombre de la cookie
+                )
                 // Limita a una sola sesión activa por usuario
                 .sessionManagement(session -> session
                     .maximumSessions(1)
@@ -96,7 +104,7 @@ public class WebSecurityConfig {
                         .logoutUrl("/logout")  //define la URL para realizar el cierre de sesión
                         .logoutSuccessUrl("/login?logout")  //redirige a login con parámetro de logout
                         .invalidateHttpSession(true)  //invalida la sesión
-                        .deleteCookies("JSESSIONID")  //elimina cookies de sesión
+                        .deleteCookies("JSESSIONID", "alopos-remember-me")  //elimina cookies de sesión y remember-me
                         .permitAll() //permite el acceso al cierre de sesión para todos.
                 )
                 // Configura el manejo de excepciones relacionadas con el acceso denegado

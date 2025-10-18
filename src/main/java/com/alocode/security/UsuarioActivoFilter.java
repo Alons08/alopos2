@@ -2,7 +2,6 @@ package com.alocode.security;
 
 import com.alocode.model.Usuario;
 import com.alocode.repository.UsuarioRepository;
-import com.alocode.service.MyUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,16 +26,29 @@ public class UsuarioActivoFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof MyUserDetails) {
-            MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-            String username = userDetails.getUsername();
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal().toString())) {
+            String username = authentication.getName();
             Optional<Usuario> usuarioOpt = usuarioRepository.getUserByUsername(username);
-            if (usuarioOpt.isPresent() && (usuarioOpt.get().getActivo() == null || !usuarioOpt.get().getActivo())) {
-                // Usuario inactivo, invalidar sesión y redirigir
-                request.getSession().invalidate();
-                SecurityContextHolder.clearContext();
-                response.sendRedirect(request.getContextPath() + "/login?inactivo");
-                return;
+            if (usuarioOpt.isPresent()) {
+                Usuario usuario = usuarioOpt.get();
+                
+                // Verificar si el usuario está inactivo
+                if (usuario.getActivo() == null || !usuario.getActivo()) {
+                    // Usuario inactivo, invalidar sesión y redirigir
+                    request.getSession().invalidate();
+                    SecurityContextHolder.clearContext();
+                    response.sendRedirect(request.getContextPath() + "/login?inactivo");
+                    return;
+                }
+                
+                // Si el usuario tiene cliente y no hay tenantId en sesión, establecerlo
+                // (esto es importante para Remember Me)
+                if (usuario.getCliente() != null) {
+                    Object sessionTenant = request.getSession().getAttribute("tenantId");
+                    if (sessionTenant == null) {
+                        request.getSession().setAttribute("tenantId", usuario.getCliente().getId());
+                    }
+                }
             }
         }
         filterChain.doFilter(request, response);

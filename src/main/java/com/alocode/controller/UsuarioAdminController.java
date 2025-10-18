@@ -43,8 +43,10 @@ public class UsuarioAdminController {
     public String guardarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes, org.springframework.ui.Model model) {
         try {
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-            com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
-            usuario.setCliente(cliente);
+            if (clienteId != null) {
+                com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
+                usuario.setCliente(cliente);
+            }
             usuarioService.guardarUsuario(usuario, rolesIds);
             redirectAttributes.addFlashAttribute("success", "Usuario guardado exitosamente");
             return "redirect:/admin/usuarios";
@@ -70,8 +72,10 @@ public class UsuarioAdminController {
     public String actualizarUsuario(@ModelAttribute Usuario usuario, @RequestParam(required = false) List<Long> rolesIds, org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
         try {
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-            com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
-            usuario.setCliente(cliente);
+            if (clienteId != null) {
+                com.alocode.model.Cliente cliente = usuarioService.obtenerClientePorId(clienteId);
+                usuario.setCliente(cliente);
+            }
             usuarioService.actualizarUsuario(usuario, rolesIds);
             redirectAttributes.addFlashAttribute("success", "Usuario actualizado exitosamente");
         } catch (Exception e) {

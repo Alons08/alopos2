@@ -45,8 +45,10 @@ public class ProductoController {
         model.addAttribute("totalInactivos", productoService.contarProductosInactivos());
         // Agregar el cliente actual al modelo para control de visibilidad
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        Cliente cliente = productoService.obtenerClientePorId(clienteId);
-        model.addAttribute("cliente", cliente);
+        if (clienteId != null) {
+            Cliente cliente = productoService.obtenerClientePorId(clienteId);
+            model.addAttribute("cliente", cliente);
+        }
         model.addAttribute("q", q);
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
@@ -64,8 +66,10 @@ public class ProductoController {
         model.addAttribute("productosBase", productoService.obtenerProductosBase());
         // Agregar el cliente actual al modelo para control de visibilidad
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        Cliente cliente = productoService.obtenerClientePorId(clienteId);
-        model.addAttribute("cliente", cliente);
+        if (clienteId != null) {
+            Cliente cliente = productoService.obtenerClientePorId(clienteId);
+            model.addAttribute("cliente", cliente);
+        }
         return "nuevo-producto";
     }
 
@@ -75,8 +79,10 @@ public class ProductoController {
         try {
             // Asignar el cliente actual usando TenantContext
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-            com.alocode.model.Cliente cliente = productoService.obtenerClientePorId(clienteId);
-            producto.setCliente(cliente);
+            if (clienteId != null) {
+                com.alocode.model.Cliente cliente = productoService.obtenerClientePorId(clienteId);
+                producto.setCliente(cliente);
+            }
             productoService.guardarProducto(producto);
             redirectAttributes.addFlashAttribute("success", "Producto guardado exitosamente");
             return "redirect:/productos";
@@ -94,8 +100,10 @@ public class ProductoController {
             model.addAttribute("productosBase", productoService.obtenerProductosBase());
             // Agregar el cliente actual al modelo para control de visibilidad
             Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-            Cliente cliente = productoService.obtenerClientePorId(clienteId);
-            model.addAttribute("cliente", cliente);
+            if (clienteId != null) {
+                Cliente cliente = productoService.obtenerClientePorId(clienteId);
+                model.addAttribute("cliente", cliente);
+            }
             model.addAttribute("error", e.getMessage());
             return "nuevo-producto";
         }
@@ -122,8 +130,10 @@ public class ProductoController {
         
         // Agregar el cliente actual al modelo para control de visibilidad
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        Cliente cliente = productoService.obtenerClientePorId(clienteId);
-        model.addAttribute("cliente", cliente);
+        if (clienteId != null) {
+            Cliente cliente = productoService.obtenerClientePorId(clienteId);
+            model.addAttribute("cliente", cliente);
+        }
 
         return "nuevo-producto";
     }

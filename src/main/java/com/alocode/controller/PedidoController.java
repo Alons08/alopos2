@@ -49,8 +49,10 @@ public class PedidoController {
         model.addAttribute("pedidos", pedidos);
         // Agregar el cliente actual al modelo para control de visibilidad de estados
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
-        Cliente cliente = productoService.obtenerClientePorId(clienteId);
-        model.addAttribute("cliente", cliente);
+        if (clienteId != null) {
+            Cliente cliente = productoService.obtenerClientePorId(clienteId);
+            model.addAttribute("cliente", cliente);
+        }
         return "pedidos";
     }
 
