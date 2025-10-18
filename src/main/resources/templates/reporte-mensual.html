@@ -234,11 +234,9 @@
                     </div>
                 </div>
             </div>
-            <!-- El resto del contenido permanece igual -->
-        </div>
-        
-        <!-- Resumen mensual -->
-        <div class="card mb-4 border-0 shadow-sm">
+            
+            <!-- Resumen mensual -->
+            <div class="card mb-4 border-0 shadow-sm">
             <div class="card-header">
                 <h5 class="mb-0"><i class="bi bi-calendar-month me-2"></i>Resumen Mensual</h5>
             </div>
@@ -251,7 +249,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <h6 class="card-title">TOTAL GENERAL</h6>
-                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalMensual, 1, 2)}"></span></p>
+                                        <p class="card-text">S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.totalMensual).replace(',', '.')}"></span></p>
                                     </div>
                                     <i class="bi bi-cash-stack fs-4"></i>
                                 </div>
@@ -297,7 +295,7 @@
                             </div>
                             <div class="card-body">
                                 <p class="stat-number">
-                                    S/ <span th:text="${#numbers.formatDecimal(reporte.totalMensual/reporte.semanas.size(), 1, 2)}"></span>
+                                    S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.totalMensual/reporte.semanas.size()).replace(',', '.')}"></span>
                                 </p>
                             </div>
                         </div>
@@ -345,7 +343,7 @@
                                     <span th:text="${#dates.format(semana.fin, 'dd/MM')}"></span>
                                 </td>
                                 <td>
-                                    S/ <span th:text="${#numbers.formatDecimal(semana.totalSemana, 1, 2)}"></span>
+                                    S/ <span th:text="${T(java.lang.String).format('%.2f', semana.totalSemana).replace(',', '.')}"></span>
                                 </td>
                                 <td th:text="${semana.cantidadPedidos}"></td>
                                 <td>
@@ -360,7 +358,8 @@
                 </div>
             </div>
         </div>
-    </div>
+        </div> <!-- Cierre de reporteMensualContent -->
+    </div> <!-- Cierre de container -->
     
     <div th:replace="~{fragments/footer :: footer}"></div>
 

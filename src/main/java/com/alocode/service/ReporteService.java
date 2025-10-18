@@ -25,11 +25,23 @@ public class ReporteService {
     public ReporteDiario generarReporteDiario(LocalDateTime fecha) {
         Long clienteId = com.alocode.util.TenantContext.getCurrentTenant();
         LocalDateTime fin = fecha.plusDays(1);
+        
+        // Debug logs
+        System.out.println("=== DEBUG REPORTE DIARIO ===");
+        System.out.println("Cliente ID: " + clienteId);
+        System.out.println("Fecha inicio: " + fecha);
+        System.out.println("Fecha fin: " + fin);
+        
         List<Pedido> pedidos = pedidoRepository.findByClienteIdAndEstadoAndFechaPagadoBetweenOrderByIdAsc(
             clienteId,
             EstadoPedido.PAGADO,
             fecha,
             fin);
+            
+        System.out.println("Pedidos encontrados: " + pedidos.size());
+        pedidos.forEach(p -> System.out.println("  - Pedido #" + p.getNumeroPedido() + " - FechaPagado: " + p.getFechaPagado() + " - Total: " + p.getTotal()));
+        System.out.println("==============================");
+        
         double totalVentas = pedidos.stream()
             .mapToDouble(p -> p.getTotal() - p.getRecargo())
             .sum();

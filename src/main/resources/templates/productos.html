@@ -336,7 +336,7 @@
                                             </span>
                                             <span th:if="${producto.productoBase == null and !producto.esProductoBase}" class="badge bg-secondary">Independiente</span>
                                         </td>
-                                        <td class="price-cell" th:text="'S/ ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}"></td>
+                                        <td class="price-cell" th:text="'S/ ' + ${T(java.lang.String).format('%.2f', producto.precio).replace(',', '.')}"></td>
                                         <td class="text-center" th:text="${producto.stock}"></td>
                                         <td class="text-center" th:text="${producto.stockOcupado}"></td>
                                         <td class="text-center" th:text="${producto.stock - producto.stockOcupado}"></td>
@@ -457,7 +457,7 @@
                             </div>
                             <div class="mobile-product-detail">
                                 <span class="mobile-detail-label">Precio:</span>
-                                <span class="price-cell" th:text="'S/ ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}"></span>
+                                <span class="price-cell" th:text="'S/ ' + ${T(java.lang.String).format('%.2f', producto.precio).replace(',', '.')}"></span>
                             </div>
                             <div class="mobile-product-detail">
                                 <span class="mobile-detail-label">Stock:</span>

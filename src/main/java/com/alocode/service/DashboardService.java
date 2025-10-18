@@ -112,7 +112,7 @@ public class DashboardService {
     }
 
     /**
-     * Obtiene productos con stock bajo (≤ 5 unidades)
+     * Obtiene todos los productos con stock bajo (≤ 5 unidades)
      */
     public List<Map<String, Object>> obtenerProductosStockBajo(Long clienteId) {
         log.info("=== INICIO obtenerProductosStockBajo para clienteId: {} ===", clienteId);

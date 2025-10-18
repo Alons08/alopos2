@@ -348,7 +348,7 @@
                                                 <td data-label="N° Pedido" th:text="${pedido.numeroPedido}"></td>
                                                 <td data-label="Tipo" th:text="${pedido.tipo}"></td>
                                                 <td data-label="Mesa" th:text="${pedido.mesa != null} ? '# '+${pedido.mesa.numero} : 'N/A'"></td>
-                                                <td data-label="Total" th:text="'S/ ' + ${#numbers.formatDecimal(pedido.total, 1, 2)}"></td>
+                                                <td data-label="Total" th:text="'S/ ' + ${T(java.lang.String).format('%.2f', pedido.total).replace(',', '.')}"></td>
                                                 <td data-label="Estado" th:text="${pedido.estado}"></td>
                                                 <td data-label="Fecha" th:text="${#dates.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}" class="text-muted"></td>
                                                 <td data-label="Acciones">

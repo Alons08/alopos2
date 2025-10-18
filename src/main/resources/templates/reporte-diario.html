@@ -169,13 +169,9 @@
                     </div>
                 </div>
             </div>
-            <!-- ...el resto del contenido del reporte diario permanece igual... -->
-        </div>
-        
-        
-        
-        <!-- Resumen del día -->
-        <div class="card mb-4 border-0 shadow-sm">
+            
+            <!-- Resumen del día -->
+            <div class="card mb-4 border-0 shadow-sm">
             <div class="card-header">
                 <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Resumen del Día</h5>
             </div>
@@ -188,7 +184,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <h6 class="card-title">TOTAL VENTAS</h6>
-                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalVentas, 1, 2)}"></span></p>
+                                        <p class="card-text">S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.totalVentas).replace(',', '.')}"></span></p>
                                     </div>
                                     <i class="bi bi-wallet2 fs-4"></i>
                                 </div>
@@ -203,7 +199,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <h6 class="card-title">TOTAL RECARGOS</h6>
-                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalRecargos, 1, 2)}"></span></p>
+                                        <p class="card-text">S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.totalRecargos).replace(',', '.')}"></span></p>
                                     </div>
                                     <i class="bi bi-plus-circle fs-4"></i>
                                 </div>
@@ -218,7 +214,7 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <h6 class="card-title">TOTAL GENERAL</h6>
-                                        <p class="card-text">S/ <span th:text="${#numbers.formatDecimal(reporte.totalNeto, 1, 2)}"></span></p>
+                                        <p class="card-text">S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.totalNeto).replace(',', '.')}"></span></p>
                                     </div>
                                     <i class="bi bi-cash-stack fs-4"></i>
                                 </div>
@@ -237,11 +233,11 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Monto Apertura:</span>
-                                    <strong>S/ <span th:text="${#numbers.formatDecimal(reporte.montoApertura, 1, 2)}"></span></strong>
+                                    <strong>S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.montoApertura).replace(',', '.')}"></span></strong>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <span class="text-muted">Monto Cierre:</span>
-                                    <strong>S/ <span th:text="${#numbers.formatDecimal(reporte.montoCierre, 1, 2)}"></span></strong>
+                                    <strong>S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.montoCierre).replace(',', '.')}"></span></strong>
                                 </div>
                             </div>
                         </div>
@@ -260,7 +256,7 @@
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <span class="text-muted">Promedio por Pedido:</span>
-                                    <strong>S/ <span th:text="${#numbers.formatDecimal(reporte.totalNeto/reporte.pedidos.size(), 1, 2)}"></span></strong>
+                                    <strong>S/ <span th:text="${T(java.lang.String).format('%.2f', reporte.totalNeto/reporte.pedidos.size()).replace(',', '.')}"></span></strong>
                                 </div>
                             </div>
                         </div>
@@ -293,7 +289,7 @@
                                 <td th:text="${pedido.numeroPedido}"></td>
                                 <td th:text="${pedido.tipo}"></td>
                                 <td th:text="${pedido.mesa != null} ? ${pedido.mesa.numero} : 'N/A'"></td>
-                                <td>S/ <span th:text="${#numbers.formatDecimal(pedido.total, 1, 2)}"></span></td>
+                                <td>S/ <span th:text="${T(java.lang.String).format('%.2f', pedido.total).replace(',', '.')}"></span></td>
                                 <td th:text="${pedido.estado}"></td>
                                 <td th:text="${#dates.format(pedido.fechaPagado, 'HH:mm')}"></td>
                                 <td>
@@ -307,7 +303,8 @@
                 </div>
             </div>
         </div>
-    </div>
+        </div> <!-- Cierre de reporteDiarioContent -->
+    </div> <!-- Cierre de container -->
     
     <div th:replace="~{fragments/footer :: footer}"></div>
 
@@ -513,6 +510,16 @@
         function hideCustomLoader() {
             document.getElementById('customLoaderModal').style.display = 'none';
         }
+
+        // Debug: Mostrar información de la fecha actual del reporte
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== DEBUG REPORTE DIARIO ===');
+            console.log('Fecha del reporte:', '[[${reporte.fecha}]]');
+            console.log('Día anterior:', '[[${diaAnterior}]]');
+            console.log('Día siguiente:', '[[${diaSiguiente}]]');
+            console.log('Total pedidos:', [[${reporte.pedidos.size()}]]);
+            console.log('===========================');
+        });
 
         // Mostrar spinner al hacer clic en los botones de navegación de fecha
         document.addEventListener('DOMContentLoaded', function() {
